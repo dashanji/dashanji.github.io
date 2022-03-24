@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  dir="ltr"
+  
+><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Chapter-18 main部分详解 | FreeFlyOS | 自由飞翔的大山鸡</title>
+
+<meta name="generator" content="Hugo Eureka 0.9.1" />
+<link rel="stylesheet" href="/css/eureka.min.6a378a23360d238dc3ef4df2f5cd718093f02c10c9c7eb2437c29701cd8d389ab6da5d9f21bdd3afa305fd56c1235017.css" integrity="sha384-ajeKIzYNI43D703y9c1xgJPwLBDJx&#43;skN8KXAc2NOJq22l2fIb3Tr6MF/VbBI1AX">
+<script defer src="/js/eureka.min.4ab4e11bfa71ae0aeed55e31bbb0f8ab16c24a648722270637c4b96ea70eef4ddf17aa3e2a8131f613520e0387c1bbde.js" integrity="sha384-SrThG/pxrgru1V4xu7D4qxbCSmSHIicGN8S5bqcO703fF6o&#43;KoEx9hNSDgOHwbve"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js"
+   crossorigin></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js"
+     crossorigin></script>
+
+
+<script defer type="text/javascript" src="/js/fontawesome.min.56e85e545fac4d674dccb3bcea98ac2a625933b1f15638678edd10cf6c26fb44f0e1c5507df434dd557495bf13b58413.js" integrity="sha384-VuheVF&#43;sTWdNzLO86pisKmJZM7HxVjhnjt0Qz2wm&#43;0Tw4cVQffQ03VV0lb8TtYQT"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+   integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" 
+  integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"
+   integrity="sha384-&#43;XBljXPPiv&#43;OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js" 
+  integrity="sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0"  crossorigin></script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png">
+
+<meta name="description"
+  content="Chapter 18 of FreeFlyOS">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Docs",
+      "item":"/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"FreeFlyOS",
+      "item":"/docs/freeflyos-doc/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"Chapter-18 main部分详解",
+      "item":"/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"
+    },
+    "headline": "Chapter-18 main部分详解 | FreeFlyOS | 自由飞翔的大山鸡","datePublished": "2022-03-24T00:00:00+00:00",
+    "dateModified": "2022-03-24T00:00:00+00:00",
+    "wordCount":  519 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "/images/icon.png"
+        }
+        },
+    "description": "Chapter 18 of FreeFlyOS"
+}
+</script><meta property="og:title" content="Chapter-18 main部分详解 | FreeFlyOS | 自由飞翔的大山鸡" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="/images/icon.png">
+
+
+<meta property="og:url" content="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" />
+
+
+
+<meta property="og:description" content="Chapter 18 of FreeFlyOS" />
+
+
+
+<meta property="og:locale" content="en" />
+
+
+
+
+<meta property="og:site_name" content="自由飞翔的大山鸡" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+  <body class="flex min-h-screen flex-col">
+    <header
+      class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"
+    >
+      <div class="mx-auto w-full max-w-screen-xl"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0">
+    <a href="/" class="me-6 text-primary-text text-xl font-bold">自由飞翔的大山鸡</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/#about" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">About</a>
+            <a href="/posts/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">Posts</a>
+            <a href="/docs/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  selected-menu-item  me-4">Docs</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', switchDarkMode)
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script>
+</div>
+    </header>
+    <main class="grow pt-16">
+        <div class="pl-scrollbar">
+          <div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-e">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">Table of Contents</span>
+    <i class='fas fa-caret-right ms-1'></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="/docs/freeflyos-doc/">FreeFlyOS</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="ps-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/">Chapter-1 boot部分(引导扇区)详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-2 init部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-3 asm部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-4 dt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-5 VGA部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-6 interrupt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-7 keyboard部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-8 serial部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-9 timer部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-10 pic部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-11 stl部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-12 debug部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-13 mem部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-14 sync部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-15 task部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-16 file部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-17 pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-18 main部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-19 user部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-20 test_exec部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-21 test_cat部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-22 test_pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-23 cmake部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-24 disassembly部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-25 elf部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    <article class="prose">
+  <h1 class="mb-4">Chapter-18 main部分详解</h1>
+
+  <div
+  class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"
+>
+  <div class="me-6 my-2">
+    <i class="fas fa-calendar me-1"></i>
+    <span
+      >2022-03-24</span
+    >
+  </div>
+  <div class="me-6 my-2">
+    <i class="fas fa-clock me-1"></i>
+    <span>3 min read</span>
+  </div>
+
+  
+
+  
+</div>
+
+
+  
+  
+
+  <h2 id="mainc">main.c</h2>
+<p>ELF格式的内核入口，包含各种外设初始化，以及GDT和IDT表的设置等。</p>
+<pre><code>#include &quot;main.h&quot;
+#include &quot;../asm/asm.h&quot;
+#include &quot;../dt/dt.h&quot;
+#include &quot;../interrupt/trap.h&quot;
+#include &quot;../timer/timer.h&quot;
+#include &quot;../pic/pic.h&quot;
+#include &quot;../vga/vga.h&quot;
+#include &quot;../mem/pmm.h&quot;
+#include &quot;../mem/vmm.h&quot;
+#include &quot;../debug/debug.h&quot;
+#include &quot;../task/task.h&quot;
+#include &quot;../sync/sync.h&quot;
+#include &quot;../interrupt/syscall.h&quot;
+#include &quot;../file/ide-dev.h&quot;
+#include &quot;../file/fs.h&quot;
+#include &quot;../user/user_main.h&quot;
+#include &quot;../keyboard/keyboard.h&quot;
+#define TIME_FREQUENCY 100
+
+//三个管理区
+extern pm_zone dma_zone;
+extern pm_zone normal_zone;
+extern pm_zone highmem_zone;
+extern struct task_struct *current;
+extern unsigned int volatile jiffies;
+
+struct semaphore user_sema;
+
+static void delay(unsigned int xms);
+void user_task_print();
+int test_user_task=0;
+int offset=0;
+void printf(char *fmt,...);
+void kernel_main();
+void main(void)
+{
+	clear();
+    printk(&quot;FreeFlyOS is running\n&quot;);
+   // print_seg();
+    
+    gdt_init();
+
+    pic_init();
+    idt_init();
+    
+    enable_interupt();
+    
+    serial_init();
+    kbd_init();
+   // ASSERT(1==2);
+    setup_vpt();
+    pmm_init();
+
+    test_pmm();
+
+    test_vmm();
+
+    fs_init();
+    kernel_task_init(kernel_main);
+    //write2fs(); //放在进程初始化后，需要安装到当前进程的fd表，写入到文件系统即可，故仅需执行一次
+    
+    //必须放在task_init后，不然访问current会出现缺页
+    timer_init(TIME_FREQUENCY); //100HZ
+    
+    sema_init(&amp;user_sema,0);
+    
+    intr_enable();
+    clear();
+    user_task_init(user_main);
+    
+    //test_schedule();
+    //test_schedule();
+    //print_seg();
+    //printk(&quot;successful\n&quot;);
+    //test_ide_io();
+    //test_fs();
+    while(1);
+}
+/* 将test_exec和test_cat测试程序（占20个扇区）从500扇区处写入到文件系统中 */
+static void write2fs(){
+    //写入test_exec
+    unsigned int file_size=14136; //通过本机OS 的ls -l命令获得
+    unsigned int sec_cnt=(file_size+512-1)/512;    //扇区数
+    unsigned int prog=vmm_malloc(file_size,1);
+    ide_read((void *)prog,500,sec_cnt);
+    int fd=sys_open(&quot;/prog&quot;,O_CREAT|O_RDWR);
+    if(fd!=-1){
+      if(sys_write(fd,prog,file_size) == -1){
+            printk(&quot;file write error!\n&quot;);
+            while(1);
+      }
+    }
+    vmm_free(prog,file_size);
+    //写入test_cat
+    file_size=17748; //通过本机OS 的ls -l命令获得
+    sec_cnt=(file_size+512-1)/512;    //扇区数
+    prog=vmm_malloc(file_size,1);
+    ide_read((void *)prog,530,sec_cnt);
+    fd=sys_open(&quot;/cat&quot;,O_CREAT|O_RDWR);
+    if(fd!=-1){
+      if(sys_write(fd,prog,file_size) == -1){
+            printk(&quot;file write error!\n&quot;);
+            while(1);
+      }
+    }
+    //写入test_pipe
+    file_size=14536; //通过本机OS 的ls -l命令获得
+    sec_cnt=(file_size+512-1)/512;    //扇区数
+    prog=vmm_malloc(file_size,1);
+    ide_read((void *)prog,570,sec_cnt);
+    fd=sys_open(&quot;/pipe&quot;,O_CREAT|O_RDWR);
+    if(fd!=-1){
+      if(sys_write(fd,prog,file_size) == -1){
+            printk(&quot;file write error!\n&quot;);
+            while(1);
+      }
+    }
+    vmm_free(prog,file_size);
+    //写入file
+    fd=sys_open(&quot;/file&quot;,O_CREAT|O_RDWR);
+    char str[20]=&quot;Hello I'm a file&quot;;
+    if(fd!=-1){
+      if(sys_write(fd,str,20) == -1){
+            printk(&quot;file write error!\n&quot;);
+            while(1);
+      }
+    }
+}
+void kernel_main(){
+    while(1)
+    {
+        //printk(&quot;kernel\n&quot;);
+        //delay(1000000);
+    }
+}
+void test_pmm(){
+    //unsigned int *test=(unsigned int *)((unsigned int)0x000FFD00+(unsigned int)0xC0000000);
+    //*test=0xFFFFFFFF;
+    //printk(&quot;\ntest :%08x\n&quot;,*test);
+    //在NORMAL区域申请200个字节
+    unsigned int nor_addr=pmm_alloc(0x200,1);
+    //在DMA区域申请2000个字节
+    unsigned int dma_addr=pmm_alloc(0x2000,0);
+    //在HIGHMEM区域申请3000个字节
+    unsigned int high_addr=pmm_alloc(0x3000,2);
+    //void *ptr1=(unsigned int *)nor_addr;
+    //void *ptr2= (unsigned int *)dma_addr;
+    //void *ptr3= (unsigned int *)high_addr;
+    //unsigned char str1[0x200],str2[0x2000],str3[0x3000];
+    //unsigned char *st1=(unsigned char *)(0xC0000000+nor_addr);
+    //unsigned char *st2=(unsigned char *)(0xC0000000+dma_addr);
+    //unsigned char *st3=(unsigned char *)high_addr;
+    //*st1=0xFF;
+    //*st2=0xFF;
+    //*st3=0xFF;
+    printk(&quot;DMA---dma_addr:%08ux\n&quot;,dma_addr);
+    printk(&quot;NORMAL---nor_addr:%08ux\n&quot;,nor_addr);
+   // printk(&quot;HIGHMEM---high_addr:%08ux\n&quot;,high_addr);
+    //printk(&quot;str1:%08uxstr2:%08ux\n&quot;,*st1,*st2);
+    //打印管理区空闲页信息
+	printk(&quot;DMA free_pages:%08ux\tNORMAL free_pages:%08ux\tHIGHMEM free_pages:%08ux\n&quot;,
+	dma_zone.free_pages, normal_zone.free_pages, highmem_zone.free_pages);
+    pmm_free(nor_addr,0x200);
+    pmm_free(dma_addr,0x2000);
+    pmm_free(high_addr,0x3000);
+    //打印管理区空闲页信息
+	printk(&quot;DMA free_pages:%08ux\tNORMAL free_pages:%08ux\tHIGHMEM free_pages:%08ux\n&quot;,
+	dma_zone.free_pages, normal_zone.free_pages, highmem_zone.free_pages);
+   // str1[0]=(unsigned char *)nor_addr;
+    //str2[0]=(unsigned char *)dma_addr;
+    //str3[0]=(unsigned char *)high_addr;
+    //printk(&quot;str1:%08uxstr2:%08ux\n&quot;,*st1,*st2);
+}
+void test_vmm(){
+    printk(&quot;TEST-------------VMM1\n&quot;);
+    //在DMA区域申请0x100字节空间
+    unsigned int dma_addr=vmm_malloc(0x100,0);
+    unsigned int nor_addr=vmm_malloc(0x2000,1);
+    unsigned int high_addr=vmm_malloc(0x3000,2);
+    printk(&quot;DMA---dma_addr:%08ux\n&quot;,dma_addr);
+    printk(&quot;NORMAL---nor_addr:%08ux\n&quot;,nor_addr);
+    printk(&quot;HIGHMEM---high_addr:%08ux\n&quot;,high_addr);
+    printk(&quot;TEST-------------VMM2\n&quot;);
+    //在DMA区域申请0x100字节空间
+    unsigned int dma2_addr=vmm_malloc(0x100,0);
+    unsigned int nor2_addr=vmm_malloc(0x2000,1);
+    unsigned int high2_addr=vmm_malloc(0x3000,2);
+    printk(&quot;DMA---dma_addr:%08ux\n&quot;,dma2_addr);
+    printk(&quot;NORMAL---nor_addr:%08ux\n&quot;,nor2_addr);
+    printk(&quot;HIGHMEM---high_addr:%08ux\n&quot;,high2_addr);
+    unsigned char *st3=(unsigned char *)high2_addr;
+    *st3=0xFF;
+    printk(&quot;str3:%08ux\n&quot;,*st3);
+    vmm_free(dma_addr,0x100);
+    vmm_free(nor_addr,0x2000);
+    vmm_free(high_addr,0x3000);
+    unsigned int dma3_addr=vmm_malloc(0x100,0);
+    unsigned int nor3_addr=vmm_malloc(0x2000,1);
+    unsigned int high3_addr=vmm_malloc(0x3000,2);
+    printk(&quot;DMA---dma_addr:%08ux\n&quot;,dma3_addr);
+    printk(&quot;NORMAL---nor_addr:%08ux\n&quot;,nor3_addr);
+    printk(&quot;HIGHMEM---high_addr:%08ux\n&quot;,high3_addr);
+    unsigned char *st4=(unsigned char *)high3_addr;
+    *st4=0xFF;
+    printk(&quot;str4:%08ux\n&quot;,*st4);
+}
+void test_schedule(){
+    //int newtask1_pid=kernel_thread(print_task1,&quot;task1 &quot;,0);
+    //struct task_struct *newtask1=find_task(newtask1_pid);
+    
+    //set_task_name(newtask1,&quot;task1&quot;);
+    
+    //int newtask2_pid=kernel_thread(print_task2,&quot;task2 &quot;,0);
+   // struct task_struct *newtask2=find_task(newtask2_pid);
+    //printk(&quot;Hello &quot;);
+   // set_task_name(newtask2,&quot;task2&quot;);
+    intr_enable();
+    //printk(&quot;Hello &quot;);
+    while(1){
+        //if(!(jiffies%100))
+        //printk(&quot;Main &quot;);
+        //delay(1000000);
+    }     
+}
+static void print_task1(void *arg){
+    /* 用void*来通用表示参数,被调用的函数知道自己需要什么类型的参数,自己转换再用 */
+    char* para = arg;
+    while(1){
+        //printk(&quot;sema_value : %08d&quot;,test_sema.value);
+       // sema_down(&amp;test_sema);
+        //if(!(jiffies%100))
+        printk(&quot;%s&quot;,para);
+        
+        delay(1000000);
+        //lock_release(&amp;test_lock);
+    }
+    
+    //schedule();
+    //  }
+}
+static void print_task2(void *arg){
+    
+    /* 用void*来通用表示参数,被调用的函数知道自己需要什么类型的参数,自己转换再用 */
+    char* para = arg;
+    while(1){
+        //if(!(jiffies%100))
+        //lock_acquire(&amp;test_lock);
+        //printk(&quot;sema_value : %08d&quot;,test_sema.value);
+        //sema_up(&amp;test_sema);
+        //sema_down(&amp;test_sema);
+        //lock_release(&amp;test_lock);
+        printk(&quot;%s&quot;,para);
+        delay(1000000);
+        
+    }
+    
+    //while(1);
+    //schedule();
+    //}
+}
+// 定义一个延时xus毫秒的延时函数
+static void delay(unsigned int xus) // xus代表需要延时的微秒数
+{
+    unsigned int x,y;
+    for(x=xus;x&gt;0;x--)
+        for(y=110;y&gt;0;y--);
+}
+void test_user(){
+    user_task_init(user_main);
+}
+
+
+/*void user_task_print(){
+    //while(1){ 
+    //    test_user_task++;
+    //}
+    //printk(&quot;int $0x60;&quot;);
+    //test_user_task=user_sys_getpid();
+    //asm volatile(&quot;int $0x60&quot;);
+    //int num=10;
+    //_syscall6(num);
+    //printf(&quot;user sys getpid return %08d&quot;,test_user_task);
+    int a=10;
+    a=1000;
+    user_print_string(&quot;hello,I'm User!\n&quot;);
+    while(1);
+}*/
+
+</code></pre>
+<p>main函数基本上就是整个内核的执行过程了，包含以下几个主要步骤：</p>
+<p>1、GDT初始化</p>
+<p>2、PIC中断和IDT初始化。</p>
+<p>3、串口初始化。</p>
+<p>4、键盘初始化。</p>
+<p>5、建立新页表</p>
+<p>6、内存初始化。</p>
+<p>7、文件系统初始化。</p>
+<p>8、内核进程初始化。</p>
+<p>9、时钟初始化。</p>
+<p>10、信号量初始化。</p>
+<p>11、用户进程初始化。</p>
+<p>从以上步骤我们基本能看出FreeFlyOS具有哪些功能了。</p>
+
+</article>
+
+                    
+                    
+                    
+
+                    
+
+
+
+                    
+  <div
+    class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"
+  >
+    <div>
+      
+        <span class="text-primary-text block font-bold"
+          >Previous</span
+        >
+        <a href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-17 pipe部分详解</a>
+      
+    </div>
+    <div class="mt-4 md:mt-0 md:text-right">
+      
+        <span class="text-primary-text block font-bold">Next</span>
+        <a href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-19 user部分详解</a>
+      
+    </div>
+  </div>
+
+
+                    
+
+
+
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div
+  class="
+    bg-secondary-bg
+   prose sticky top-16 z-10 hidden px-6 py-4 lg:block"
+>
+  <h3>On This Page</h3>
+</div>
+<div
+  class="sticky-toc 
+    border-s
+   hidden px-6 pb-6 lg:block"
+>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#mainc">main.c</a></li>
+  </ul>
+</nav>
+</div>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    enableStickyToc();
+  });
+</script>
+
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      
+    </main>
+    <footer class="pl-scrollbar">
+      <div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2022 <a href="https://dashanji.github.io/">dashanji</a>
+ &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+    </footer>
+  </body>
+</html>

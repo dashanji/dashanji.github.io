@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  dir="ltr"
+  
+><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Chapter-7 keyboard部分详解 | FreeFlyOS | 自由飞翔的大山鸡</title>
+
+<meta name="generator" content="Hugo Eureka 0.9.1" />
+<link rel="stylesheet" href="/css/eureka.min.6a378a23360d238dc3ef4df2f5cd718093f02c10c9c7eb2437c29701cd8d389ab6da5d9f21bdd3afa305fd56c1235017.css" integrity="sha384-ajeKIzYNI43D703y9c1xgJPwLBDJx&#43;skN8KXAc2NOJq22l2fIb3Tr6MF/VbBI1AX">
+<script defer src="/js/eureka.min.4ab4e11bfa71ae0aeed55e31bbb0f8ab16c24a648722270637c4b96ea70eef4ddf17aa3e2a8131f613520e0387c1bbde.js" integrity="sha384-SrThG/pxrgru1V4xu7D4qxbCSmSHIicGN8S5bqcO703fF6o&#43;KoEx9hNSDgOHwbve"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js"
+   crossorigin></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js"
+     crossorigin></script>
+
+
+<script defer type="text/javascript" src="/js/fontawesome.min.56e85e545fac4d674dccb3bcea98ac2a625933b1f15638678edd10cf6c26fb44f0e1c5507df434dd557495bf13b58413.js" integrity="sha384-VuheVF&#43;sTWdNzLO86pisKmJZM7HxVjhnjt0Qz2wm&#43;0Tw4cVQffQ03VV0lb8TtYQT"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+   integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" 
+  integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"
+   integrity="sha384-&#43;XBljXPPiv&#43;OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js" 
+  integrity="sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0"  crossorigin></script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png">
+
+<meta name="description"
+  content="Chapter 7 of FreeFlyOS">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Docs",
+      "item":"/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"FreeFlyOS",
+      "item":"/docs/freeflyos-doc/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"Chapter-7 keyboard部分详解",
+      "item":"/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"
+    },
+    "headline": "Chapter-7 keyboard部分详解 | FreeFlyOS | 自由飞翔的大山鸡","datePublished": "2022-03-24T00:00:00+00:00",
+    "dateModified": "2022-03-24T00:00:00+00:00",
+    "wordCount":  1174 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "/images/icon.png"
+        }
+        },
+    "description": "Chapter 7 of FreeFlyOS"
+}
+</script><meta property="og:title" content="Chapter-7 keyboard部分详解 | FreeFlyOS | 自由飞翔的大山鸡" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="/images/icon.png">
+
+
+<meta property="og:url" content="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" />
+
+
+
+<meta property="og:description" content="Chapter 7 of FreeFlyOS" />
+
+
+
+<meta property="og:locale" content="en" />
+
+
+
+
+<meta property="og:site_name" content="自由飞翔的大山鸡" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+  <body class="flex min-h-screen flex-col">
+    <header
+      class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"
+    >
+      <div class="mx-auto w-full max-w-screen-xl"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0">
+    <a href="/" class="me-6 text-primary-text text-xl font-bold">自由飞翔的大山鸡</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/#about" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">About</a>
+            <a href="/posts/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">Posts</a>
+            <a href="/docs/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  selected-menu-item  me-4">Docs</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', switchDarkMode)
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script>
+</div>
+    </header>
+    <main class="grow pt-16">
+        <div class="pl-scrollbar">
+          <div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-e">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">Table of Contents</span>
+    <i class='fas fa-caret-right ms-1'></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="/docs/freeflyos-doc/">FreeFlyOS</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="ps-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/">Chapter-1 boot部分(引导扇区)详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-2 init部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-3 asm部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-4 dt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-5 VGA部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-6 interrupt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-7 keyboard部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-8 serial部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-9 timer部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-10 pic部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-11 stl部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-12 debug部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-13 mem部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-14 sync部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-15 task部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-16 file部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-17 pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-18 main部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-19 user部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-20 test_exec部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-21 test_cat部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-22 test_pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-23 cmake部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-24 disassembly部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-25 elf部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    <article class="prose">
+  <h1 class="mb-4">Chapter-7 keyboard部分详解</h1>
+
+  <div
+  class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"
+>
+  <div class="me-6 my-2">
+    <i class="fas fa-calendar me-1"></i>
+    <span
+      >2022-03-24</span
+    >
+  </div>
+  <div class="me-6 my-2">
+    <i class="fas fa-clock me-1"></i>
+    <span>6 min read</span>
+  </div>
+
+  
+
+  
+</div>
+
+
+  
+  
+
+  <h2 id="keyboardc">keyboard.c</h2>
+<p>键盘驱动程序</p>
+<pre><code>#include &quot;keyboard.h&quot;
+#include &quot;../interrupt/trap.h&quot;
+#include &quot;../vga/vga.h&quot;
+#include &quot;../serial/serial.h&quot;
+/***** Keyboard input code *****/
+
+#define NO              0
+
+#define SHIFT           (1&lt;&lt;0)
+#define CTL             (1&lt;&lt;1)
+#define ALT             (1&lt;&lt;2)
+
+#define CAPSLOCK        (1&lt;&lt;3)
+#define NUMLOCK         (1&lt;&lt;4)
+#define SCROLLLOCK      (1&lt;&lt;5)
+
+#define E0ESC           (1&lt;&lt;6)
+
+unsigned int shift=0;
+char shell_input=0; //shell输入字符，每次读取一个
+//int shell_rpos=0;      //shell输入缓冲区读偏移
+//int shell_wpos=0;      //shell输入缓冲区写偏移
+//shiftcode[1D]=CTL,
+static unsigned char shiftcode[256] = {
+    [0x1D] CTL,
+    [0x2A] SHIFT,
+    [0x36] SHIFT,
+    [0x38] ALT,
+    [0x9D] CTL,
+    [0xB8] ALT
+};
+
+static unsigned char togglecode[256] = {
+    [0x3A] CAPSLOCK,
+    [0x45] NUMLOCK,
+    [0x46] SCROLLLOCK
+};
+
+static unsigned char normalmap[256] = {
+    NO,   0x1B, '1',  '2',  '3',  '4',  '5',  '6',  // 0x00
+    '7',  '8',  '9',  '0',  '-',  '=',  '\b', '\t',
+    'q',  'w',  'e',  'r',  't',  'y',  'u',  'i',  // 0x10
+    'o',  'p',  '[',  ']',  '\n', NO,   'a',  's',
+    'd',  'f',  'g',  'h',  'j',  'k',  'l',  ';',  // 0x20
+    '\'', '`',  NO,   '\\', 'z',  'x',  'c',  'v',
+    'b',  'n',  'm',  ',',  '.',  '/',  NO,   '*',  // 0x30
+    NO,   ' ',  NO,   NO,   NO,   NO,   NO,   NO,
+    NO,   NO,   NO,   NO,   NO,   NO,   NO,   '7',  // 0x40
+    '8',  '9',  '-',  '4',  '5',  '6',  '+',  '1',
+    '2',  '3',  '0',  '.',  NO,   NO,   NO,   NO,   // 0x50
+    [0xC7] KEY_HOME,    [0x9C] '\n' /*KP_Enter*/,
+    [0xB5] '/' /*KP_Div*/,  [0xC8] KEY_UP,
+    [0xC9] KEY_PGUP,    [0xCB] KEY_LF,
+    [0xCD] KEY_RT,      [0xCF] KEY_END,
+    [0xD0] KEY_DN,      [0xD1] KEY_PGDN,
+    [0xD2] KEY_INS,     [0xD3] KEY_DEL
+};
+
+static unsigned char shiftmap[256] = {
+    NO,   033,  '!',  '@',  '#',  '$',  '%',  '^',  // 0x00
+    '&amp;',  '*',  '(',  ')',  '_',  '+',  '\b', '\t',
+    'Q',  'W',  'E',  'R',  'T',  'Y',  'U',  'I',  // 0x10
+    'O',  'P',  '{',  '}',  '\n', NO,   'A',  'S',
+    'D',  'F',  'G',  'H',  'J',  'K',  'L',  ':',  // 0x20
+    '&quot;',  '~',  NO,   '|',  'Z',  'X',  'C',  'V',
+    'B',  'N',  'M',  '&lt;',  '&gt;',  '?',  NO,   '*',  // 0x30
+    NO,   ' ',  NO,   NO,   NO,   NO,   NO,   NO,
+    NO,   NO,   NO,   NO,   NO,   NO,   NO,   '7',  // 0x40
+    '8',  '9',  '-',  '4',  '5',  '6',  '+',  '1',
+    '2',  '3',  '0',  '.',  NO,   NO,   NO,   NO,   // 0x50
+    [0xC7] KEY_HOME,    [0x9C] '\n' /*KP_Enter*/,
+    [0xB5] '/' /*KP_Div*/,  [0xC8] KEY_UP,
+    [0xC9] KEY_PGUP,    [0xCB] KEY_LF,
+    [0xCD] KEY_RT,      [0xCF] KEY_END,
+    [0xD0] KEY_DN,      [0xD1] KEY_PGDN,
+    [0xD2] KEY_INS,     [0xD3] KEY_DEL
+};
+
+#define C(x) (x - '@')
+
+static unsigned char ctlmap[256] = {
+    NO,      NO,      NO,      NO,      NO,      NO,      NO,      NO,
+    NO,      NO,      NO,      NO,      NO,      NO,      NO,      NO,
+    C('Q'),  C('W'),  C('E'),  C('R'),  C('T'),  C('Y'),  C('U'),  C('I'),
+    C('O'),  C('P'),  NO,      NO,      '\r',    NO,      C('A'),  C('S'),
+    C('D'),  C('F'),  C('G'),  C('H'),  C('J'),  C('K'),  C('L'),  NO,
+    NO,      NO,      NO,      C('\\'), C('Z'),  C('X'),  C('C'),  C('V'),
+    C('B'),  C('N'),  C('M'),  NO,      NO,      C('/'),  NO,      NO,
+    [0x97] KEY_HOME,
+    [0xB5] C('/'),      [0xC8] KEY_UP,
+    [0xC9] KEY_PGUP,    [0xCB] KEY_LF,
+    [0xCD] KEY_RT,      [0xCF] KEY_END,
+    [0xD0] KEY_DN,      [0xD1] KEY_PGDN,
+    [0xD2] KEY_INS,     [0xD3] KEY_DEL
+};
+
+static unsigned char *charcode[4] = {
+    normalmap,
+    shiftmap,
+    ctlmap,
+    ctlmap
+};
+
+/* *
+ * kbd_proc_data - get data from keyboard
+ *
+ * The kbd_proc_data() function gets data from the keyboard.
+ * If we finish a character, return it, else 0. And return -1 if no data.
+ * */
+int kbd_proc_data(void) {
+    int c;
+    unsigned char data;
+    //static unsigned int shift=0;
+   
+    if ((inb(KBSTATP) &amp; KBS_DIB) == 0) {
+        return -1;
+    }
+
+    data = inb(KBDATAP);
+
+    if (data == 0xE0) {
+        // E0 escape character
+        shift |= E0ESC;
+        return 0;
+    } else if (data &amp; 0x80) {
+        // Key released
+        data = (shift &amp; E0ESC ? data : data &amp; 0x7F);
+        shift &amp;= ~(shiftcode[data] | E0ESC);
+        return 0;
+    } else if (shift &amp; E0ESC) {
+        // Last character was an E0 escape; or with 0x80
+        data |= 0x80;
+        shift &amp;= ~E0ESC;
+    }
+
+    shift |= shiftcode[data];
+    shift ^= togglecode[data];
+
+    c = charcode[shift &amp; (CTL | SHIFT)][data];
+    if (shift &amp; CAPSLOCK) {
+        if ('a' &lt;= c &amp;&amp; c &lt;= 'z')
+            c += 'A' - 'a';
+        else if ('A' &lt;= c &amp;&amp; c &lt;= 'Z')
+            c += 'a' - 'A';
+    }
+    //backspace
+    //if (c=='\b'){
+        //backtrace();
+    //    return '\b';
+    //}
+    // Process special keys
+    // Ctrl-Alt-Del: reboot
+    if (!(~shift &amp; (CTL | ALT)) &amp;&amp; c == KEY_DEL) {
+        printk(&quot;Rebooting!\b&quot;);
+        outb(0x92, 0x3); // courtesy of Chris Frost
+    }
+    return c;
+}
+
+/* kbd_intr - try to feed input characters from keyboard */
+void kbd_intr(void) {
+    cons_intr(kbd_proc_data);
+}
+
+void kbd_init(void) {
+    cons.rpos=0;
+    cons.wpos=0;
+    for(int i=0;i&lt;CONSBUFSIZE;i++)
+    {
+        cons.buf[i]=0;
+    }
+
+    shell_input=0;
+    // drain the kbd buffer
+    shift=0;
+    kbd_intr();
+    pic_enable(IRQ_KBD);
+}
+</code></pre>
+<h2 id="keyboardh">Keyboard.h</h2>
+<pre><code>#ifndef _KEYBOARD_H_
+#define _KEYBOARD_H_
+
+// Special keycodes
+#define KEY_HOME            0xE0
+#define KEY_END             0xE1
+#define KEY_UP              0xE2
+#define KEY_DN              0xE3
+#define KEY_LF              0xE4
+#define KEY_RT              0xE5
+#define KEY_PGUP            0xE6
+#define KEY_PGDN            0xE7
+#define KEY_INS             0xE8
+#define KEY_DEL             0xE9
+
+
+/* This is i8042reg.h + kbdreg.h from NetBSD. */
+
+#define KBSTATP             0x64    // kbd controller status port(I)
+#define KBS_DIB             0x01    // kbd data in buffer
+#define KBS_IBF             0x02    // kbd input buffer low
+#define KBS_WARM            0x04    // kbd input buffer low
+#define BS_OCMD             0x08    // kbd output buffer has command
+#define KBS_NOSEC           0x10    // kbd security lock not engaged
+#define KBS_TERR            0x20    // kbd transmission error
+#define KBS_RERR            0x40    // kbd receive error
+#define KBS_PERR            0x80    // kbd parity error
+
+#define KBCMDP              0x64    // kbd controller port(O)
+#define KBC_RAMREAD         0x20    // read from RAM
+#define KBC_RAMWRITE        0x60    // write to RAM
+#define KBC_AUXDISABLE      0xa7    // disable auxiliary port
+#define KBC_AUXENABLE       0xa8    // enable auxiliary port
+#define KBC_AUXTEST         0xa9    // test auxiliary port
+#define KBC_KBDECHO         0xd2    // echo to keyboard port
+#define KBC_AUXECHO         0xd3    // echo to auxiliary port
+#define KBC_AUXWRITE        0xd4    // write to auxiliary port
+#define KBC_SELFTEST        0xaa    // start self-test
+#define KBC_KBDTEST         0xab    // test keyboard port
+#define KBC_KBDDISABLE      0xad    // disable keyboard port
+#define KBC_KBDENABLE       0xae    // enable keyboard port
+#define KBC_PULSE0          0xfe    // pulse output bit 0
+#define KBC_PULSE1          0xfd    // pulse output bit 1
+#define KBC_PULSE2          0xfb    // pulse output bit 2
+#define KBC_PULSE3          0xf7    // pulse output bit 3
+
+#define KBDATAP             0x60    // kbd data port(I)
+#define KBOUTP              0x60    // kbd data port(O)
+
+#define K_RDCMDBYTE         0x20
+#define K_LDCMDBYTE         0x60
+
+#define KC8_TRANS           0x40    // convert to old scan codes
+#define KC8_MDISABLE        0x20    // disable mouse
+#define KC8_KDISABLE        0x10    // disable keyboard
+#define KC8_IGNSEC          0x08    // ignore security lock
+#define KC8_CPU             0x04    // exit from protected mode reset
+#define KC8_MENABLE         0x02    // enable mouse interrupt
+#define KC8_KENABLE         0x01    // enable keyboard interrupt
+#define CMDBYTE             (KC8_TRANS|KC8_CPU|KC8_MENABLE|KC8_KENABLE)
+
+/* keyboard commands */
+#define KBC_RESET           0xFF    // reset the keyboard
+#define KBC_RESEND          0xFE    // request the keyboard resend the last byte
+#define KBC_SETDEFAULT      0xF6    // resets keyboard to its power-on defaults
+#define KBC_DISABLE         0xF5    // as per KBC_SETDEFAULT, but also disable key scanning
+#define KBC_ENABLE          0xF4    // enable key scanning
+#define KBC_TYPEMATIC       0xF3    // set typematic rate and delay
+#define KBC_SETTABLE        0xF0    // set scancode translation table
+#define KBC_MODEIND         0xED    // set mode indicators(i.e. LEDs)
+#define KBC_ECHO            0xEE    // request an echo from the keyboard
+
+/* keyboard responses */
+#define KBR_EXTENDED        0xE0    // extended key sequence
+#define KBR_RESEND          0xFE    // needs resend of command
+#define KBR_ACK             0xFA    // received a valid command
+#define KBR_OVERRUN         0x00    // flooded
+#define KBR_FAILURE         0xFD    // diagnosic failure
+#define KBR_BREAK           0xF0    // break code prefix - sent on key release
+#define KBR_RSTDONE         0xAA    // reset complete
+#define KBR_ECHO            0xEE    // echo response
+
+int kbd_proc_data(void);
+void kbd_intr(void);
+void kbd_init(void);
+
+#endif
+</code></pre>
+<p>键盘驱动还是有点复杂的，话不多说，直接看图，自己理解，看完下面的原理，再对着代码看一看应该就OK了，驱动了解一下就行。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211315541.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-hWpSDXSi-1609679567256)(readme.assets/image-20210102114611098.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211338990.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-2KsuKpOi-1609679567258)(readme.assets/image-20210102114624229.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211402875.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-OqnFwGB3-1609679567259)(readme.assets/image-20210102114657210.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211513311.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-U24YAtB6-1609679567260)(readme.assets/image-20210102114752810.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211530846.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-iGdZFYXy-1609679567261)(readme.assets/image-20210102114805015.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211558307.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-pi7Amigh-1609679567262)(readme.assets/image-20210102114819159.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211618390.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-CfomG2fF-1609679567263)(readme.assets/image-20210102115246364.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/202101032116399.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-v58onDzr-1609679567264)(readme.assets/image-20210102115255006.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211705315.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-H5E1mqdk-1609679567265)(readme.assets/image-20210102115304459.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211722754.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-uIXHBcm9-1609679567266)(readme.assets/image-20210102115317484.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211739164.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-y6J9F9E3-1609679567267)(readme.assets/image-20210102115333510.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211753498.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-5NldOSkI-1609679567271)(readme.assets/image-20210102115342960.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103211807659.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-GHrtxILa-1609679567273)(readme.assets/image-20210102115355715.png)\]"></p>
+
+</article>
+
+                    
+                    
+                    
+
+                    
+
+
+
+                    
+  <div
+    class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"
+  >
+    <div>
+      
+        <span class="text-primary-text block font-bold"
+          >Previous</span
+        >
+        <a href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-6 interrupt部分详解</a>
+      
+    </div>
+    <div class="mt-4 md:mt-0 md:text-right">
+      
+        <span class="text-primary-text block font-bold">Next</span>
+        <a href="/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-8 serial部分详解</a>
+      
+    </div>
+  </div>
+
+
+                    
+
+
+
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div
+  class="
+    bg-secondary-bg
+   prose sticky top-16 z-10 hidden px-6 py-4 lg:block"
+>
+  <h3>On This Page</h3>
+</div>
+<div
+  class="sticky-toc 
+    border-s
+   hidden px-6 pb-6 lg:block"
+>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#keyboardc">keyboard.c</a></li>
+    <li><a href="#keyboardh">Keyboard.h</a></li>
+  </ul>
+</nav>
+</div>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    enableStickyToc();
+  });
+</script>
+
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      
+    </main>
+    <footer class="pl-scrollbar">
+      <div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2022 <a href="https://dashanji.github.io/">dashanji</a>
+ &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+    </footer>
+  </body>
+</html>

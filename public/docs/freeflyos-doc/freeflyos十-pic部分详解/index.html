@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  dir="ltr"
+  
+><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Chapter-10 pic部分详解 | FreeFlyOS | 自由飞翔的大山鸡</title>
+
+<meta name="generator" content="Hugo Eureka 0.9.1" />
+<link rel="stylesheet" href="/css/eureka.min.6a378a23360d238dc3ef4df2f5cd718093f02c10c9c7eb2437c29701cd8d389ab6da5d9f21bdd3afa305fd56c1235017.css" integrity="sha384-ajeKIzYNI43D703y9c1xgJPwLBDJx&#43;skN8KXAc2NOJq22l2fIb3Tr6MF/VbBI1AX">
+<script defer src="/js/eureka.min.4ab4e11bfa71ae0aeed55e31bbb0f8ab16c24a648722270637c4b96ea70eef4ddf17aa3e2a8131f613520e0387c1bbde.js" integrity="sha384-SrThG/pxrgru1V4xu7D4qxbCSmSHIicGN8S5bqcO703fF6o&#43;KoEx9hNSDgOHwbve"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js"
+   crossorigin></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js"
+     crossorigin></script>
+
+
+<script defer type="text/javascript" src="/js/fontawesome.min.56e85e545fac4d674dccb3bcea98ac2a625933b1f15638678edd10cf6c26fb44f0e1c5507df434dd557495bf13b58413.js" integrity="sha384-VuheVF&#43;sTWdNzLO86pisKmJZM7HxVjhnjt0Qz2wm&#43;0Tw4cVQffQ03VV0lb8TtYQT"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+   integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" 
+  integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"
+   integrity="sha384-&#43;XBljXPPiv&#43;OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js" 
+  integrity="sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0"  crossorigin></script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png">
+
+<meta name="description"
+  content="Chapter 10 of FreeFlyOS">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Docs",
+      "item":"/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"FreeFlyOS",
+      "item":"/docs/freeflyos-doc/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"Chapter-10 pic部分详解",
+      "item":"/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"
+    },
+    "headline": "Chapter-10 pic部分详解 | FreeFlyOS | 自由飞翔的大山鸡","datePublished": "2022-03-24T00:00:00+00:00",
+    "dateModified": "2022-03-24T00:00:00+00:00",
+    "wordCount":  225 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "/images/icon.png"
+        }
+        },
+    "description": "Chapter 10 of FreeFlyOS"
+}
+</script><meta property="og:title" content="Chapter-10 pic部分详解 | FreeFlyOS | 自由飞翔的大山鸡" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="/images/icon.png">
+
+
+<meta property="og:url" content="/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" />
+
+
+
+<meta property="og:description" content="Chapter 10 of FreeFlyOS" />
+
+
+
+<meta property="og:locale" content="en" />
+
+
+
+
+<meta property="og:site_name" content="自由飞翔的大山鸡" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+  <body class="flex min-h-screen flex-col">
+    <header
+      class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"
+    >
+      <div class="mx-auto w-full max-w-screen-xl"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0">
+    <a href="/" class="me-6 text-primary-text text-xl font-bold">自由飞翔的大山鸡</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/#about" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">About</a>
+            <a href="/posts/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">Posts</a>
+            <a href="/docs/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  selected-menu-item  me-4">Docs</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', switchDarkMode)
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script>
+</div>
+    </header>
+    <main class="grow pt-16">
+        <div class="pl-scrollbar">
+          <div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-e">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">Table of Contents</span>
+    <i class='fas fa-caret-right ms-1'></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="/docs/freeflyos-doc/">FreeFlyOS</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="ps-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/">Chapter-1 boot部分(引导扇区)详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-2 init部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-3 asm部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-4 dt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-5 VGA部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-6 interrupt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-7 keyboard部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-8 serial部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-9 timer部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-10 pic部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-11 stl部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-12 debug部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-13 mem部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-14 sync部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-15 task部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-16 file部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-17 pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-18 main部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-19 user部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-20 test_exec部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-21 test_cat部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-22 test_pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-23 cmake部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-24 disassembly部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-25 elf部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    <article class="prose">
+  <h1 class="mb-4">Chapter-10 pic部分详解</h1>
+
+  <div
+  class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"
+>
+  <div class="me-6 my-2">
+    <i class="fas fa-calendar me-1"></i>
+    <span
+      >2022-03-24</span
+    >
+  </div>
+  <div class="me-6 my-2">
+    <i class="fas fa-clock me-1"></i>
+    <span>2 min read</span>
+  </div>
+
+  
+
+  
+</div>
+
+
+  
+  
+
+  <h2 id="picc">pic.c</h2>
+<p>8259A芯片级联控制器PIC的初始化</p>
+<pre><code>#include &quot;pic.h&quot;
+
+static unsigned short irq_mask = 0xFFFF &amp; ~(1 &lt;&lt; 2);
+static char did_init = 0;
+
+static void pic_setmask(unsigned short mask) {
+    irq_mask = mask;
+    unsigned char mask_low=mask&amp;0xff;
+    unsigned char mask_high=(mask&gt;&gt;8)&amp;0xff;
+    if (did_init) 
+    {
+        outb(0x21, mask_low);
+        outb(0xA1, mask_high);
+    }
+}
+
+void pic_enable(unsigned int irq) {
+    pic_setmask(irq_mask &amp; ~(1 &lt;&lt; irq));
+}
+
+void pic_init(){
+    did_init = 1;
+    //屏蔽所有中断
+    outb(0x21,0xFF);
+    outb(0xA1,0xFF);
+
+    // 重新映射 IRQ 表
+    // 两片级联的 Intel 8259A 芯片
+    // 主片端口 0x20 0x21
+    // 从片端口 0xA0 0xA1
+   
+    //设置ICW1命令字，
+    // 初始化主片、从片
+    // 0001 0001
+    outb(0x20, 0x11);
+    outb(0xA0, 0x11);
+    
+    
+    // 设置主片 IRQ 从 0x20(32) 号中断开始
+    outb(0x21, 0x20);
+
+    // 设置从片 IRQ 从 0x28(40) 号中断开始
+    outb(0xA1, 0x28);
+    
+    // 设置主片 IR2 引脚连接从片
+    outb(0x21, 0x04);
+
+    // 告诉从片输出引脚和主片 IR2 号相连
+    outb(0xA1, 0x02);
+    
+    //NB Automatic EOI mode doesn't tend to work on the slave.
+    outb(0x21, 0x03);
+    outb(0xA1, 0x03);
+    
+    // OCW3:  0ef01prs
+    //   ef:  0x = NOP, 10 = clear specific mask, 11 = set specific mask
+    //    p:  0 = no polling, 1 = polling mode
+    //   rs:  0x = NOP, 10 = read IRR, 11 = read ISR
+    outb(0x20, 0x68);    // clear specific mask
+    outb(0xA0, 0x68);    // OCW3
+    outb(0x20, 0x0a);    // read IRR by default
+    outb(0xA0, 0x0a);    // OCW3
+    
+    if (irq_mask != 0xFFFF) 
+        pic_setmask(irq_mask);
+    
+}
+</code></pre>
+<h2 id="pich">pic.h</h2>
+<pre><code>#ifndef  _PIC_H_
+#define _PIC_H_
+
+void pic_init();
+void pic_enable(unsigned int irq);
+
+#endif
+</code></pre>
+<h4 id="8259a芯片">8259A芯片</h4>
+<p>8259A是<a href="https://baike.baidu.com/item/%E4%B8%93%E9%97%A8/8698309">专门</a>为了对8085A和8086/8088进行中断<a href="https://baike.baidu.com/item/%E6%8E%A7%E5%88%B6/17222">控制</a>而设计的芯片，它是可以用程序控制的中断控制器。单个的8259A能管理8级向量优先级中断。在不增加其他电路的情况下，最多可以级联成64级的向量优级<a href="https://baike.baidu.com/item/%E4%B8%AD%E6%96%AD%E7%B3%BB%E7%BB%9F/10480702">中断系统</a>。8259A有多种工作方式，能用于各种系统。各种工作方式的设定是在初始化时通过软件进行的。 在<a href="https://baike.baidu.com/item/%E6%80%BB%E7%BA%BF%E6%8E%A7%E5%88%B6%E5%99%A8/8829516">总线控制器</a>的控制下，8259A芯片可以处于编程状态和操作状态，编程状态是CPU使用IN或OUT指令对8259A芯片进行初始化编程的状态。</p>
+<p>一个外部<a href="https://baike.baidu.com/item/%E4%B8%AD%E6%96%AD%E8%AF%B7%E6%B1%82">中断请求</a>信号通过中断请求线<a href="https://baike.baidu.com/item/IRQ/1229055">IRQ</a>，传输到IMR（<a href="https://baike.baidu.com/item/%E4%B8%AD%E6%96%AD%E5%B1%8F%E8%94%BD">中断屏蔽</a><a href="https://baike.baidu.com/item/%E5%AF%84%E5%AD%98%E5%99%A8">寄存器</a>），IMR根据所设定的<a href="https://baike.baidu.com/item/%E4%B8%AD%E6%96%AD%E5%B1%8F%E8%94%BD%E5%AD%97">中断屏蔽字</a>（OCW1），决定是将其丢弃还是接受。如果可以接受，则8259A将IRR（中断请求暂存寄存器）中代表此IRQ的位置置1，以表示此IRQ有中断请求信号，并同时向CPU的INTR（中断请求）管脚发送一个信号。但CPU这时可能正在执行一条指令，因此CPU不会立即响应。而当这CPU正忙着执行某条指令时，还有可能有其余的IRQ线送来中断请求，这些请求都会接受IMR的挑选。如果没有被屏蔽，那么这些请求也会被放到IRR中，也即IRR中代表它们的IRQ的相应位会被置1。</p>
+<p>当CPU执行完一条指令时后，会检查一下INTR管脚是否有信号。如果发现有信号，就会转到中断服务，此时，CPU会立即向8259A芯片的INTA（中断应答）管脚发送一个信号。当芯片收到此信号后，判优部件开始工作，它在IRR中，挑选优先级最高的中断，将<a href="https://baike.baidu.com/item/%E4%B8%AD%E6%96%AD%E8%AF%B7%E6%B1%82">中断请求</a>送到ISR（中断服务<a href="https://baike.baidu.com/item/%E5%AF%84%E5%AD%98%E5%99%A8">寄存器</a>），也即将ISR中代表此<a href="https://baike.baidu.com/item/IRQ/1229055">IRQ</a>的位置一，并将IRR中相应位置零，表明此中断正在接受CPU的处理。同时，将它的编号写入<a href="https://baike.baidu.com/item/%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F">中断向量</a>寄存器<a href="https://baike.baidu.com/item/IVR/279431">IVR</a>的低三位（IVR正是由ICW2所指定的，不知你是否还记得ICW2的最低三位在指定时都是0，而在这里，它们被利用了！）这时，CPU还会送来第二个INTA信号，当收到此信号后，芯片将IVR中的内容，也就是此中断的<a href="https://baike.baidu.com/item/%E4%B8%AD%E6%96%AD%E5%8F%B7">中断号</a>送上通向CPU的数据线。</p>
+<p>这个内容看起来仿佛十分复杂，但如果我们用一个很简单的比喻来解释就好理解了。CPU就相当于一个公司的老总，而8259A芯片就相当于这个老总的秘书。比如有很多人想见老总，但老总正在打电话，于是交由秘书先行接待。每个想见老总的人都需要把自己的名片交给秘书，秘书首先看看名片，有没有老总明确表示不愿见到的人，如果没有就把它放到一个盒子里面。这时老总的电话还没打完，但不停的有人递上名片求见老总，秘书就把符合要求的名片全放在盒子里了。老总打完电话了，探出头来问秘书：有人想见我吗？这时，秘书就从盒子里挑选一个级别最高的，并把他的名片交给老总。</p>
+<p><img src="https://img-blog.csdnimg.cn/2021010321285986.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-YF6ZEGex-1609680516880)(readme.assets/image-20210102164946298.png)\]"></p>
+<p>初始化流程：</p>
+<p>1、根据ICW1的格式，当发送的字节第5比特位（D4）=1，并且地址线A0=0时，表示对ICW1编程。一般把ICW1设置为0x11，表示中断请求是边沿触发、多片8259A级联并且需要发送ICW4。</p>
+<p>2、在设置了ICW1后，当A0=1时表示对ICW2进行设置，此时8259A主芯片的端口地址是0x21，从芯片的端口地址是0xA1。在Linux-0.11系统中，主片的ICW2设置为0x20，表示主片中断请求0-7级对应的中断号是0x20-0x27，从片的ICW设置为0x28，表示从片中断请求从中断号0x28开始。</p>
+<p>3、对于ICW3来说，把8259A主片的ICW3设置为0x04，表示IR2连接了从片，8259A从片设置为0x02，表示该片连接到主片的IR2引脚。</p>
+<p>4、8259A主片和从片的ICW4命令字均设置为0x01，表示8259A 芯片被设置成普通全嵌套、非缓冲、非自动结束中断方式，并且用于8086及其兼容系统。</p>
+<p>5、允许8259A主片和从片的中断。</p>
+
+</article>
+
+                    
+                    
+                    
+
+                    
+
+
+
+                    
+  <div
+    class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"
+  >
+    <div>
+      
+        <span class="text-primary-text block font-bold"
+          >Previous</span
+        >
+        <a href="/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-9 timer部分详解</a>
+      
+    </div>
+    <div class="mt-4 md:mt-0 md:text-right">
+      
+        <span class="text-primary-text block font-bold">Next</span>
+        <a href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-11 stl部分详解</a>
+      
+    </div>
+  </div>
+
+
+                    
+
+
+
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div
+  class="
+    bg-secondary-bg
+   prose sticky top-16 z-10 hidden px-6 py-4 lg:block"
+>
+  <h3>On This Page</h3>
+</div>
+<div
+  class="sticky-toc 
+    border-s
+   hidden px-6 pb-6 lg:block"
+>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#picc">pic.c</a></li>
+    <li><a href="#pich">pic.h</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#8259a芯片">8259A芯片</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</div>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    enableStickyToc();
+  });
+</script>
+
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      
+    </main>
+    <footer class="pl-scrollbar">
+      <div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2022 <a href="https://dashanji.github.io/">dashanji</a>
+ &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+    </footer>
+  </body>
+</html>

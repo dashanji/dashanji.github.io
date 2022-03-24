@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  dir="ltr"
+  
+><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Chapter-1 boot部分(引导扇区)详解 | FreeFlyOS | 自由飞翔的大山鸡</title>
+
+<meta name="generator" content="Hugo Eureka 0.9.1" />
+<link rel="stylesheet" href="/css/eureka.min.6a378a23360d238dc3ef4df2f5cd718093f02c10c9c7eb2437c29701cd8d389ab6da5d9f21bdd3afa305fd56c1235017.css" integrity="sha384-ajeKIzYNI43D703y9c1xgJPwLBDJx&#43;skN8KXAc2NOJq22l2fIb3Tr6MF/VbBI1AX">
+<script defer src="/js/eureka.min.4ab4e11bfa71ae0aeed55e31bbb0f8ab16c24a648722270637c4b96ea70eef4ddf17aa3e2a8131f613520e0387c1bbde.js" integrity="sha384-SrThG/pxrgru1V4xu7D4qxbCSmSHIicGN8S5bqcO703fF6o&#43;KoEx9hNSDgOHwbve"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js"
+   crossorigin></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js"
+     crossorigin></script>
+
+
+<script defer type="text/javascript" src="/js/fontawesome.min.56e85e545fac4d674dccb3bcea98ac2a625933b1f15638678edd10cf6c26fb44f0e1c5507df434dd557495bf13b58413.js" integrity="sha384-VuheVF&#43;sTWdNzLO86pisKmJZM7HxVjhnjt0Qz2wm&#43;0Tw4cVQffQ03VV0lb8TtYQT"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+   integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" 
+  integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"
+   integrity="sha384-&#43;XBljXPPiv&#43;OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js" 
+  integrity="sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0"  crossorigin></script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png">
+
+<meta name="description"
+  content="Chapter 1 of FreeFlyOS">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Docs",
+      "item":"/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"FreeFlyOS",
+      "item":"/docs/freeflyos-doc/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"Chapter-1 boot部分(引导扇区)详解",
+      "item":"/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/"
+    },
+    "headline": "Chapter-1 boot部分(引导扇区)详解 | FreeFlyOS | 自由飞翔的大山鸡","datePublished": "2022-03-24T00:00:00+00:00",
+    "dateModified": "2022-03-24T00:00:00+00:00",
+    "wordCount":  1235 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "/images/icon.png"
+        }
+        },
+    "description": "Chapter 1 of FreeFlyOS"
+}
+</script><meta property="og:title" content="Chapter-1 boot部分(引导扇区)详解 | FreeFlyOS | 自由飞翔的大山鸡" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="/images/icon.png">
+
+
+<meta property="og:url" content="/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/" />
+
+
+
+<meta property="og:description" content="Chapter 1 of FreeFlyOS" />
+
+
+
+<meta property="og:locale" content="en" />
+
+
+
+
+<meta property="og:site_name" content="自由飞翔的大山鸡" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+  <body class="flex min-h-screen flex-col">
+    <header
+      class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"
+    >
+      <div class="mx-auto w-full max-w-screen-xl"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0">
+    <a href="/" class="me-6 text-primary-text text-xl font-bold">自由飞翔的大山鸡</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/#about" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">About</a>
+            <a href="/posts/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">Posts</a>
+            <a href="/docs/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  selected-menu-item  me-4">Docs</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', switchDarkMode)
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script>
+</div>
+    </header>
+    <main class="grow pt-16">
+        <div class="pl-scrollbar">
+          <div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-e">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">Table of Contents</span>
+    <i class='fas fa-caret-right ms-1'></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="/docs/freeflyos-doc/">FreeFlyOS</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="ps-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/">Chapter-1 boot部分(引导扇区)详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-2 init部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-3 asm部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-4 dt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-5 VGA部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-6 interrupt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-7 keyboard部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-8 serial部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-9 timer部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-10 pic部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-11 stl部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-12 debug部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-13 mem部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-14 sync部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-15 task部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-16 file部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-17 pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-18 main部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-19 user部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-20 test_exec部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-21 test_cat部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-22 test_pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-23 cmake部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-24 disassembly部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-25 elf部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    <article class="prose">
+  <h1 class="mb-4">Chapter-1 boot部分(引导扇区)详解</h1>
+
+  <div
+  class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"
+>
+  <div class="me-6 my-2">
+    <i class="fas fa-calendar me-1"></i>
+    <span
+      >2022-03-24</span
+    >
+  </div>
+  <div class="me-6 my-2">
+    <i class="fas fa-clock me-1"></i>
+    <span>6 min read</span>
+  </div>
+
+  
+
+  
+</div>
+
+
+  
+  
+
+  <h2 id="bootld">boot.ld</h2>
+<pre><code>/* 
+**   链接脚本
+*/
+OUTPUT_FORMAT(elf32-i386)
+OUTPUT_ARCH(i386)
+ENTRY(start)
+/*
+*   ld有多种方法设置进程入口地址, 按以下顺序: (编号越前, 优先级越高)
+*           1, ld命令行的-e选项
+*           2, 连接脚本的ENTRY(SYMBOL)命令
+*           3, 如果定义了start 符号, 使用start符号值
+*           4, 如果存在 .text section , 使用.text section的第一字节的位置值
+*           5, 使用值0
+*
+*
+*/
+
+SECTIONS 
+{
+    /* 将定位器符号置为0x7c00 */
+    . = 0x7C00;
+
+    /*
+    将所有(*符号代表任意输入文件)输入文件bootsector.S的.start section合并
+     成一个.start section, 该section的地址由定位器符号的值
+     指定, 即0x7c00.
+     bootsector.o整体作为一个start节
+    */
+    .start : {
+        *bootsector.o(.text)
+    }
+
+    /*
+    将所有(*符号代表任意输入文件)输入文件的.text section合并
+     成一个.text section, 该section的地址紧接.start节.
+     bootmain.o中的text作为一个text节
+    */
+    .text : { *(.text) }
+
+    /*
+    将所有(*符号代表任意输入文件)输入文件的.data section合并
+     成一个.data section, 该section的地址紧接.text节.
+     bootmain.o中的data作为一个data节
+    */
+    .data : { *(.data .rodata) }
+    
+    /DISCARD/ : { *(.eh_*) }
+}
+</code></pre>
+<h2 id="bootsectors">bootsector.S</h2>
+<pre><code>/*
+*  主要功能：关中断、内存探测、80x86 CPU从实模式变成保护模式
+*           跳转到加载内核的32位代码段
+*    注意：本文件不是MBR(512B)，而是和bootmain.c链接成MBR
+*/
+.text
+.code16   #.code16表示16位代码段
+.global start
+/*
+*将ds、es和ss段寄存器均设置成cs段寄存器的值，并将栈顶指针esp指向
+*0x7c00，栈向低地址增长。这步操作其实也可省略，因为在16位代码段中
+*还用不到其他段寄存器，在需要使用的时候再初始化不迟
+*/
+start:
+movw %cs,%ax
+movw %ax,%ds	# -&gt;Data Segment
+movw %ax,%es	# -&gt;Extra Segment
+movw %ax,%ss	# -&gt;Stack Segment
+movl $0x7C00,%esp
+
+/*
+*关中断，在后面我们在内存中会建立中断向量表，所以事先关好中断，
+*防止在建表过程中来了中断，所以事先屏蔽，防止这种情况产生。
+*/
+cli
+
+
+/* 内存探测，内存地址0x8000作为内存探测段数的存储地址，
+   方便后面调用 */
+movw $0,0x8000
+movw $0x8004,%di
+xor %ebx,%ebx
+mm_probe:
+movl $0xe820,%eax
+movl $20,%ecx
+movl $0x534D4150,%edx
+int $0x15
+#产生进位则跳转
+jnc cont
+jmp probe_end
+cont:
+incl 0x8000
+addw $20,%di
+cmpl $0,%ebx
+jnz mm_probe
+probe_end:
+
+
+/*
+*打开地址线A20。实际上若我们使用qemu跑这个程序时，A20默认打开，
+*但为了兼容性，最好还是手动将A20地址线打开.读者可以试一试将打开
+*A20代码删去后，在保护模式(32位代码段#)下用回滚机制测试时是否
+*仍然显示字符
+*
+*8042(键盘控制器)端口的P21和A20相连，置1则打开
+*0x64端口 读：位1=1 输入缓冲器满(0x60/0x64口有给8042的数据）
+*0x64端口 写: 0xd1-&gt;写8042的端口P2，比如位2控制P21 
+*当写时，0x60端口提供数据，比如0xdf，这里面把P2置1
+*
+*由于MacOS下编译器的版本原因，若加上下面代码会超出512B,故舍去
+*/
+
+/*waitforbuffernull1:
+
+#先确定8042是不是为空,如果不为空，则一直等待
+xorl %eax,%eax
+inb $0x64,%al
+testb $0x2,%al
+jnz waitforbuffernull1
+
+#8042中没有命令，则开始向0x64端口发出写P2端口的命令
+movb $0xd1,%al
+outb %al,$0x64
+waitforbuffernull2:
+
+#再确定8042是不是为空,如果不为空，则一直等待 
+xorl %eax,%eax
+inb $0x64,%al
+testb $0x2,%al
+jnz waitforbuffernull2
+
+#向0x60端口发送数据，即把P2端口设置为0xdf
+movb $0xdf,%al
+outb %al,$0x60*/
+
+/* 加载gdt表,即将内存中的gdt基址和表长写入GDTR寄存器 */
+lgdt gdt_48
+
+/* 打开保护模式，将cr0的位0置为1,一般而言BIOS中断
+    只在实模式下进行调用 */
+movl %cr0,%eax
+orl $0x1,%eax
+movl %eax,%cr0
+
+/*
+*进入到32位代码段。0x8代表段选择子(16位)——0000000000001000
+*其中最后2为代表特权级.linux内核只使用了2个特权级(0和3)，00代表
+*0特权级(内核级)，倒数第3位的代表是gdt(全局描述符表)还是
+*idt(局部描述符表)，0代表全局描述符表，前13位代表gdt的项数(第1项)，
+*属于代码段。所以0x8代表特权级为0(内核级)的全局代码段,promode代表
+*偏移地址。
+*/
+ljmp $0x8,$promode
+
+/* 保护模式下的32位代码段 */
+promode:
+.code32
+movw $0x10,%ax
+movw %ax,%ds	#-&gt;Data Segment
+movw %ax,%es	#-&gt;Extra Segment
+movw %ax,%ss	#-&gt;Stack Segment
+
+movw $0x18,%ax
+movw %ax,%gs
+
+movl $0x0,%ebp
+movl $start,%esp
+
+/* 调用bootmain.c中的bootmain函数 */
+call bootmain
+
+/* 在内存中做一块GDT表 */
+.align 2
+gdt:
+.word 0,0,0,0
+
+.word 0xFFFF	#第1项CS,基地址为0，限长
+.word 0x0000    
+.word 0x9A00
+.word 0x00CF
+
+.word 0xFFFF	#第2项DS,基地址为0
+.word 0x0000
+.word 0x9200
+.word 0x00CF
+
+.word 0xFFFF	#第3项VGA,基地址位0xb8000
+.word 0x8000
+.word 0x920b
+.word 0x0000 
+
+/*
+*将gdtr专用寄存器指向我们在内存中做的一块GDT表,GDTR寄存器格式:
+*48位(高32位地址+低16位限长)，intel是小端方式
+*/
+gdt_48:
+.word 0x1f    #gdt表限长 sizeof(gdt)-1 低地址，放在gdtr的低字节
+.long gdt     #gdt表基址  高地址，放在gdtr的高字节
+
+
+
+</code></pre>
+<h2 id="bootmainc">bootmain.c</h2>
+<pre><code>/*
+*   主要功能：将elf格式的内核代码读入到指定内存区域中
+*               本文件和bootsector.S组成MBR
+*      注意： MBR文件末尾以0xaa55结束，需sign文件
+*              格式化成合法的MBR
+*/
+
+#define SECTSIZE        512
+#define ELFHDR          ((struct elfhdr *)0x10000)      // scratch space
+#define ELF_MAGIC    0x464C457FU    //0x464C457FU 
+
+/* elf文件头 */
+struct elfhdr{
+	unsigned int magic;      // must equal ELF_MAGIC
+	unsigned char elf[12];
+	unsigned short type;     // 1=relocatable, 2=executable, 3=shared object, 4=core image
+	unsigned short machine;  // 3=x86, 4=68K, etc.
+	unsigned int version;    // file version, always 1
+	unsigned int entry;      // entry point if executable
+	unsigned int phoff;      // file position of program header or 0
+	unsigned int shoff;      // file position of section header or 0
+	unsigned int flags;      // architecture-specific flags, usually 0
+	unsigned short ehsize;   // size of this elf header
+	unsigned short phentsize;// size of an entry in program header
+	unsigned short phnum;    // number of entries in program header or 0
+	unsigned short shentsize;// size of an entry in section header
+	unsigned short shnum;    // number of entries in section header or 0
+	unsigned short shstrndx; // section number that contains section name strings
+};
+
+/* 程序头 */
+struct proghdr {
+    unsigned int p_type;   // loadable code or data, dynamic linking info,etc.
+    unsigned int p_offset; // file offset of segment
+    unsigned int p_va;     // virtual address to map segment
+    unsigned int p_pa;     // physical address, not used
+    unsigned int p_filesz; // size of segment in file
+    unsigned int p_memsz;  // size of segment in memory (bigger if contains bss）
+    unsigned int p_flags;  // read/write/execute bits
+    unsigned int p_align;  // required alignment, invariably hardware page size
+};
+
+/*
+*   inb(port):从port端口中读取一个字节数据返回
+*/
+static inline unsigned char inb(unsigned short port) {
+    unsigned char data;
+    asm volatile (&quot;inb %1, %0&quot; : &quot;=a&quot; (data) : &quot;d&quot; (port));
+    return data;
+}
+
+/*
+*insl(port,addr,cnt):从port端口循环读cnt次双字到addr位置
+*
+*cld指令是使DF=0， 即si，di寄存器自动增加
+*
+*rep指令的目的是重复其上面的指令.ECX的值是重复的次数.repe和repne，
+*前者是repeat equal，意思是相等的时候重复，后者是repeat not equal，
+*不等的时候重复；每循环一次cx自动减一。
+*
+*insl 指令是从 DX 指定的 I/O 端口将双字输入 ES:(E)DI 指定的内存位置
+*
+*/
+static inline void insl(unsigned int port, void *addr, int cnt) {
+    asm volatile (
+            &quot;cld;&quot;
+            &quot;repne; insl;&quot;
+            : &quot;=D&quot; (addr), &quot;=c&quot; (cnt)
+            : &quot;d&quot; (port), &quot;0&quot; (addr), &quot;1&quot; (cnt)
+            : &quot;memory&quot;, &quot;cc&quot;);
+}
+
+/*
+*   outb(port,data):将一个字节数据data读入port端口中
+*/
+static inline void outb(unsigned short port, unsigned char data) {
+    asm volatile (&quot;outb %0, %1&quot; :: &quot;a&quot; (data), &quot;d&quot; (port));
+}
+
+/*
+*   waitdisk:等待硬盘准备好
+*/
+static inline void waitdisk(void) {
+    while ((inb(0x1F7) &amp; 0xC0) != 0x40)
+        ;
+}
+
+/*
+*   readsect(dst,secno):读取扇区号secno所在的扇区进入dst地址中
+*/
+static inline void readsect(void *dst, unsigned int secno) {
+    
+    // 等待硬盘准备好
+    waitdisk();
+
+    outb(0x1F2, 1);                  // count = 1
+    outb(0x1F3, secno &amp; 0xFF);
+    outb(0x1F4, (secno &gt;&gt; 8) &amp; 0xFF);
+    outb(0x1F5, (secno &gt;&gt; 16) &amp; 0xFF);
+    outb(0x1F6, ((secno &gt;&gt; 24) &amp; 0xF) | 0xE0);
+    outb(0x1F7, 0x20);               // 命令0x20 - 读取扇区 
+
+    // 等待硬盘准备好
+    waitdisk();
+    // 读取一个扇区
+    insl(0x1F0, dst, SECTSIZE / 4);
+}
+
+/*
+*   readseg(va,count,offset):读取内核基址偏移为offset处的count字节
+*                               放入虚拟地址va中。
+*/
+static void readseg(unsigned int va, unsigned int count, unsigned int offset) {
+    unsigned int end_va = va + count;
+
+    // round down to sector boundary
+    va -= offset % SECTSIZE;
+
+    // translate from bytes to sectors; kernel starts at sector 1
+    unsigned int secno = (offset / SECTSIZE) + 1;
+
+    // If this is too slow, we could read lots of sectors at a time.
+    // We'd write more to memory than asked, but it doesn't matter --
+    // we load in increasing order.
+    for (; va &lt; end_va; va += SECTSIZE, secno ++) {
+        readsect((void *)va, secno);
+    }
+}
+
+/*
+*   bootmain():读取第1号扇区中的内核的ELF头，获取程序段头信息
+*                并把所有程序段读入内存的相应虚拟地址中
+*               由于此时未开分页机制，虚拟地址=物理地址
+*                最后进入ELF头的入口地址，即内核地址
+*/
+void bootmain(void) {
+    // read the 1st page off disk
+    readseg((unsigned int )ELFHDR, SECTSIZE * 2, 0);
+
+    struct proghdr *ph, *eph;
+
+    // load each program segment (ignores ph flags)
+    ph = (struct proghdr *)((unsigned int )ELFHDR + ELFHDR-&gt;phoff);
+    eph = ph + ELFHDR-&gt;phnum;
+    unsigned int mask;
+    //由于内核放在16MB处，至少需要28位对齐（0xFFFFFFF）
+    for (; ph &lt; eph; ph ++) {
+        //qemu特性决定
+        if(ph-&gt;p_va &gt; (unsigned int )0xC0000000){
+            mask=0xFFFFFFF;
+        }
+        else{
+            mask=0xFFFFFFFF;
+        }
+        readseg(ph-&gt;p_va &amp; mask, ph-&gt;p_memsz, ph-&gt;p_offset);
+    }
+
+    // call the entry point from the ELF header
+    // note: does not return
+    ((void (*)(void))(ELFHDR-&gt;entry &amp; 0xFFFFFFFF))();
+
+    while (1);
+}
+
+
+</code></pre>
+<h2 id="signc">sign.c</h2>
+<pre><code>/*
+*   主要功能：在bootsector.S和bootmain.c链接成的
+*            bootblock.out文件末尾添加0xaa55结束符
+*      注意： 合法的MBR文件末尾以0xaa55结束。
+*             
+*/
+#include &lt;stdio.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/stat.h&gt;
+
+/*
+*  main(argc,argv)：在第一个参数argv[1]文件的末尾
+*    添加0x55AA，然后写入第二个参数argv[2]文件中
+*/
+int main(int argc, char *argv[]) {
+    struct stat st;
+
+    if (argc != 3) {
+        fprintf(stderr, &quot;Usage: &lt;input filename&gt; &lt;output filename&gt;\n&quot;);
+        return -1;
+    }
+
+    if (stat(argv[1], &amp;st) != 0) {
+        fprintf(stderr, &quot;Error opening file '%s': %s\n&quot;, argv[1], strerror(errno));
+        return -1;
+    }
+    printf(&quot;'%s' size: %lld bytes\n&quot;, argv[1], (long long)st.st_size);
+
+    if (st.st_size &gt; 510) {
+        fprintf(stderr, &quot;%lld &gt;&gt; 510!!\n&quot;, (long long)st.st_size);
+        return -1;
+    }
+
+    char buf[512];
+    memset(buf, 0, sizeof(buf));
+
+    FILE *ifp = fopen(argv[1], &quot;rb&quot;);
+    int size = fread(buf, 1, st.st_size, ifp);
+    if (size != st.st_size) {
+        fprintf(stderr, &quot;read '%s' error, size is %d.\n&quot;, argv[1], size);
+        return -1;
+    }
+    fclose(ifp);
+
+    buf[510] = 0x55;
+    buf[511] = 0xAA;
+    
+    FILE *ofp = fopen(argv[2], &quot;wb+&quot;);
+    size = fwrite(buf, 1, 512, ofp);
+    if (size != 512) {
+        fprintf(stderr, &quot;write '%s' error, size is %d.\n&quot;, argv[2], size);
+        return -1;
+    }
+    fclose(ofp);
+    printf(&quot;build 512 bytes boot sector: '%s' success!\n&quot;, argv[2]);
+    return 0;
+}
+
+
+</code></pre>
+<h2 id="cmakeliststxt">CMakeLists.txt</h2>
+<pre><code>#设置项目名
+project (bootblock C ASM)
+
+add_library(bootsector OBJECT bootsector.S)
+add_library(bootmain OBJECT bootmain.c)
+
+#链接
+add_executable(${PROJECT_NAME}.o 
+    $&lt;TARGET_OBJECTS:bootsector&gt;
+    $&lt;TARGET_OBJECTS:bootmain&gt;
+)
+
+target_link_options(${PROJECT_NAME}.o PRIVATE -T ${FreeFlyOS_SOURCE_DIR}/boot/boot.ld)
+target_link_options(${PROJECT_NAME}.o PRIVATE -Wl,-melf_i386)
+
+
+add_custom_command(TARGET ${PROJECT_NAME}.o
+    POST_BUILD
+    COMMAND
+        ${CMAKE_OBJCOPY} -S -O binary ${PROJECT_NAME}.o ${PROJECT_NAME}.out
+    COMMAND    
+        gcc ${FreeFlyOS_SOURCE_DIR}/boot/sign.c -o sign
+    COMMAND    
+        ./sign ${PROJECT_NAME}.out ${PROJECT_NAME}
+)
+
+
+</code></pre>
+<p>1、编译bootsector.S以及bootmain.c文件生成bootsector.o和bootmain.o</p>
+<p>2、将boosector.o和bootmain.o链接到0x7c00地址处生成bootblock.o</p>
+<p>3、使用objcopy将bootblack.o复制生成可执行文件bootblock.out</p>
+<p>4、使用格式化工具sign将bootblack.out格式化成MBR</p>
+<p>5、之后为了给主分区表预留空间，该MBR从0x1BE-0x1FD的空间为主分区表信息，本项目的MBR如下图所示。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103190118916.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="功能说明">功能说明</h2>
+<p>作为一个内核的bootloader，它的主要功能如下：</p>
+<p>1、在16位代码段下，应先设置段寄存器（DS、ES、SS）的值（CS默认上电赋值）。</p>
+<p>2、关中断，为之后建立中断向量表打好基础。</p>
+<p>3、内存探测，通过BIOS提供的0x15中断获取可用内存数据，并存储在内存物理地址0x8000处。</p>
+<p>4、打开地址A20，按理说这步应该是要做的，但由于本人环境编译器版本问题，加上这段代码会使MBR超过512B，故只能删掉这部分代码，经过测试，在qemu模拟器不影响后续代码的执行，以此来减少MBR的空间，并为主分区表预留空间。</p>
+<p>5、加载gdt表，其中设置了CS和DS段基址为0，段限长为4GB，这样就能访问0-4GB的物理地址了，而实际分配给虚拟机2GB内存，为后面地址映射作准备。</p>
+<p>6、接着就是打开保护模式了，把cr0的第0位置1即可，此时就无法调用BIOS中断了，所以如果需要用BIOS中断获取硬件信息，最好在保护模式前就写好。</p>
+<p>7、使用ljmp长跳转到保护模式下的32位代码段，该段的属性已经在gdt表中写好，只需确定跳转代码的偏移地址即可。</p>
+<p>8、上一步操作已经确定了CS段，而数据段并未确定，所以需要设置DS、ES、SS段的值，这里还设置了gs段的值，之前主要是为了能够用VGA输出字符，但后续直接写了VGA的驱动，所以这里的GS段设置和之前GDT中的VGA段均可删掉。</p>
+<p>9、设置下栈地址，栈顶指针指向0x7c00，也就是bootloader开始的位置，但栈是向下增长的，故不会影响bootloader代码，在bootmain.c中会调用函数，故需要一个栈来存放参数和返回地址等信息。</p>
+<p>10、将内核加载到内存中，一般内核文件都是elf文件格式，为了能够读取内核的elf头，我们将内核文件放在引导扇区MBR后面一个扇区，通过x86_64-elf-readelf -a build/kernel/kernel可以看到内核的elf文件布局，如下图所示。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103190152618.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><img src="https://img-blog.csdnimg.cn/20210103190222781.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>从这张图中我们能看到整个内核文件基本分为3个部分：init部分（.init.text/data）、user部分（.user.text/data/rodata/bss）、kernel部分(.text/rodata/data/bss)，各个部分的段地址由链接脚本决定，由于这个时候我们还没开启分页，虚拟地址=物理地址，而且实际物理内存只有2G，所以内核部分（即从C1000000开始）的代码，故在bootmain中需要进行一个判断，若虚拟地址大于2G，即内核代码，放在0x1000000处，当然，也可以设置qemu模拟器的内存大小，比如分配4G，但要注意的一点是，当分配给qemu模拟器4G内存中，可用只有3.5G，此后到4G之间的物理地址无法使用。</p>
+<p>然后就是通过IO端口和硬盘进行交互，将各个部分的各个段读到对应的虚拟地址上（虚拟地址=物理地址），最后跳转到ELF文件的entry中，即0x100000（init部分的代码）。</p>
+<p>12、boot下的链接脚本，如下图所示，0x7C00为约定好的系统引导地址，即BIOS执行完后，会自动执行0x7C00开始的bootloader。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103190309211.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>13、关于CMakeLists.txt的一些解释</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103190338584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>1⃣️project ( )&mdash;&mdash;首先设置项目名称，一般这个可以随意设置，然后要注明使用了哪些语言，比如C语言，ASM汇编，若不指定则在编译时会自动看成C语言，.S文件就编译不了，需要在上层目录下的CMakeLists.txt下使能编译器。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103190356603.png" alt="在这里插入图片描述"></p>
+<p>2⃣️add_library&mdash;&mdash;将源文件编译成静态库文件，可以把它看成x86_64-elf-gcc(MAC下)/gcc(Ubuntu下) -c bootsector.c -o bootsector.o，当然这个编译选项在上一层也就是整个项目目录下的CMakeLists.txt确定的，如下图所示。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103190413733.png" alt="在这里插入图片描述"></p>
+<p>具体说明下每个参数是啥意思吧：</p>
+<p>-Os：主要对程序的尺寸进行优化，为了减少MBR的大小，可谓绞尽脑汁。</p>
+<p>-nostdlib：不连接系统标准启动文件和标准哭文件，只把指定的文件传递给连接库，这样我们就能重写printf等，不会和标准C库重名了。</p>
+<p>-fno-builtin：不使用C语言的内建函数，所以我们设置的函数名可以和内建函数同名。</p>
+<p>-Wall：显示所有警告。</p>
+<p>-ggdb：产生debug信息，用于gdb调试</p>
+<p>-m32：生成32位机器的汇编代码</p>
+<p>-gstabs：以stabs格式声称调试信息，但是不包括gdb调试信息。</p>
+<p>-nostdinc：不包含C语言的标准库的头文件。</p>
+<p>-fno-stack-protector：不使用栈保护检测。</p>
+<p>3⃣️add_executable&mdash;&mdash;将静态库文件链接成可执行文件，实际使用时为x86_64-elf-ld命令（MAC下）/ld命令（Ubuntu下）</p>
+<p>4⃣️target_link_options&mdash;&ndash;设置链接选项，-T指定链接脚本，-Wl 传递参数 ，-melf_i386链接为32位程序</p>
+<p>5⃣️add_custom_command&mdash;&ndash;在生成项目文件后，继续执行指定的命令，比如把.o文件转化为二进制文件，然后通过格式化文件sign将bootloader格式化为MBR。</p>
+<p>最后，boot目录大概就总结这么多吧，有不懂的地方随时联系我，295957410@qq.com，项目源码地址为https://github.com/dashanji/FreeFlyOS。</p>
+
+</article>
+
+                    
+                    
+                    
+
+                    
+
+
+
+                    
+  <div
+    class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"
+  >
+    <div>
+      
+    </div>
+    <div class="mt-4 md:mt-0 md:text-right">
+      
+        <span class="text-primary-text block font-bold">Next</span>
+        <a href="/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-2 init部分详解</a>
+      
+    </div>
+  </div>
+
+
+                    
+
+
+
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div
+  class="
+    bg-secondary-bg
+   prose sticky top-16 z-10 hidden px-6 py-4 lg:block"
+>
+  <h3>On This Page</h3>
+</div>
+<div
+  class="sticky-toc 
+    border-s
+   hidden px-6 pb-6 lg:block"
+>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#bootld">boot.ld</a></li>
+    <li><a href="#bootsectors">bootsector.S</a></li>
+    <li><a href="#bootmainc">bootmain.c</a></li>
+    <li><a href="#signc">sign.c</a></li>
+    <li><a href="#cmakeliststxt">CMakeLists.txt</a></li>
+    <li><a href="#功能说明">功能说明</a></li>
+  </ul>
+</nav>
+</div>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    enableStickyToc();
+  });
+</script>
+
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      
+    </main>
+    <footer class="pl-scrollbar">
+      <div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2022 <a href="https://dashanji.github.io/">dashanji</a>
+ &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+    </footer>
+  </body>
+</html>

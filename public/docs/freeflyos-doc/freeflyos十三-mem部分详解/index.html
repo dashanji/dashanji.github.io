@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  dir="ltr"
+  
+><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Chapter-13 mem部分详解 | FreeFlyOS | 自由飞翔的大山鸡</title>
+
+<meta name="generator" content="Hugo Eureka 0.9.1" />
+<link rel="stylesheet" href="/css/eureka.min.6a378a23360d238dc3ef4df2f5cd718093f02c10c9c7eb2437c29701cd8d389ab6da5d9f21bdd3afa305fd56c1235017.css" integrity="sha384-ajeKIzYNI43D703y9c1xgJPwLBDJx&#43;skN8KXAc2NOJq22l2fIb3Tr6MF/VbBI1AX">
+<script defer src="/js/eureka.min.4ab4e11bfa71ae0aeed55e31bbb0f8ab16c24a648722270637c4b96ea70eef4ddf17aa3e2a8131f613520e0387c1bbde.js" integrity="sha384-SrThG/pxrgru1V4xu7D4qxbCSmSHIicGN8S5bqcO703fF6o&#43;KoEx9hNSDgOHwbve"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js"
+   crossorigin></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js"
+     crossorigin></script>
+
+
+<script defer type="text/javascript" src="/js/fontawesome.min.56e85e545fac4d674dccb3bcea98ac2a625933b1f15638678edd10cf6c26fb44f0e1c5507df434dd557495bf13b58413.js" integrity="sha384-VuheVF&#43;sTWdNzLO86pisKmJZM7HxVjhnjt0Qz2wm&#43;0Tw4cVQffQ03VV0lb8TtYQT"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+   integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" 
+  integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"
+   integrity="sha384-&#43;XBljXPPiv&#43;OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js" 
+  integrity="sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0"  crossorigin></script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png">
+
+<meta name="description"
+  content="Chapter 13 of FreeFlyOS">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Docs",
+      "item":"/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"FreeFlyOS",
+      "item":"/docs/freeflyos-doc/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"Chapter-13 mem部分详解",
+      "item":"/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"
+    },
+    "headline": "Chapter-13 mem部分详解 | FreeFlyOS | 自由飞翔的大山鸡","datePublished": "2022-03-24T00:00:00+00:00",
+    "dateModified": "2022-03-24T00:00:00+00:00",
+    "wordCount":  1518 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "/images/icon.png"
+        }
+        },
+    "description": "Chapter 13 of FreeFlyOS"
+}
+</script><meta property="og:title" content="Chapter-13 mem部分详解 | FreeFlyOS | 自由飞翔的大山鸡" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="/images/icon.png">
+
+
+<meta property="og:url" content="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" />
+
+
+
+<meta property="og:description" content="Chapter 13 of FreeFlyOS" />
+
+
+
+<meta property="og:locale" content="en" />
+
+
+
+
+<meta property="og:site_name" content="自由飞翔的大山鸡" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+  <body class="flex min-h-screen flex-col">
+    <header
+      class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"
+    >
+      <div class="mx-auto w-full max-w-screen-xl"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0">
+    <a href="/" class="me-6 text-primary-text text-xl font-bold">自由飞翔的大山鸡</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/#about" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">About</a>
+            <a href="/posts/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">Posts</a>
+            <a href="/docs/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  selected-menu-item  me-4">Docs</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', switchDarkMode)
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script>
+</div>
+    </header>
+    <main class="grow pt-16">
+        <div class="pl-scrollbar">
+          <div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-e">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">Table of Contents</span>
+    <i class='fas fa-caret-right ms-1'></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="/docs/freeflyos-doc/">FreeFlyOS</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="ps-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/">Chapter-1 boot部分(引导扇区)详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-2 init部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-3 asm部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-4 dt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-5 VGA部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-6 interrupt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-7 keyboard部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-8 serial部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-9 timer部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-10 pic部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-11 stl部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-12 debug部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-13 mem部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-14 sync部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-15 task部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-16 file部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-17 pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-18 main部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-19 user部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-20 test_exec部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-21 test_cat部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-22 test_pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-23 cmake部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-24 disassembly部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-25 elf部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    <article class="prose">
+  <h1 class="mb-4">Chapter-13 mem部分详解</h1>
+
+  <div
+  class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"
+>
+  <div class="me-6 my-2">
+    <i class="fas fa-calendar me-1"></i>
+    <span
+      >2022-03-24</span
+    >
+  </div>
+  <div class="me-6 my-2">
+    <i class="fas fa-clock me-1"></i>
+    <span>8 min read</span>
+  </div>
+
+  
+
+  
+</div>
+
+
+  
+  
+
+  <h4 id="memlayouth">memlayout.h</h4>
+<p>内存布局信息</p>
+<pre><code>#ifndef _MEMLAYOUT_H_
+#define _MEMLAYOUT_H_
+
+#define USER_START 0x40000000
+#define KERNEL_START 0xC1000000
+#define KERNEL_STACK_START 0xF8000000 //0xC1800000
+#define KERNEL_STACK_SIZE 0x2000   //8KB
+
+#define EXEC_START 0x60000000
+
+
+//物理地址到线性地址的转换
+#define PA_LA(addr) (unsigned int)(addr+(unsigned int)0xC0000000) 
+//线性地址到物理地址的转换
+#define LA_PA(addr) (unsigned int)(addr-(unsigned int)0xC0000000)
+
+/* *                        PMM IN QEMU ( 2 GB ) Before PMM MANAGEMENT
+ * Phsical memory layout:                                        
+ *    This side means we can                                         This side means we can't 
+ *       see it in qemu                                         see it in qemu,it's only in real memory                                                       
+ *
+ *     4G ------------------&gt; +---------------------------------+ 0xFFFFFFFF
+ *                            |                                 |
+ *  DISPLAYED IN QEMU------&gt;  |          Invalid Memory         |
+ *                            |                                 |
+ *                            +---------------------------------+ 0xFFFC0000
+ *                            |                                 |
+ *                            :                                 :
+ *                            |         ~~~~~~~~~~~~~~~~        |    &lt;------ IN Phsical Memory
+ *                            :                                 :
+ *                            |                                 |
+ *                            +---------------------------------+ 0x80000000
+ *                            |                                 |
+ *  DISPLAYED IN QEMU------&gt;  |          Invalid Memory         |
+ *                            |                                 |
+ *                            +---------------------------------+ 0x7FFE0000
+ *                            |                                 |
+ *  DISPLAYED IN QEMU------&gt;  |           Valid Memory          |
+ *                            |                                 |
+ *                            +---------------------------------+ 0x00100000
+ *                            |        Invalid Memory (*)       |
+ *  DISPLAYED IN QEMU------&gt;  |  - - - - - - - - - - - - - - -  |
+ *                            |         BIOS Boot Block         |
+ *                            +---------------------------------+ 0x000F0000
+ *                            |        Invalid Memory (*)       |
+ *                            |  - - - - - - - - - - - - - - -  |    &lt;------ IN Phsical Memory
+ *                            |    BIOS Routine &amp; Card BIOS     |
+ *                            +---------------------------------+ 0x000C0000
+ *                            |        Invalid Memory (*)       |
+ *                            |  - - - - - - - - - - - - - - -  |    &lt;------ IN Phsical Memory
+ *                            |CGA/EGA+ Chroma text video buffer|
+ *                            +---------------------------------+ 0x000B8000
+ *                            |        Invalid Memory (*)       |
+ *                            |  - - - - - - - - - - - - - - -  |    &lt;------ IN Phsical Memory
+ *                            |      Mono text video buffer     |
+ *                            +---------------------------------+ 0x000B0000
+ *                            |        Invalid Memory (*)       | 
+ *                            |  - - - - - - - - - - - - - - -  |    &lt;------ IN Phsical Memory
+ *                            | EGA/VGA/XGA/XVGA Graphic Video  |
+ *                            |             Buffer              |
+ *                            +---------------------------------+ 0x000A0000
+ *                            |        Invalid Memory (*)       |
+ *  DISPLAYED IN QEMU------&gt;  |  - - - - - - - - - - - - - - -  |
+ *                            |      Extended BIOS Data Area    |
+ *                            +---------------------------------+ 0x0009FC00
+ *  DISPLAYED IN QEMU------&gt;  |          Valid Memory           | 
+ *     0 -------------------&gt; +---------------------------------+ 0x00000000
+ * (*) Note: The kernel ensures that &quot;Invalid Memory&quot; is used for MMIO 
+ *
+ * */
+
+
+#endif
+</code></pre>
+<h4 id="pmmc">pmm.c</h4>
+<p>物理内存管理</p>
+<pre><code>#include  &quot;pmm.h&quot;
+#include  &quot;memlayout.h&quot;
+#include  &quot;../vga/vga.h&quot;
+#include  &quot;../asm/asm.h&quot;
+/*
+*   在链接脚本kernel.ld中确定的内核结束地址，该值相当于一个指针
+*	   &amp;kernel_start相当于内核起始地址的VMA
+*/
+ 
+
+//物理页数组
+pm_page pp[MAX_PMM_PAGE];
+//三个管理区
+pm_zone dma_zone;
+pm_zone normal_zone;
+pm_zone highmem_zone;	
+
+extern unsigned int kernel_end;
+extern unsigned int user_end;
+/*
+*       物理内存初始化
+*/
+void pmm_init(){
+	unsigned int dma_free=0,normal_free=0,highmem_free=0;
+
+	//物理页初始化，此时已开启新的页表，地址需进行转换
+	struct memory_seg *mem=(struct memory_seg *)(PA_LA(mem_seg_start));
+	for(unsigned int i=*(unsigned int *)(PA_LA(mem_seg_num)),j=0;i&gt;0;i--,j++){
+		for(unsigned int x=mem[j].base;x&lt;((x+(unsigned int)mem[j].size)&amp;PMM_PAGE_MASK);x+=PMM_PAGE_SIZE){
+			//使用qemu模拟器时，会打印一些2GB以上的不可用内存，所以直接舍去即可
+			if(x&lt;0x80000000){
+				//如果为可用内存
+				if(mem[j].state==1)	{
+					pp[pa_idx(x)].flags=PMM_PAGE_KERNEL;
+					pp[pa_idx(x)].count=-1;
+					pp[pa_idx(x)].addr=x&amp;PMM_PAGE_MASK;					
+				}
+				//不可用内存
+				else{
+					pp[pa_idx(x)].flags=PMM_PAGE_INVALID;
+					pp[pa_idx(x)].count=0;
+					pp[pa_idx(x)].addr=x&amp;PMM_PAGE_MASK;
+				}
+				//每个页分配一个管理区
+				if(pp[pa_idx(x)].addr&lt;NORMAL_START){
+						pp[pa_idx(x)].flags|=PMM_PAGE_DMA;
+						dma_free+=pp[pa_idx(x)].count==-1?1:0;
+				}
+				else if(pp[pa_idx(x)].addr&lt;HIGHMEM_START){
+					pp[pa_idx(x)].flags|=PMM_PAGE_NORMAL;
+					normal_free+=pp[pa_idx(x)].count==-1?1:0;
+				}
+				else{
+					pp[pa_idx(x)].flags|=PMM_PAGE_HIGHMEM;
+					highmem_free+=pp[pa_idx(x)].count==-1?1:0;
+				}				
+			}
+		}
+	}
+	//管理区域初始化
+	//dma区域所管理的物理页数量
+	dma_zone.all_pages=((unsigned int)NORMAL_START-(unsigned int)DMA_START)/(unsigned int)PMM_PAGE_SIZE;
+	dma_zone.free_pages=dma_free;
+	dma_zone.pmpage=pp;
+	//normal区域所管理的物理页数量
+	normal_zone.all_pages=((unsigned int)HIGHMEM_START-(unsigned int)NORMAL_START)/(unsigned int)PMM_PAGE_SIZE;
+	normal_zone.free_pages=normal_free;
+	normal_zone.pmpage=&amp;pp[dma_zone.all_pages];
+	//highmem区域所管理的物理页数量
+	highmem_zone.all_pages=(unsigned int)MAX_PMM_PAGE-(unsigned int)HIGHMEM_START/(unsigned int)PMM_PAGE_SIZE;
+	highmem_zone.free_pages=highmem_free;
+	highmem_zone.pmpage=&amp;pp[normal_zone.all_pages+dma_zone.all_pages];
+	/*
+	//打印几个具有标志性的物理页
+	printk(&quot;pp[0] address:%08ux\ncount:%08ux\n&quot;
+	,pp[0].addr,pp[0].count);
+	printk(&quot;pp[0x9E] address:%08ux\ncount:%08ux\n&quot;
+	,pp[0x9E].addr,pp[0x9E].count);
+	printk(&quot;pp[0x9F] address:%08ux\ncount:%08ux\n&quot;
+	,pp[0x9F].addr,pp[0x9F].count);
+	printk(&quot;pp[0x100-1] address:%08ux\ncount:%08ux\n&quot;
+	,pp[0x100-1].addr,pp[0x100-1].count);
+	printk(&quot;pp[0x100] address:%08ux\ncount:%08ux\n&quot;
+	,pp[0x100].addr,pp[0x100].count);
+	printk(&quot;pp[0x7FFDF] address:%08ux\ncount:%08ux\n&quot;
+	,pp[0x7FFDF].addr,pp[0x7FFDF].count);
+	printk(&quot;pp[0x7FFE0] address:%08ux\ncount:%08ux\n&quot;
+	,pp[0x7FFE0].addr,pp[0x7FFE0].count);
+	printk(&quot;pp[0x7FFFF] address:%08ux\ncount:%08ux\n&quot;
+	,pp[0x7FFFF].addr,pp[0x7FFFF].count);
+	*/
+	//打印管理区信息
+/*	printk(&quot;DMA page all_pages:%08ux\nfree_pages:%08ux\nstart:%08ux\nend:%08ux\n&quot;,
+	dma_zone.all_pages,
+	dma_zone.free_pages,
+	dma_zone.pmpage[0].addr,
+	dma_zone.pmpage[dma_zone.all_pages-1].addr);
+	printk(&quot;NORMAL page all_pages:%08ux\nfree_pages:%08ux\nstart:%08ux\nend:%08ux\n&quot;,
+	normal_zone.all_pages,
+	normal_zone.free_pages,
+	normal_zone.pmpage[0].addr,
+	normal_zone.pmpage[normal_zone.all_pages-1].addr);
+	printk(&quot;HIGHMEM page all_pages:%08ux\nfree_pages:%08ux\nstart:%08ux\nend:%08ux\n&quot;,
+	highmem_zone.all_pages,
+	highmem_zone.free_pages,
+	highmem_zone.pmpage[0].addr,
+	highmem_zone.pmpage[highmem_zone.all_pages-1].addr);
+*/
+	//设置用户页面被占用
+	for(unsigned int i=USER_START;i&lt;USER_START+(&amp;user_end+PMM_PAGE_SIZE-1)&amp;PMM_PAGE_MASK;i+=PMM_PAGE_SIZE){
+		highmem_zone.pmpage[(i-(unsigned int)HIGHMEM_START)/PMM_PAGE_SIZE].count=1;
+		highmem_zone.free_pages--;
+	}
+	//设置内核页面被占用
+	for(unsigned int i=LA_PA((unsigned int)KERNEL_START);i&lt;(unsigned int)(((unsigned int)LA_PA((unsigned int)&amp;kernel_end)+PMM_PAGE_SIZE-1)&amp;PMM_PAGE_MASK);i+=PMM_PAGE_SIZE){
+		normal_zone.pmpage[(i-LA_PA((unsigned int)KERNEL_START))/PMM_PAGE_SIZE].count=1;
+		normal_zone.free_pages--;
+	}
+	//设置内核栈页面被占用,向低地址增长
+	for(unsigned int i=LA_PA((unsigned int)KERNEL_STACK_START-(unsigned int)KERNEL_STACK_SIZE);i&lt;(unsigned int)(LA_PA((unsigned int)KERNEL_STACK_START)&amp;PMM_PAGE_MASK);i+=PMM_PAGE_SIZE){
+		normal_zone.pmpage[(i-LA_PA((unsigned int)KERNEL_START))/PMM_PAGE_SIZE].count=1;
+		normal_zone.free_pages--;
+	}
+	printk(&quot;DMA free_pages:%08ux\tNORMAL free_pages:%08ux\tHIGHMEM free_pages:%08ux\n&quot;,
+	dma_zone.free_pages, normal_zone.free_pages, highmem_zone.free_pages);
+}
+/*
+**		最简单的物理页分配算法：按页分配，不满一页则分配一页
+** 			bytes:申请字节数 zonenum:所属管理区
+*/
+unsigned int pmm_alloc(unsigned int bytes,char zonenum){
+	
+	unsigned int page,addr;
+	unsigned int start,end,num=0;
+	pm_zone *zone_ptr;
+
+	//需要分配的页数
+	page=(bytes+PMM_PAGE_SIZE-1)/PMM_PAGE_SIZE;
+	//printk(&quot;page:%08ux\n&quot;,page);
+
+	//分配管理区
+	if(zonenum==0){
+		zone_ptr=&amp;dma_zone;
+	}
+	else if(zonenum==1){
+		zone_ptr=&amp;normal_zone;
+	}
+	else{
+		zone_ptr=&amp;highmem_zone;
+	}
+
+	//找到连续的page页
+	start=0;
+	for(unsigned int i=0;i&lt;zone_ptr-&gt;all_pages;i++){
+		if(zone_ptr-&gt;pmpage[i].count==-1){
+			num++;
+			end=i;
+		}
+		else{
+			start=i+1;
+			num=0;
+		}
+		if(num==page){
+			break;
+		}
+	}
+
+	//设置管理区属性
+	for(unsigned int i=start;i&lt;=end;i++){
+		zone_ptr-&gt;pmpage[i].count=1;
+		zone_ptr-&gt;free_pages--;
+	}
+
+	return zone_ptr-&gt;pmpage[start].addr;
+}
+
+/*
+**		物理页释放算法：按页释放，不满一页则释放一页
+** 		addr:起始地址 bytes:释放字节数 
+*/
+void pmm_free(unsigned int addr,unsigned int bytes){
+
+	unsigned int page;
+	pm_zone *zone_ptr;
+	//需要释放的页数
+	page=(bytes+PMM_PAGE_SIZE-1)/PMM_PAGE_SIZE;
+
+	//分配管理区
+	if(addr&lt;NORMAL_START){
+		zone_ptr=&amp;dma_zone;
+	}
+	else if(addr&lt;HIGHMEM_START){
+		addr-=(unsigned int)NORMAL_START;
+		zone_ptr=&amp;normal_zone;
+	}
+	else{
+		addr-=(unsigned int)HIGHMEM_START;
+		zone_ptr=&amp;highmem_zone;
+	}
+
+	//设置管理区属性
+	unsigned int start=addr&amp;PMM_PAGE_MASK;
+	//起始页号
+	unsigned int pgstart=start/(unsigned int)PMM_PAGE_SIZE;
+	for(unsigned int i=0;i&lt;page;i++){
+		//memset(PA_LA(zone_ptr-&gt;pmpage[pgstart].addr),0,PMM_PAGE_SIZE);
+		zone_ptr-&gt;pmpage[pgstart].count=-1;
+		zone_ptr-&gt;free_pages++;
+		pgstart++;
+	}
+	
+}
+</code></pre>
+<h2 id="pmmh">pmm.h</h2>
+<pre><code>#ifndef _PMM_H_
+#define _PMM_H_
+
+//内存探测时存储数据地址
+#define mem_seg_num 0x8000
+#define mem_seg_start 0x8004
+
+//物理页大小 4KB
+#define PMM_PAGE_SIZE 0x1000 
+//物理页掩码
+#define PMM_PAGE_MASK 0xFFFFF000
+
+//物理页标志位
+#define PMM_PAGE_KERNEL 0
+#define PMM_PAGE_USER 1
+#define PMM_PAGE_DIRTY 2
+#define PMM_PAGE_LOCK 4
+#define PMM_PAGE_INVALID 8
+
+#define PMM_PAGE_DMA 0
+#define PMM_PAGE_NORMAL 16
+#define PMM_PAGE_HIGHMEM 32
+
+//管理区域起始地址
+#define DMA_START 0x0
+#define NORMAL_START 0x1000000     //16MB
+#define HIGHMEM_START 0x38000000   //896MB
+//2GB的内存，最多有2GB/4KB=2^19个页=524288页
+#define MAX_PMM_PAGE 0x80000
+//将物理地址转化为物理页号
+#define pa_idx(pa) ((pa&amp;PMM_PAGE_MASK)&gt;&gt;12)
+
+struct memory_seg{
+	unsigned long long base;
+	unsigned long long size;
+	unsigned int state;
+}__attribute__((packed));
+
+//内存管理单位：页
+typedef struct page{
+	/* 
+		  一组标志位  
+	   位0代表页属性，0代表内核页，1代表用户页
+	   位1代表是否被修改，即脏位,1代表已修改
+	   位2代表是否上锁，1代表已上锁
+	   位3代表该页是不是处于MMIO区域，即不可用内存,1代表该页不可用	
+	   位4和位5代表该页所属管理区，00代表DMA区域，01代表NORMAL区域，10代表HIGHMEM区域
+	*/
+	unsigned char flags;
+	int count; //页的引用计数器，字段为-1时，代表空闲
+	unsigned int addr; //页起始地址
+	//struct address_space *mapping;
+}pm_page;
+
+//内存管理区域
+typedef struct zone{
+	pm_page *pmpage; //指向该区域下的物理页数组
+	unsigned int all_pages; //管理区下的物理页数量
+	unsigned int free_pages; //管理区下的空闲页数量
+}pm_zone;
+
+void pmm_init();
+unsigned int pmm_alloc(unsigned int bytes,char zone);
+void pmm_free(unsigned int addr,unsigned int bytes);
+
+#endif
+</code></pre>
+<h2 id="vmmc">vmm.c</h2>
+<pre><code>#include &quot;vmm.h&quot;
+#include &quot;pmm.h&quot;
+#include &quot;memlayout.h&quot;
+#include &quot;../vga/vga.h&quot;
+#include &quot;../interrupt/trap.h&quot;
+#include &quot;../asm/asm.h&quot;
+#include &quot;../stl/defs.h&quot;
+#include &quot;../task/task.h&quot;
+//新页目录表
+unsigned int new_pdt[PAGE_DIR_SIZE] __attribute__( (aligned(VMM_PAGE_SIZE) ) );
+//将DMA和NORMAL区域(0xC0000000-0xF8000000)线性映射到0x0-896MB处，刚好224个页表
+//由于在init部分已经设置栈顶为F8000000，此处已经将其映射到了内核的最后部分
+unsigned int pt_dma_nomal[(unsigned int)HIGHMEM_START/
+((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE)]
+[PAGE_TABLE_SIZE] __attribute__( (aligned(VMM_PAGE_SIZE) ) );
+
+//内核HIGHMEM区域动态映射
+unsigned int pt_highmem[((unsigned int)0x40000000-(unsigned int)HIGHMEM_START)/
+((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE)]
+[PAGE_TABLE_SIZE] __attribute__( (aligned(VMM_PAGE_SIZE) ) );
+
+//用户HIGHMEM区域动态映射
+unsigned int user_pt_highmem[(unsigned int)0xC0000000/
+((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE)]
+[PAGE_TABLE_SIZE] __attribute__( (aligned(VMM_PAGE_SIZE) ) );
+
+//用户HIGHMEM区域申请页面对应的物理地址，用户新建页表时需要绑定新页表的实际物理地址
+//struct highmem_va_pa high_va_pa[];
+unsigned int highmem_start=0xF8000000;
+unsigned int highmem_end=0xF8000000;
+//HIGHMEM区域当前映射地址记录器
+unsigned int highmem_ptr;
+
+extern unsigned int user_end;
+extern struct task_struct *current;
+//建立新页表，记住每个表项存的都是物理地址，此时线性地址需进行转换
+void setup_vpt()
+{
+    //页表数量
+    unsigned int pt_len=(unsigned int)HIGHMEM_START/
+((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE);
+
+     for(unsigned int i=0;i&lt;pt_len;i++){
+            new_pdt[i+idx(PA_LA(DMA_START))]=LA_PA((unsigned int)pt_dma_nomal[i])|VMM_PAGE_PRESENT|VMM_PAGE_RW|VMM_PAGE_KERNEL;
+        }
+    
+    for(unsigned int i=0,j=0,k=0,n=0;n&lt;pt_len*(unsigned int)PAGE_TABLE_SIZE;i+=(unsigned int)VMM_PAGE_SIZE,n++){
+        pt_dma_nomal[j][k++]=i|VMM_PAGE_PRESENT|VMM_PAGE_RW|VMM_PAGE_KERNEL;
+        if(k==PAGE_TABLE_SIZE){
+            j++;
+            k=0;
+        }
+        //printk(&quot;i:%08ux\nj:%08ux\nk:%08ux\n&quot;,i,j,k);
+    }
+    //用户页表设置为0，防止后面清理用户页表时缺页（需要遍历）
+    /*for(unsigned int i=0;i&lt;(unsigned int)0xC0000000/
+((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE);i++)
+    for(unsigned int j=0;j&lt;PAGE_TABLE_SIZE;j++)
+    {
+        user_pt_highmem[i][j]=0;//|VMM_PAGE_PRESENT|VMM_PAGE_RW|VMM_PAGE_USER;
+    }*/
+    /* 对user部分进行映射,0x40000000至user_end 映射到 0x40000000起始的一段区域 */
+    vmm_map(new_pdt,0x40000000,&amp;user_end,0x40000000);
+    //&amp;user_end
+    //更换新页表
+    __asm__ volatile (&quot;mov %0, %%cr3&quot; : : &quot;r&quot; (LA_PA((unsigned int)new_pdt)) );
+    //在该函数结束的时候，由于特权级未发生变化，属于平级调用，所以在返回的时候需要记录栈指针
+    //因此为了保证更换页表后代码能正常运行，更换页表前后的栈都是对应同一段物理内存0x37FFE000-0x38000000
+}
+
+
+/*
+**           vmm_malloc:分配虚拟页
+**     bytes:申请字节数 zonenum:所属管理区
+*/
+unsigned int vmm_malloc(unsigned int bytes,char zonenum){
+    
+    unsigned int page;
+
+    unsigned int addr=pmm_alloc(bytes,zonenum);
+	//需要分配的页数
+	page=(bytes+VMM_PAGE_SIZE-1)/VMM_PAGE_SIZE;
+	//printk(&quot;page:%08ux\n&quot;,page);
+
+	//HIGHMEM管理区需动态映射
+	if(zonenum==2){
+        highmem_ptr=highmem_end;
+		for(unsigned int i=0;i&lt;page;i++){
+            pt_highmem[(highmem_end-highmem_start)/
+            ((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE)]
+            [((highmem_end-highmem_start)/VMM_PAGE_SIZE)%PAGE_TABLE_SIZE]=addr|VMM_PAGE_PRESENT|VMM_PAGE_RW|VMM_PAGE_USER;
+            highmem_end+=VMM_PAGE_SIZE;
+            addr+=PMM_PAGE_SIZE;
+        }
+        unsigned int pt_num=(highmem_end-highmem_start+
+        (unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE-1)/
+        ((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE);
+        for(unsigned int i=0;i&lt;pt_num;i++){
+            new_pdt[i+idx(highmem_start)]=LA_PA((unsigned int)pt_highmem[i])|VMM_PAGE_PRESENT|VMM_PAGE_RW|VMM_PAGE_USER;
+            //printk(&quot;i+idx(highmem_start) : %08d&quot;,i+idx(highmem_start));
+        }
+        addr=highmem_ptr;
+	}
+	else{
+		addr=PA_LA(addr);
+	}
+    //CPU_INVLPG(highmem_ptr);
+    return addr;
+}
+
+
+
+/*
+**           vmm_malloc:释放虚拟页
+** 		 addr:起始地址 bytes:释放字节数 
+*/
+void vmm_free(unsigned int addr,unsigned int bytes){
+
+	unsigned int page,pmaddr;
+	//需要分配的页数
+	page=(bytes+PMM_PAGE_SIZE-1)/PMM_PAGE_SIZE;
+	
+    pmaddr=LA_PA(addr);
+
+	//HIGHMEM管理区需动态释放
+	if(pmaddr&gt;=(unsigned int)HIGHMEM_START){
+        pmm_free(pt_highmem[((addr&amp;VMM_PAGE_MASK)-highmem_start)/
+            ((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE)]
+            [(((addr&amp;VMM_PAGE_MASK)-highmem_start)/VMM_PAGE_SIZE)%PAGE_TABLE_SIZE]&amp;VMM_PAGE_MASK,bytes);
+
+		for(unsigned int i=0;i&lt;page;i++){
+            pt_highmem[(addr-highmem_start)/
+            ((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE)]
+            [((addr-highmem_start)/VMM_PAGE_SIZE)%PAGE_TABLE_SIZE]=addr|VMM_PAGE_UNPRESENT|VMM_PAGE_RW|VMM_PAGE_USER;//VMM_PAGE_KERNEL;
+            addr+=VMM_PAGE_SIZE;
+        }
+	}
+	else{
+		pmm_free(LA_PA(addr),bytes);
+	}
+}
+
+/*
+**           vmm_map(pdt,start,end)
+**          pdt为待映射的页表基址，虚拟地址
+** 将虚拟地址va_start-va_end的区域映射到HIGHMEM区域pa_start，建立页表映射关系
+**      （DMA和NORMAL区域已经默认映射内核 ）
+**       
+*/
+void vmm_map(unsigned int *pdt,unsigned int va_start,unsigned int va_end,
+unsigned int pa_start){
+    
+    unsigned int page;
+    //需要映射的实际地址
+    unsigned int map_start=va_start&amp;(unsigned int)VMM_PAGE_MASK;
+    unsigned int map_end=(va_end+VMM_PAGE_SIZE-1)&amp;VMM_PAGE_MASK;
+    unsigned int pos=map_start;
+    pa_start&amp;=VMM_PAGE_MASK;
+    //计算需要分配的页数
+    page=(map_end-map_start)/VMM_PAGE_SIZE;
+    for(unsigned int i=0;i&lt;page;i++){
+            user_pt_highmem[idx(pos)][(pos/(unsigned int)VMM_PAGE_SIZE)%PAGE_TABLE_SIZE]=
+            pa_start|VMM_PAGE_PRESENT|VMM_PAGE_RW|VMM_PAGE_USER;
+            pa_start+=VMM_PAGE_SIZE;
+            pos+=VMM_PAGE_SIZE;
+        }
+        unsigned int pt_num=(page+PAGE_TABLE_SIZE-1)/PAGE_TABLE_SIZE;
+        for(unsigned int i=0;i&lt;pt_num;i++){
+            pdt[i+idx(map_start)]=LA_PA((unsigned int)user_pt_highmem[i+idx(map_start)])|VMM_PAGE_PRESENT|VMM_PAGE_RW|VMM_PAGE_USER;
+        }
+}
+
+// setup_pgdir - alloc one page as PDT
+unsigned int
+setup_pgdir() {
+    unsigned int pdt_start=vmm_malloc(VMM_PAGE_SIZE,1);
+    memcpy(pdt_start, new_pdt, VMM_PAGE_SIZE);
+    //pgdir[PDX(VPT)] = PADDR(pgdir) | PTE_P | PTE_W;
+    //mm-&gt;pgdir = pgdir;
+    return pdt_start;
+}
+/*
+**   vma_malloc:分配VMA区域
+**   vm_start:虚拟区域起始地址
+**   vm_end:虚拟区域结束地址   
+**   vm_flags:虚拟区域属性，可读、可写、可执行
+**   zonenum:VMA区域所属管理区
+*/
+/*struct vma_struct *
+vma_create(unsigned int vm_start, unsigned int vm_end, unsigned int vm_flags,char zonenum) {
+    unsigned int size=round_up_to(vm_end-vm_start,VMM_PAGE_SIZE);
+    struct vma_struct *vma = vmm_malloc(size,zonenum);
+
+    if (vma != NULL) {
+        vma-&gt;vm_start = vm_start;
+        vma-&gt;vm_end = vm_end;
+        vma-&gt;vm_flags = vm_flags;
+    }
+    return vma;
+}
+
+struct mm_struct *
+mm_create(char zonenum) {
+    struct mm_struct *mm = vmm_malloc(sizeof(struct mm_struct),zonenum);
+
+    if (mm != NULL) {
+        list_init(&amp;(mm-&gt;mmap_link));
+        mm-&gt;mmap_cache = NULL;
+        mm-&gt;pgdir = NULL;
+        mm-&gt;map_count = 0;
+        
+        set_mm_count(mm, 0);
+    }    
+    return mm;
+}*/
+/* sys_malloc系统调用，为用户分配内存 */
+unsigned int sys_malloc(unsigned int bytes){
+    unsigned int addr=vmm_malloc(bytes,2);
+    memcpy(current-&gt;cr3_va,new_pdt,VMM_PAGE_SIZE);
+    return addr;
+}
+/* sys_free系统调用，为用户释放内存 */
+void sys_free(unsigned int addr,unsigned int size){
+    vmm_free(addr,size);
+    memcpy(current-&gt;cr3_va,new_pdt,VMM_PAGE_SIZE);
+}
+/* sys_mmap系统调用，分配内存段到指定位置*/
+void sys_mmap(unsigned int va_start,unsigned int va_end,unsigned int pa_start){
+    unsigned int *pdt=(unsigned int *)current-&gt;cr3_va;
+    vmm_map(pdt,va_start,va_end,pa_start);
+}
+</code></pre>
+<h2 id="vmmh">vmm.h</h2>
+<pre><code>#ifndef _VMM_H_
+#define _VMM_H_
+
+#include &quot;../stl/list.h&quot;
+//虚拟页大小
+#define VMM_PAGE_SIZE 0x1000
+
+//页目录项数
+#define PAGE_DIR_SIZE 0x400
+//页表项数
+#define PAGE_TABLE_SIZE 0x400
+
+//虚拟页掩码
+#define VMM_PAGE_MASK 0xFFFFF000
+
+//bit0代表页或页表存在位，为1时，说明页在物理内存中，指向地址转换
+//              为0时，表示页不在内存中，若访问则出现页故障异常
+#define VMM_PAGE_PRESENT 0x1 
+#define VMM_PAGE_UNPRESENT 0x0
+//bit1代表一个页或一组页的读/写标志，为0时只读，为1时可读可写
+#define VMM_PAGE_RW      0x2 
+//bit2代表一个页或一组页的权限，为0时内核权限，为1时用户权限
+#define VMM_PAGE_KERNEL  0x0
+#define VMM_PAGE_USER    0x4
+
+//addr开始的虚拟地址在页目录表中的项数
+#define idx(addr) (unsigned int)((unsigned int)addr)/((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE)
+
+//将链表节点转化为vma_struct起始地址
+#define le2vma(le, member)                  \
+    to_struct((le), struct vma_struct, member)
+
+#define VMA_READ 0x1    //只读
+#define VMA_WRITE 0x2   //只写
+#define VMA_EXEC 0x4    //只执行 
+
+//VMA数据结构，为了分配大量连续的页
+struct vma_struct{
+    //struct mm_struct *vm_mm;
+    unsigned int vm_start; //虚拟内存区域起始地址
+    unsigned int vm_end; //结束地址
+    unsigned int vm_flags; //标志变量
+    //list_entry_t link;
+};
+
+//highmem区域虚拟地址转换为物理地址
+struct highmem_va_pa
+{
+    unsigned int va; //页表虚拟地址
+    unsigned int pa; //页表物理地址
+};
+
+//包含所有VMA的共同属性
+/*struct mm_struct{
+    list_entry_t mmap_link; 
+    struct vma_struct *mmap_cache; //包含的所有VMA区域
+    unsigned int *pgdir; //包含的VMA区域所属页表
+    int map_count;  //包含的VMA区域计数器
+}; */
+
+void setup_vpt();
+unsigned int vmm_malloc(unsigned int bytes,char zonenum);
+void vmm_free(unsigned int addr,unsigned int bytes);
+
+void vmm_map(unsigned int *pdt,unsigned int va_start,unsigned int va_end,unsigned int pa_start);
+unsigned int setup_pgdir();
+unsigned int sys_malloc(unsigned int bytes);
+void sys_free(unsigned int addr,unsigned int size);
+void sys_mmap(unsigned int va_start,unsigned int va_end,unsigned int pa_start);
+#endif
+</code></pre>
+<p>呃，关于内存管理这块，说实话感觉自己写的很烂，烂归烂，分配和释放内存还是没问题的，只是有些情况没有考虑全面，比如内存用完之后，分配算法就会失效，不多说了，先来看下怎么实现的吧，如下图所示，代码很简单，就是页表映射稍微复杂点，另外注明一下，cr3为页表基址，这个地址必须为页表的物理地址，然后页表项和页项分别存的是页表的物理地址和页的物理地址，所以需要进行一个线性变换（若内核页使用直接映射方式）。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103214127724.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-0EHEQ6YF-1609681276460)(readme.assets/image-20210102163754215.png)\]"></p>
+
+</article>
+
+                    
+                    
+                    
+
+                    
+
+
+
+                    
+  <div
+    class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"
+  >
+    <div>
+      
+        <span class="text-primary-text block font-bold"
+          >Previous</span
+        >
+        <a href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-12 debug部分详解</a>
+      
+    </div>
+    <div class="mt-4 md:mt-0 md:text-right">
+      
+        <span class="text-primary-text block font-bold">Next</span>
+        <a href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-14 sync部分详解</a>
+      
+    </div>
+  </div>
+
+
+                    
+
+
+
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div
+  class="
+    bg-secondary-bg
+   prose sticky top-16 z-10 hidden px-6 py-4 lg:block"
+>
+  <h3>On This Page</h3>
+</div>
+<div
+  class="sticky-toc 
+    border-s
+   hidden px-6 pb-6 lg:block"
+>
+  <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#memlayouth">memlayout.h</a></li>
+            <li><a href="#pmmc">pmm.c</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#pmmh">pmm.h</a></li>
+    <li><a href="#vmmc">vmm.c</a></li>
+    <li><a href="#vmmh">vmm.h</a></li>
+  </ul>
+</nav>
+</div>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    enableStickyToc();
+  });
+</script>
+
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      
+    </main>
+    <footer class="pl-scrollbar">
+      <div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2022 <a href="https://dashanji.github.io/">dashanji</a>
+ &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+    </footer>
+  </body>
+</html>

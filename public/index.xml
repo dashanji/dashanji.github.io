@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>自由飞翔的大山鸡</title>
+    <link>/</link>
+    <description>Recent content on 自由飞翔的大山鸡</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>&amp;copy; 2022 &lt;a href=&#34;https://dashanji.github.io/&#34;&gt;dashanji&lt;/a&gt;
+</copyright>
+    <lastBuildDate>Thu, 24 Mar 2022 17:46:29 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Chapter-1 boot部分(引导扇区)详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/</guid>
+      <description>boot.ld /* ** 链接脚本 */ OUTPUT_FORMAT(elf32-i386) OUTPUT_ARCH(i386) ENTRY(start) /* * ld有多种方法设置进程入口地址, 按以下顺序: (编号越前, 优先级越高) * 1, ld命令行的-e选项 * 2, 连接脚本的ENTRY(SYMBOL)命令 * 3, 如果定义了start 符号, 使用start符号值 * 4, 如果存在 .text section , 使用.text section的第一字节的位置值 * 5, 使用值0 * * */ SECTIONS { /* 将定位器符号置为0x7c00 */ . = 0x7C00; /* 将所有(*符号代表任意输入文件)输入文件bootsector.S的.start section合并 成一个.start section, 该section的地址由定位器符号的值 指定, 即0x7c00. bootsector.o整体作为一个start节 */ .start : { *bootsector.o(.text) } /* 将所有(*符号代表任意输入文件)输入文件的.text section合并 成一个.text section, 该section的地址紧接.start节. bootmain.o中的text作为一个text节 */ .text : { *(.text) } /* 将所有(*符号代表任意输入文件)输入文件的.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-2 init部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>init.c /* * init.c : 建立临时页表，开启分页 */ #include &amp;quot;init.h&amp;quot; #include &amp;quot;../mem/memlayout.h&amp;quot; #include &amp;quot;../debug/debug.h&amp;quot; /* * 具体映射关系已经在kernel.ld中定义即，LMA=VMA-0xC0000000，故 * 只需将内核所在的地址写入页表，并开启分页即可。 */ extern unsigned int kernel_end; void init() { //内核 起始页在页目录表中的第几项 unsigned int kernel_pdt_idx=(KERNEL_START&amp;amp;page_mask)/(vmm_page_size*page_table_size); //内核栈 起始页在页目录表中的第几项 unsigned int stack_pdt_idx=((KERNEL_STACK_START-KERNEL_STACK_SIZE)&amp;amp;page_mask)/(vmm_page_size*page_table_size); //user //unsigned int user_pdt_idx=((unsigned int)0x800000&amp;amp;page_mask)/(vmm_page_size*page_table_size); //在页目录表项中设置对应的页表地址 //init部分对应的页目录表项 pdt[0]=(unsigned int)pt_init|vmm_page_present|vmm_page_rw|vmm_page_kernel; //C0000000开始的4MB对应的页目录表项 pdt[kernel_pdt_idx-4]=(unsigned int)pt|vmm_page_present|vmm_page_rw|vmm_page_kernel; //内核部分对应的页目录表项 pdt[kernel_pdt_idx]=(unsigned int)pt1|vmm_page_present|vmm_page_rw|vmm_page_kernel; pdt[kernel_pdt_idx+1]=(unsigned int)pt2|vmm_page_present|vmm_page_rw|vmm_page_kernel; pdt[kernel_pdt_idx+2]=(unsigned int)pt3|vmm_page_present|vmm_page_rw|vmm_page_kernel; //内核栈部分对应的页目录表项 pdt[stack_pdt_idx]=(unsigned int)stack_pt|vmm_page_present|vmm_page_rw|vmm_page_kernel; //user部分对应的页目录项 //pdt[user_pdt_idx]=(unsigned int)user_pt|vmm_page_present|vmm_page_rw|vmm_page_kernel; /*目前需要映射页表的只有三个部分，分别是init部分（一个页表）、内核部分（两个页表）、内核栈（两页）*/ //因为在init中开启分页后，代码仍然是停留在init部分，所以需要将其虚拟地址映射到物理地址，显然这部分不会超过4MB //故将其虚拟地址0-4MB全部映射到物理内存0-4MB for(unsigned int i=0;i&amp;lt;page_table_size;i++){ pt_init[i]=(i&amp;lt;&amp;lt;12)|vmm_page_present|vmm_page_rw|vmm_page_kernel; } //将0xC0000000的前4MB映射到物理地址，即虚拟地址0xC0000000-0xC0400000映射到物理地址0x00000000-0x00400000 //VGA设备会用到，且内存探测时存储了数据在0x8000处，避免后面出现缺页 for(unsigned int i=0,j=0;i&amp;lt;page_table_size;i++,j+=vmm_page_size){ pt[i]=j|vmm_page_present|vmm_page_rw|vmm_page_kernel; } //将内核开始的前4MB映射到物理地址，即虚拟地址0xC1000000-0xC1400000映射到物理地址0x01000000-0x01400000 for(unsigned int i=0,j=0x1000000;i&amp;lt;page_table_size;i++,j+=vmm_page_size){ pt1[i]=j|vmm_page_present|vmm_page_rw|vmm_page_kernel; } //将内核开始的4MB-8MB映射到物理地址，即虚拟地址0xC1400000-0xC1800000映射到物理地址0x01400000-0x01800000 for(unsigned int i=0,j=0x1000000+vmm_page_size*page_table_size;i&amp;lt;page_table_size;i++,j+=vmm_page_size){ pt2[i]=j|vmm_page_present|vmm_page_rw|vmm_page_kernel; } //将内核开始的8MB-12MB映射到物理地址，即虚拟地址0xC1800000-0xC1B00000映射到物理地址0x01800000-0x01B00000 for(unsigned int i=0,j=0x1000000+vmm_page_size*page_table_size*2;i&amp;lt;page_table_size;i++,j+=vmm_page_size){ pt3[i]=j|vmm_page_present|vmm_page_rw|vmm_page_kernel; } //计算栈底在页表中的第几项，栈是向低地址增长的，实际栈为0xF7FFE000-0xF8000000，映射到0x37FFE000-0x38000000 unsigned int stack_pt_idx=(((KERNEL_STACK_START-KERNEL_STACK_SIZE)&amp;amp;page_mask)/vmm_page_size)&amp;amp;0x3ff; for(unsigned int i=stack_pt_idx,j=0x37FFE000;i&amp;lt;stack_pt_idx+2;i++,j+=vmm_page_size){ stack_pt[i]=j|vmm_page_present|vmm_page_rw|vmm_page_kernel; } /*unsigned int user_pt_idx=(((unsigned int)0x800000&amp;amp;page_mask)/vmm_page_size)&amp;amp;0x3ff; for(unsigned int i=user_pt_idx,j=(unsigned int)0x800000;i&amp;lt;stack_pt_idx+1;i++,j+=vmm_page_size){ user_pt[i]=j|vmm_page_present|vmm_page_rw|vmm_page_kernel; }*/ //0x37FFE000 /* 开启分页 */ __asm__ volatile (&amp;quot;mov %0, %%cr3&amp;quot; : : &amp;quot;r&amp;quot; (pdt) ); unsigned int cr0; __asm__ volatile (&amp;quot;mov %%cr0, %0&amp;quot; : &amp;quot;=r&amp;quot; (cr0) ); // 最高位 PG 位置 1，分页开启 cr0 |= (1u &amp;lt;&amp;lt; 31); __asm__ volatile (&amp;quot;mov %0, %%cr0&amp;quot; : : &amp;quot;r&amp;quot; (cr0) ); /*设置栈顶为0xF8000000 ，栈大小为8KB*/ __asm__ volatile (&amp;quot;mov %0, %%esp&amp;quot; : : &amp;quot;r&amp;quot; ((unsigned int)KERNEL_STACK_START)); __asm__ volatile (&amp;quot;xor %%ebp, %%ebp&amp;quot; : :); //__asm__ volatile (&amp;quot;mov %0, %%ebp&amp;quot; : : &amp;quot;r&amp;quot; ((unsigned int)KERNEL_STACK_START-(unsigned int)KERNEL_STACK_SIZE)); //判断内核是否映射完全，关键是BSS段 //ASSERT((unsigned int)(&amp;amp;kernel_end)&amp;gt;(unsigned int)0x01B00000); //调用内核入口 main(); return; }  Init.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-3 asm部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>asm.c 通过C语言函数实现嵌入汇编指令
+#include &amp;quot;asm.h&amp;quot; #define NULL (void *)0 /* ** inb(port):从端口port读出一个字节数据并返回 */ inline unsigned char inb(unsigned short port) { unsigned char data; asm volatile (&amp;quot;inb %1, %0&amp;quot; : &amp;quot;=a&amp;quot; (data) : &amp;quot;d&amp;quot; (port)); return data; } /* ** inw(port):从端口port读出两个字节数据并返回 */ inline unsigned short inw(unsigned short port) { unsigned short data; asm volatile (&amp;quot;inw %1, %0&amp;quot; : &amp;quot;=a&amp;quot; (data) : &amp;quot;d&amp;quot; (port)); return data; } /* ** outb(port，data):将一个字节数据data写入端口port中 */ inline void outb(unsigned short port, unsigned char data) { asm volatile (&amp;quot;outb %0, %1&amp;quot; :: &amp;quot;a&amp;quot; (data), &amp;quot;d&amp;quot; (port)); } /* ** outw(port,data):将两个字节数据data写入端口port中 */ inline void outw(unsigned short port, unsigned short data) { asm volatile (&amp;quot;outw %0, %1&amp;quot; :: &amp;quot;a&amp;quot; (data), &amp;quot;d&amp;quot; (port)); } /* * * memset - sets the first @n bytes of the memory area pointed by @s * to the specified value @c.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-4 dt部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>dt.c 主要功能：GDT和IDT表的建立和加载
+1、GDT表在bootsector.S中就建立了，但那处于16位实模式下，而此时程序已进入32位保护模式，GDT每个段描述符限长变成4GB，所以需要建立一个新的GDT表，并加载到GDTR寄存器中。
+2、IDT表和GDT表不同的是需要设置中断号和中断向量，并将硬件PIC上的中断号和中断向量绑定，当发生一个硬件中断时，比如按下键盘，PIC就会向系统送一个中断号（硬件完成），然后就会去IDT表中找该中断号对应的中断向量，然后执行相应的中断服务处理程序。
+#include &amp;quot;dt.h&amp;quot; #include &amp;quot;../asm/asm.h&amp;quot; #include &amp;quot;../mem/memlayout.h&amp;quot; /* * * Global Descriptor Table: * * The kernel and user segments are identical (except for the DPL). To load * the %ss register, the CPL must equal the DPL. Thus, we must duplicate the * segments for the user and the kernel. Defined as follows: * - 0x0 : unused (always faults -- for trapping NULL far pointers) * - 0x8 : kernel code segment * - 0x10: kernel data segment * - 0x18: user code segment * - 0x20: user data segment * - 0x28: defined for tss * */ struct segdesc gdt[] = { SEG_NULL, //null SEG(STA_X | STA_R, 0x0, 0xFFFFFFFF, DPL_KERNEL), //kernel text SEG(STA_W, 0x0, 0xFFFFFFFF, DPL_KERNEL), //kernel data SEG(STA_X | STA_R, 0x0, 0xFFFFFFFF, DPL_USER), //user text SEG(STA_W, 0x0, 0xFFFFFFFF, DPL_USER), //user data SEG_NULL, //tss SEG_NULL //ldt0 }; /* * * Interrupt descriptor table: * * Must be built at run time because shifted function addresses can&#39;t * be represented in relocation records.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-5 VGA部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>vga.c #include &amp;quot;vga.h&amp;quot; #include &amp;quot;../asm/asm.h&amp;quot; #include &amp;quot;../serial/serial.h&amp;quot; #include &amp;quot;../keyboard/keyboard.h&amp;quot; #define NULL ((void *)0) //the standard window is 80*25, max of cursor_x is 25, max of cursor_y is 80 static unsigned char cursor_x=0; static unsigned char cursor_y=0; //the start address of CGA is 0xB8000，此时开启了分页，应加上一个线性映射地址 //避免后面新建页表时，未映射前面一段物理内存而导致BUG static unsigned short *vga_memory=(unsigned short *)(0xB8000+0xC0000000); /* print cursor */ inline void print_cursor(unsigned char x,unsigned char y){ unsigned short pos; //calculate the pos from (0,0) pos=x*80+y; //write register data to port 0x3d4,set register_cursor_x outb(VGA_register,register_cursor_x); //set cursor_x outb(VGA_data,(pos&amp;gt;&amp;gt;8)&amp;amp;0xFF); //write register data to port 0x3d4,set register_cursor_y outb(VGA_register,register_cursor_y); //set cursor_y outb(VGA_data,pos&amp;amp;0xFF); } /* use &#39;space&#39; to clear the screen */ inline void clear(){ unsigned short attribute=((0&amp;lt;&amp;lt;4)&amp;amp;0xf0|(15&amp;amp;0xf))&amp;lt;&amp;lt;8; unsigned short space=&#39; &#39;|attribute; for(unsigned short i=0;i&amp;lt;25*80;i++){ vga_memory[i]=space; } cursor_x=0; cursor_y=0; print_cursor(cursor_x,cursor_y); } /* print char */ inline void print_char(char c,color_type background,color_type foreground){ unsigned short attribute=0,character=0,pos; if(cursor_x&amp;gt;=25){ clear(); } //calculate the pos from (0,0) pos=cursor_x*80+cursor_y; switch(c) { case &#39;\n&#39;: cursor_y=0; cursor_x++; break; case &#39;\t&#39;: cursor_y=(cursor_y+8)&amp;amp;~(8-1); break; default: //set the first byte of character character=c; //set the last byte of character attribute=((background&amp;lt;&amp;lt;4)&amp;amp;0xf0|(foreground&amp;amp;0xf))&amp;lt;&amp;lt;8; character=character|attribute; //send character to vga memory vga_memory[pos]=character; cursor_y++; if(cursor_y&amp;gt;=80) { cursor_y=0; cursor_x++; } break; } print_cursor(cursor_x,cursor_y); } //print string inline void print_string(char *str,color_type background,color_type foreground){ //the end of string is &#39;\0&#39; and its ascii is 0 while(*str){ print_char(*str++,background,foreground); } } /* print num * base-represent the displayed type is hex or dec: * base=10-----hex base=16-----dec * flag-1:display len bits num * flag-0:dislay only num */ inline void print_num(unsigned long long num, color_type background,color_type foreground,unsigned char base,char len,int flag){ char str[20]; char i,j,k; str[len]=&#39;\0&#39;; for(i=len-1;i&amp;gt;=0;i--){ str[i]=do_div(num,base); if(base==10){ str[i]=str[i]+&#39;0&#39;; } else if(base==16){ str[i]=str[i]&amp;gt;9?</description>
+    </item>
+    
+    <item>
+      <title>Chapter-6 interrupt部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>trap.c 中断服务程序IRQ的实现.
+#include &amp;quot;trap.h&amp;quot; #include &amp;quot;../asm/asm.h&amp;quot; #include &amp;quot;../vga/vga.h&amp;quot; #include &amp;quot;../timer/timer.h&amp;quot; #include &amp;quot;../debug/debug.h&amp;quot; #include &amp;quot;../dt/dt.h&amp;quot; #include &amp;quot;../task/task.h&amp;quot; #include &amp;quot;../sync/sync.h&amp;quot; #include &amp;quot;../serial/serial.h&amp;quot; extern struct semaphore user_sema; extern unsigned int volatile jiffies; //记录当前系统开机的时钟节拍数 extern unsigned int volatile second; //记录秒数 //int test_test=0; extern struct task_struct *current; //指向当前进程 static const char *IA32flags[] = { &amp;quot;CF&amp;quot;, NULL, &amp;quot;PF&amp;quot;, NULL, &amp;quot;AF&amp;quot;, NULL, &amp;quot;ZF&amp;quot;, &amp;quot;SF&amp;quot;, &amp;quot;TF&amp;quot;, &amp;quot;IF&amp;quot;, &amp;quot;DF&amp;quot;, &amp;quot;OF&amp;quot;, NULL, NULL, &amp;quot;NT&amp;quot;, NULL, &amp;quot;RF&amp;quot;, &amp;quot;VM&amp;quot;, &amp;quot;AC&amp;quot;, &amp;quot;VIF&amp;quot;, &amp;quot;VIP&amp;quot;, &amp;quot;ID&amp;quot;, NULL, NULL, }; void print_regs(struct pushregs *regs) { printk(&amp;quot; edi 0x%08ux\n&amp;quot;, regs-&amp;gt;reg_edi); printk(&amp;quot; esi 0x%08ux\n&amp;quot;, regs-&amp;gt;reg_esi); printk(&amp;quot; ebp 0x%08ux\n&amp;quot;, regs-&amp;gt;reg_ebp); printk(&amp;quot; oesp 0x%08ux\n&amp;quot;, regs-&amp;gt;reg_oesp); printk(&amp;quot; ebx 0x%08ux\n&amp;quot;, regs-&amp;gt;reg_ebx); printk(&amp;quot; edx 0x%08ux\n&amp;quot;, regs-&amp;gt;reg_edx); printk(&amp;quot; ecx 0x%08ux\n&amp;quot;, regs-&amp;gt;reg_ecx); printk(&amp;quot; eax 0x%08ux\n&amp;quot;, regs-&amp;gt;reg_eax); } void print_trapframe(struct trapframe *tf) { // printk(&amp;quot;trapframe at %p\n&amp;quot;, tf); print_regs(&amp;amp;tf-&amp;gt;tf_regs); printk(&amp;quot; ds 0x----%04ux\n&amp;quot;, tf-&amp;gt;tf_ds); printk(&amp;quot; es 0x----%04ux\n&amp;quot;, tf-&amp;gt;tf_es); printk(&amp;quot; fs 0x----%04ux\n&amp;quot;, tf-&amp;gt;tf_fs); printk(&amp;quot; gs 0x----%04ux\n&amp;quot;, tf-&amp;gt;tf_gs); //printk(&amp;quot; trap 0x%08ux %s\n&amp;quot;, tf-&amp;gt;tf_trapno, trapname(tf-&amp;gt;tf_trapno)); printk(&amp;quot; err 0x%08ux\n&amp;quot;, tf-&amp;gt;tf_err); printk(&amp;quot; eip 0x%08ux\n&amp;quot;, tf-&amp;gt;tf_eip); printk(&amp;quot; cs 0x----%04ux\n&amp;quot;, tf-&amp;gt;tf_cs); printk(&amp;quot; flag 0x%08ux &amp;quot;, tf-&amp;gt;tf_eflags); int i, j; for (i = 0, j = 1; i &amp;lt; sizeof(IA32flags) / sizeof(IA32flags[0]); i ++, j &amp;lt;&amp;lt;= 1) { if ((tf-&amp;gt;tf_eflags &amp;amp; j) &amp;amp;&amp;amp; IA32flags[i] !</description>
+    </item>
+    
+    <item>
+      <title>Chapter-7 keyboard部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>keyboard.c 键盘驱动程序
+#include &amp;quot;keyboard.h&amp;quot; #include &amp;quot;../interrupt/trap.h&amp;quot; #include &amp;quot;../vga/vga.h&amp;quot; #include &amp;quot;../serial/serial.h&amp;quot; /***** Keyboard input code *****/ #define NO 0 #define SHIFT (1&amp;lt;&amp;lt;0) #define CTL (1&amp;lt;&amp;lt;1) #define ALT (1&amp;lt;&amp;lt;2) #define CAPSLOCK (1&amp;lt;&amp;lt;3) #define NUMLOCK (1&amp;lt;&amp;lt;4) #define SCROLLLOCK (1&amp;lt;&amp;lt;5) #define E0ESC (1&amp;lt;&amp;lt;6) unsigned int shift=0; char shell_input=0; //shell输入字符，每次读取一个 //int shell_rpos=0; //shell输入缓冲区读偏移 //int shell_wpos=0; //shell输入缓冲区写偏移 //shiftcode[1D]=CTL, static unsigned char shiftcode[256] = { [0x1D] CTL, [0x2A] SHIFT, [0x36] SHIFT, [0x38] ALT, [0x9D] CTL, [0xB8] ALT }; static unsigned char togglecode[256] = { [0x3A] CAPSLOCK, [0x45] NUMLOCK, [0x46] SCROLLLOCK }; static unsigned char normalmap[256] = { NO, 0x1B, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;5&#39;, &#39;6&#39;, // 0x00 &#39;7&#39;, &#39;8&#39;, &#39;9&#39;, &#39;0&#39;, &#39;-&#39;, &#39;=&#39;, &#39;\b&#39;, &#39;\t&#39;, &#39;q&#39;, &#39;w&#39;, &#39;e&#39;, &#39;r&#39;, &#39;t&#39;, &#39;y&#39;, &#39;u&#39;, &#39;i&#39;, // 0x10 &#39;o&#39;, &#39;p&#39;, &#39;[&#39;, &#39;]&#39;, &#39;\n&#39;, NO, &#39;a&#39;, &#39;s&#39;, &#39;d&#39;, &#39;f&#39;, &#39;g&#39;, &#39;h&#39;, &#39;j&#39;, &#39;k&#39;, &#39;l&#39;, &#39;;&#39;, // 0x20 &#39;\&#39;&#39;, &#39;`&#39;, NO, &#39;\\&#39;, &#39;z&#39;, &#39;x&#39;, &#39;c&#39;, &#39;v&#39;, &#39;b&#39;, &#39;n&#39;, &#39;m&#39;, &#39;,&#39;, &#39;.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-8 serial部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>serial.c 串口设备驱动
+#include &amp;quot;serial.h&amp;quot; #include &amp;quot;../pic/pic.h&amp;quot; #include &amp;quot;../asm/asm.h&amp;quot; #include &amp;quot;../interrupt/trap.h&amp;quot; #include &amp;quot;../vga/vga.h&amp;quot; #include &amp;quot;../keyboard/keyboard.h&amp;quot; struct consle cons; static char serial_exists = 0; extern char shell_input; //shell输入字符 /* stupid I/O delay routine necessitated by historical PC design flaws */ void delay(void) { inb(0x84); inb(0x84); inb(0x84); inb(0x84); } void serial_init(void) { // Turn off the FIFO outb(COM1 + COM_FCR, 0); // Set speed; requires DLAB latch outb(COM1 + COM_LCR, COM_LCR_DLAB); outb(COM1 + COM_DLL, (unsigned char) (115200 / 9600)); outb(COM1 + COM_DLM, 0); // 8 data bits, 1 stop bit, parity off; turn off DLAB latch outb(COM1 + COM_LCR, COM_LCR_WLEN8 &amp;amp; ~COM_LCR_DLAB); // No modem controls outb(COM1 + COM_MCR, 0); // Enable rcv interrupts outb(COM1 + COM_IER, COM_IER_RDI); // Clear any preexisting overrun indications and interrupts // Serial port doesn&#39;t exist if COM_LSR returns 0xFF serial_exists = (inb(COM1 + COM_LSR) !</description>
+    </item>
+    
+    <item>
+      <title>Chapter-9 timer部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>timer.c 定时器初始化
+#include &amp;quot;timer.h&amp;quot; #include &amp;quot;../asm/asm.h&amp;quot; #include &amp;quot;../pic/pic.h&amp;quot; #include &amp;quot;../interrupt/trap.h&amp;quot; unsigned int volatile jiffies; //记录自系统启动以来产生的节拍总数 unsigned int volatile second; //根据节拍总数换算成秒数 void timer_init(unsigned int frequency){ //Intel 8253/8254 PIT芯片 I/O端口地址范围是40h-43h，输入频率为1193180，frequency为每秒中断次数 unsigned int divisor=1193180/frequency; //将8253/8254芯片设置为模式3 outb(0x43,0x36); unsigned char low=divisor&amp;amp;0xff; unsigned char high=(divisor&amp;gt;&amp;gt;8)&amp;amp;0xff; outb(0x40,low); outb(0x40,high); jiffies=0; //初始化节拍总数，防止更换页表时初始化值更改 second=0; //初始化秒数 pic_enable(IRQ_TIMER); }  timer.h #ifndef _TIMER_H_ #define _TIMER_H_ void timer_init(unsigned int frequency); #endif  定时器8253驱动原理如下，另外补充了FreeFlyOS的时钟每过1S中断一次，同时进行进程调度。</description>
+    </item>
+    
+    <item>
+      <title>Chapter-10 pic部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>pic.c 8259A芯片级联控制器PIC的初始化
+#include &amp;quot;pic.h&amp;quot; static unsigned short irq_mask = 0xFFFF &amp;amp; ~(1 &amp;lt;&amp;lt; 2); static char did_init = 0; static void pic_setmask(unsigned short mask) { irq_mask = mask; unsigned char mask_low=mask&amp;amp;0xff; unsigned char mask_high=(mask&amp;gt;&amp;gt;8)&amp;amp;0xff; if (did_init) { outb(0x21, mask_low); outb(0xA1, mask_high); } } void pic_enable(unsigned int irq) { pic_setmask(irq_mask &amp;amp; ~(1 &amp;lt;&amp;lt; irq)); } void pic_init(){ did_init = 1; //屏蔽所有中断 outb(0x21,0xFF); outb(0xA1,0xFF); // 重新映射 IRQ 表 // 两片级联的 Intel 8259A 芯片 // 主片端口 0x20 0x21 // 从片端口 0xA0 0xA1 //设置ICW1命令字， // 初始化主片、从片 // 0001 0001 outb(0x20, 0x11); outb(0xA0, 0x11); // 设置主片 IRQ 从 0x20(32) 号中断开始 outb(0x21, 0x20); // 设置从片 IRQ 从 0x28(40) 号中断开始 outb(0xA1, 0x28); // 设置主片 IR2 引脚连接从片 outb(0x21, 0x04); // 告诉从片输出引脚和主片 IR2 号相连 outb(0xA1, 0x02); //NB Automatic EOI mode doesn&#39;t tend to work on the slave.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-11 stl部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>list.h 链表数据结构
+#ifndef _LIST_H_ #define _LIST_H_ /* * * Simple doubly linked list implementation. * * Some of the internal functions (&amp;quot;__xxx&amp;quot;) are useful when manipulating * whole lists rather than single entries, as sometimes we already know * the next/prev entries and we can generate better code by using them * directly rather than using the generic single-entry routines. * */ struct list_entry { struct list_entry *prev, *next; }; typedef struct list_entry list_entry_t; static inline void list_init(list_entry_t *elm) __attribute__((always_inline)); static inline void list_add(list_entry_t *listelm, list_entry_t *elm) __attribute__((always_inline)); static inline void list_add_before(list_entry_t *listelm, list_entry_t *elm) __attribute__((always_inline)); static inline void list_add_after(list_entry_t *listelm, list_entry_t *elm) __attribute__((always_inline)); static inline void list_del(list_entry_t *listelm) __attribute__((always_inline)); static inline void list_del_init(list_entry_t *listelm) __attribute__((always_inline)); static inline char list_empty(list_entry_t *list) __attribute__((always_inline)); static inline list_entry_t *list_next(list_entry_t *listelm) __attribute__((always_inline)); static inline list_entry_t *list_prev(list_entry_t *listelm) __attribute__((always_inline)); static inline void __list_add(list_entry_t *elm, list_entry_t *prev, list_entry_t *next) __attribute__((always_inline)); static inline void __list_del(list_entry_t *prev, list_entry_t *next) __attribute__((always_inline)); /* * * list_init - initialize a new entry * @elm: new entry to be initialized * */ static inline void list_init(list_entry_t *elm) { elm-&amp;gt;prev = elm-&amp;gt;next = elm; } /* * * list_add - add a new entry * @listelm: list head to add after * @elm: new entry to be added * * Insert the new element @elm *after* the element @listelm which * is already in the list.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-12 debug部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>debug.c 包含两个函数，一个是打印寄存器信息，另一个是设置断言失败的结果
+#include &amp;quot;debug.h&amp;quot; #include &amp;quot;monitor.h&amp;quot; #include &amp;quot;../vga/vga.h&amp;quot; #include &amp;quot;../interrupt/trap.h&amp;quot; /* * 打印段寄存器信息 */ void print_seg() { unsigned short cs,ds,gs,es,fs,ss; asm volatile(&amp;quot;movw %%cs, %0;&amp;quot; &amp;quot;movw %%ds, %1;&amp;quot; &amp;quot;movw %%gs, %2;&amp;quot; &amp;quot;movw %%es, %3;&amp;quot; &amp;quot;movw %%fs, %4;&amp;quot; &amp;quot;movw %%ss, %5;&amp;quot;: &amp;quot;=m&amp;quot;(cs),&amp;quot;=m&amp;quot;(ds),&amp;quot;=m&amp;quot;(gs),&amp;quot;=m&amp;quot;(es),&amp;quot;=m&amp;quot;(fs),&amp;quot;=m&amp;quot;(ss)); printk(&amp;quot;cs=%04x\n&amp;quot;,cs); printk(&amp;quot;ds=%04x\n&amp;quot;,ds); printk(&amp;quot;gs=%04x\n&amp;quot;,gs); printk(&amp;quot;es=%04x\n&amp;quot;,es); printk(&amp;quot;fs=%04x\n&amp;quot;,fs); printk(&amp;quot;ss=%04x\n&amp;quot;,ss); } /* * * __panic - __panic is called on unresolvable fatal errors. it prints * &amp;quot;panic: &#39;message&#39;&amp;quot;, and then enters the kernel monitor. * */ void __PANIC(const char *file, int line, const char *func, const char *condition) { // 关中断 intr_disable(); // 打印错误信息 printk(&amp;quot;kernel panic at %s:%d:\n &amp;quot;, file, line); printk(&amp;quot;In %s , the condition(%s) is wrong\n&amp;quot;,func,condition); //printk(&amp;quot;stack trackback:\n&amp;quot;); //print_seg(); while (1) { monitor(); } }  debug.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-13 mem部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>memlayout.h 内存布局信息
+#ifndef _MEMLAYOUT_H_ #define _MEMLAYOUT_H_ #define USER_START 0x40000000 #define KERNEL_START 0xC1000000 #define KERNEL_STACK_START 0xF8000000 //0xC1800000 #define KERNEL_STACK_SIZE 0x2000 //8KB #define EXEC_START 0x60000000 //物理地址到线性地址的转换 #define PA_LA(addr) (unsigned int)(addr+(unsigned int)0xC0000000) //线性地址到物理地址的转换 #define LA_PA(addr) (unsigned int)(addr-(unsigned int)0xC0000000) /* * PMM IN QEMU ( 2 GB ) Before PMM MANAGEMENT * Phsical memory layout: * This side means we can This side means we can&#39;t * see it in qemu see it in qemu,it&#39;s only in real memory * * 4G ------------------&amp;gt; +---------------------------------+ 0xFFFFFFFF * | | * DISPLAYED IN QEMU------&amp;gt; | Invalid Memory | * | | * +---------------------------------+ 0xFFFC0000 * | | * : : * | ~~~~~~~~~~~~~~~~ | &amp;lt;------ IN Phsical Memory * : : * | | * +---------------------------------+ 0x80000000 * | | * DISPLAYED IN QEMU------&amp;gt; | Invalid Memory | * | | * +---------------------------------+ 0x7FFE0000 * | | * DISPLAYED IN QEMU------&amp;gt; | Valid Memory | * | | * +---------------------------------+ 0x00100000 * | Invalid Memory (*) | * DISPLAYED IN QEMU------&amp;gt; | - - - - - - - - - - - - - - - | * | BIOS Boot Block | * +---------------------------------+ 0x000F0000 * | Invalid Memory (*) | * | - - - - - - - - - - - - - - - | &amp;lt;------ IN Phsical Memory * | BIOS Routine &amp;amp; Card BIOS | * +---------------------------------+ 0x000C0000 * | Invalid Memory (*) | * | - - - - - - - - - - - - - - - | &amp;lt;------ IN Phsical Memory * |CGA/EGA+ Chroma text video buffer| * +---------------------------------+ 0x000B8000 * | Invalid Memory (*) | * | - - - - - - - - - - - - - - - | &amp;lt;------ IN Phsical Memory * | Mono text video buffer | * +---------------------------------+ 0x000B0000 * | Invalid Memory (*) | * | - - - - - - - - - - - - - - - | &amp;lt;------ IN Phsical Memory * | EGA/VGA/XGA/XVGA Graphic Video | * | Buffer | * +---------------------------------+ 0x000A0000 * | Invalid Memory (*) | * DISPLAYED IN QEMU------&amp;gt; | - - - - - - - - - - - - - - - | * | Extended BIOS Data Area | * +---------------------------------+ 0x0009FC00 * DISPLAYED IN QEMU------&amp;gt; | Valid Memory | * 0 -------------------&amp;gt; +---------------------------------+ 0x00000000 * (*) Note: The kernel ensures that &amp;quot;Invalid Memory&amp;quot; is used for MMIO * * */ #endif  pmm.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-14 sync部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>sync.c #include &amp;quot;sync.h&amp;quot; #include &amp;quot;../debug/debug.h&amp;quot; #include &amp;quot;../interrupt/trap.h&amp;quot; #include &amp;quot;../task/task.h&amp;quot; #include &amp;quot;../vga/vga.h&amp;quot; extern struct task_struct *current; /* 初始化信号量 */ void sema_init(struct semaphore* psema, unsigned char value) { psema-&amp;gt;value = value; // 为信号量赋初值 list_init(&amp;amp;psema-&amp;gt;waiters); //初始化信号量的等待队列 } /* 初始化锁plock */ void lock_init(struct lock* plock) { plock-&amp;gt;holder = NULL; plock-&amp;gt;holder_repeat_nr = 0; sema_init(&amp;amp;plock-&amp;gt;semaphore, 1); // 信号量初值为1 } /* 信号量down操作 */ void sema_down(struct semaphore* psema) { /* 关中断来保证原子操作 */ enum intr_status flag; list_entry_t *head=&amp;amp;psema-&amp;gt;waiters; list_entry_t *ite=head; struct task_struct *task; //printk(&amp;quot; %08d\n&amp;quot;,get_now_intr_status()); local_intr_save(flag); //printk(&amp;quot; %08d\n&amp;quot;,get_now_intr_status()); { //printk(&amp;quot;check 3&amp;quot;); // 若value为0,表示已经被别人持有 while(psema-&amp;gt;value == 0) {	//printk(&amp;quot;check 4&amp;quot;); /* 当前线程不应该已在信号量的waiters队列中 */ while((ite=list_next(ite))!</description>
+    </item>
+    
+    <item>
+      <title>Chapter-15 task部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>task.c #include &amp;quot;task.h&amp;quot; #include &amp;quot;../interrupt/syscall.h&amp;quot; #include &amp;quot;../stl/elf.h&amp;quot; #include &amp;quot;../mem/pmm.h&amp;quot; #include &amp;quot;../mem/vmm.h&amp;quot; #include &amp;quot;../mem/memlayout.h&amp;quot; #include &amp;quot;../debug/debug.h&amp;quot; #include &amp;quot;../sync/sync.h&amp;quot; #include &amp;quot;../file/file.h&amp;quot; #include &amp;quot;../file/inode.h&amp;quot; #define HASH_SHIFT 10 #define HASH_LIST_SIZE (1 &amp;lt;&amp;lt; HASH_SHIFT) #define pid_hashfn(x) (hash32(x, HASH_SHIFT)) /* #define __KERNEL_EXECVE(name, binary, size) ({ \ printk(&amp;quot;kernel_execve: pid = %d, name = \&amp;quot;%s\&amp;quot;.\n&amp;quot;, \ current-&amp;gt;pid, name); \ kernel_execve(name, binary, (unsigned int)(size)); \ }) //#x 表示字符串操作符，即&amp;quot;x&amp;quot; //##x##表示连接符 #define KERNEL_EXECVE(x) ({ \ extern unsigned char _binary_##x##_out_start[], \ _binary_##x##_out_size[]; \ __KERNEL_EXECVE(#x, _binary_##x##_out_start, \ _binary_##x##_out_size); \ }) #define __KERNEL_EXECVE2(x, xstart, xsize) ({ \ extern unsigned char xstart[], xsize[]; \ __KERNEL_EXECVE(#x, xstart, (unsigned int)xsize); \ }) #define KERNEL_EXECVE2(x, xstart, xsize) __KERNEL_EXECVE2(x, xstart, xsize) */ // 绑定PID的哈希表 static list_entry_t hash_list[HASH_LIST_SIZE]; //PID 位图初始化 pidmap_t task_pidmap={pid_max,{0}}; static unsigned int volatile last_pid=0; //就绪进程链表 static list_entry_t ready_task_list; //所有进程链表 static list_entry_t all_task_list; struct task_struct *task0; //祖先进程，即进程0 struct task_struct *user_task; //第一个用户进程 //struct task_struct *task1; //由进程0 do_fork出来的进程1 struct task_struct *current; //指向当前进程 extern struct semaphore user_sema; //MACOS下容易出现BUG //静态全局变量设置为0值时，在运行的时候容易跑飞，所以为了避免出现BUG，在使用的时候应先定义0值 static unsigned int volatile nr_task=0; //当前所有进程数量 void forkrets(struct trapframe *tf); extern unsigned int __trapret; extern struct file file_table[MAX_FILE_OPEN]; extern struct segdesc gdt[]; extern unsigned int new_pdt[PAGE_DIR_SIZE] __attribute__( (aligned(VMM_PAGE_SIZE) ) ); extern unsigned int user_pt_highmem[(unsigned int)0xC0000000/ ((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE)] [PAGE_TABLE_SIZE]__attribute__( (aligned(VMM_PAGE_SIZE) ) ); struct task_struct *task0,*task1; /* * kernel_task_init:创建第一个内核进程 */ void kernel_task_init(void *function){ /*就绪进程链表初始化*/ list_init(&amp;amp;ready_task_list); /*所有进程链表初始化*/ list_init(&amp;amp;all_task_list); /*哈希链表初始化*/ for(int i=0;i&amp;lt;HASH_LIST_SIZE;i++){ list_init(&amp;amp;hash_list[i]); } //分配task_struct结构体 if((task0=alloc_task(KERNEL_TASK))==NULL){ printk(&amp;quot;alloc task error!</description>
+    </item>
+    
+    <item>
+      <title>Chapter-16 file部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>bitmap.h #ifndef _BITMAP_H_ #define _BITMAP_H_ /* ** 在遍历位图时,整体上以字节为单位,细节上是以位为单位, ** 所以此处位图的指针必须是单字节 */ struct bitmap { unsigned int btmp_bytes_len; unsigned char* bits; }; #endif  dir.c #include &amp;quot;dir.h&amp;quot; #include &amp;quot;inode.h&amp;quot; #include &amp;quot;file.h&amp;quot; #include &amp;quot;../mem/vmm.h&amp;quot; #include &amp;quot;../asm/asm.h&amp;quot; #include &amp;quot;../debug/debug.h&amp;quot; #define NULL (void *)0 #define BITMAP_MASK 1 struct dir *root_dir; // 根目录 extern struct partition *cur_part; /* ** 打开根目录 */ void open_root_dir(struct partition* part) { root_dir=(struct dir *)vmm_malloc(sizeof(struct dir),2); root_dir-&amp;gt;inode = inode_open(part, part-&amp;gt;sb-&amp;gt;root_inode_no); root_dir-&amp;gt;dir_pos = 0; } /* 在分区part上打开i结点为inode_no的目录并返回目录指针 */ struct dir* dir_open(struct partition* part, unsigned int inode_no) { struct dir* pdir = (struct dir*)vmm_malloc(sizeof(struct dir),2); pdir-&amp;gt;inode = inode_open(part, inode_no); pdir-&amp;gt;dir_pos = 0; return pdir; } /* 在part分区内的pdir目录内寻找名为name的文件或目录, * 找到后返回1并将其目录项存入dir_e,否则返回0 */ char search_dir_entry(struct partition* part, struct dir* pdir, const char* name, struct dir_entry* dir_e) { unsigned int block_cnt = 140;	// 12个直接块+128个一级间接块=140块 /* 12个直接块大小+128个间接块,共560字节 */ unsigned int* all_blocks = (unsigned int*)vmm_malloc(48 + 512,2); if (all_blocks == NULL) { printk(&amp;quot;search_dir_entry: sys_malloc for all_blocks failed&amp;quot;); return 0; } unsigned int block_idx = 0; while (block_idx &amp;lt; 12) { all_blocks[block_idx] = pdir-&amp;gt;inode-&amp;gt;i_sectors[block_idx]; block_idx++; } block_idx = 0; if (pdir-&amp;gt;inode-&amp;gt;i_sectors[12] !</description>
+    </item>
+    
+    <item>
+      <title>Chapter-17 pipe部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>ioqueue.c #include &amp;quot;ioqueue.h&amp;quot; #include &amp;quot;../task/task.h&amp;quot; #include &amp;quot;../debug/debug.h&amp;quot; extern struct task_struct *current; /* 初始化io队列ioq */ void ioqueue_init(struct ioqueue* ioq) { lock_init(&amp;amp;ioq-&amp;gt;lock); // 初始化io队列的锁 ioq-&amp;gt;producer = ioq-&amp;gt;consumer = NULL; // 生产者和消费者置空 ioq-&amp;gt;head = ioq-&amp;gt;tail = 0; // 队列的首尾指针指向缓冲区数组第0个位置 } /* 返回pos在缓冲区中的下一个位置值 */ static int next_pos(int pos) { return (pos + 1) % bufsize; } /* 判断队列是否已满 */ char ioq_full(struct ioqueue* ioq) { //ASSERT(get_now_intr_status() == INTR_OFF); return next_pos(ioq-&amp;gt;head) == ioq-&amp;gt;tail; } /* 判断队列是否已空 */ static char ioq_empty(struct ioqueue* ioq) { //ASSERT(get_now_intr_status() == INTR_OFF); return ioq-&amp;gt;head == ioq-&amp;gt;tail; } /* 使当前生产者或消费者在此缓冲区上等待 */ static void ioq_wait(struct task_struct** waiter) { ASSERT(*waiter == NULL &amp;amp;&amp;amp; waiter !</description>
+    </item>
+    
+    <item>
+      <title>Chapter-18 main部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>main.c ELF格式的内核入口，包含各种外设初始化，以及GDT和IDT表的设置等。
+#include &amp;quot;main.h&amp;quot; #include &amp;quot;../asm/asm.h&amp;quot; #include &amp;quot;../dt/dt.h&amp;quot; #include &amp;quot;../interrupt/trap.h&amp;quot; #include &amp;quot;../timer/timer.h&amp;quot; #include &amp;quot;../pic/pic.h&amp;quot; #include &amp;quot;../vga/vga.h&amp;quot; #include &amp;quot;../mem/pmm.h&amp;quot; #include &amp;quot;../mem/vmm.h&amp;quot; #include &amp;quot;../debug/debug.h&amp;quot; #include &amp;quot;../task/task.h&amp;quot; #include &amp;quot;../sync/sync.h&amp;quot; #include &amp;quot;../interrupt/syscall.h&amp;quot; #include &amp;quot;../file/ide-dev.h&amp;quot; #include &amp;quot;../file/fs.h&amp;quot; #include &amp;quot;../user/user_main.h&amp;quot; #include &amp;quot;../keyboard/keyboard.h&amp;quot; #define TIME_FREQUENCY 100 //三个管理区 extern pm_zone dma_zone; extern pm_zone normal_zone; extern pm_zone highmem_zone; extern struct task_struct *current; extern unsigned int volatile jiffies; struct semaphore user_sema; static void delay(unsigned int xms); void user_task_print(); int test_user_task=0; int offset=0; void printf(char *fmt,...); void kernel_main(); void main(void) { clear(); printk(&amp;quot;FreeFlyOS is running\n&amp;quot;); // print_seg(); gdt_init(); pic_init(); idt_init(); enable_interupt(); serial_init(); kbd_init(); // ASSERT(1==2); setup_vpt(); pmm_init(); test_pmm(); test_vmm(); fs_init(); kernel_task_init(kernel_main); //write2fs(); //放在进程初始化后，需要安装到当前进程的fd表，写入到文件系统即可，故仅需执行一次 //必须放在task_init后，不然访问current会出现缺页 timer_init(TIME_FREQUENCY); //100HZ sema_init(&amp;amp;user_sema,0); intr_enable(); clear(); user_task_init(user_main); //test_schedule(); //test_schedule(); //print_seg(); //printk(&amp;quot;successful\n&amp;quot;); //test_ide_io(); //test_fs(); while(1); } /* 将test_exec和test_cat测试程序（占20个扇区）从500扇区处写入到文件系统中 */ static void write2fs(){ //写入test_exec unsigned int file_size=14136; //通过本机OS 的ls -l命令获得 unsigned int sec_cnt=(file_size+512-1)/512; //扇区数 unsigned int prog=vmm_malloc(file_size,1); ide_read((void *)prog,500,sec_cnt); int fd=sys_open(&amp;quot;/prog&amp;quot;,O_CREAT|O_RDWR); if(fd!</description>
+    </item>
+    
+    <item>
+      <title>Chapter-19 user部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>stdio.c #include &amp;quot;stdio.h&amp;quot; #include &amp;quot;va_list.h&amp;quot; #include &amp;quot;user_syscall.h&amp;quot; void printf(char *fmt,...){ user_va_list ap; char c; char *str; int dec_num; int hex_num; unsigned int unsigned_dec_num; unsigned int unsigned_hex_num; long long ll_hex_num; unsigned long long ull_hex_num; char bits=0; //record the number&#39;s bits user_va_start(ap,fmt); while(*fmt){ if(*fmt==&#39;%&#39;){ user_dis_num: switch (*(++fmt)) { case &#39;c&#39;: c=user_va_arg(ap,char); user_print_char(c); break; case &#39;s&#39;: str=user_va_arg(ap,char *); user_print_string(str); break; case &#39;d&#39;: dec_num=user_va_arg(ap,int); if(bits){ user_print_num(dec_num,dec,bits,display_bits); } else{ user_print_num(dec_num,dec,ulonglong_max,display_num); } break; case &#39;X&#39;: case &#39;x&#39;: hex_num=user_va_arg(ap,int); if(bits){ user_print_num(hex_num,hex,bits,display_bits); } else{ user_print_num(hex_num,hex,ulonglong_max,display_num); } break; case &#39;l&#39;: case &#39;L&#39;: ll_hex_num=user_va_arg(ap,long long); if(bits){ user_print_num(ll_hex_num,hex,bits,display_bits); } else{ user_print_num(ll_hex_num,hex,ulonglong_max,display_num); } break; case &#39;u&#39;: switch (*(++fmt)) { case &#39;d&#39;: unsigned_dec_num=user_va_arg(ap,unsigned int); if(bits){ user_print_num(unsigned_dec_num,dec,bits,display_bits); } else{ user_print_num(unsigned_dec_num,dec,ulonglong_max,display_num); } break; case &#39;X&#39;: case &#39;x&#39;: unsigned_hex_num=user_va_arg(ap,unsigned int); if(bits){ user_print_num(unsigned_hex_num,hex,bits,display_bits); } else{ user_print_num(unsigned_hex_num,hex,ulonglong_max,display_num); } break; case &#39;l&#39;: case &#39;L&#39;: ull_hex_num=user_va_arg(ap,unsigned long long); if(bits){ user_print_num(ull_hex_num,hex,bits,display_bits); } else{ user_print_num(ull_hex_num,hex,ulonglong_max,display_num); } break; default: break; } break; //read the bits of number displayed,the range is 00-99 case &#39;0&#39;: case &#39;1&#39;: case &#39;2&#39;: case &#39;3&#39;: case &#39;4&#39;: case &#39;5&#39;: case &#39;6&#39;: case &#39;7&#39;: case &#39;8&#39;: case &#39;9&#39;: bits=(*fmt-&#39;0&#39;)*10+(*(++fmt)-&#39;0&#39;); goto user_dis_num; break; default: user_print_string(&amp;quot;error format!</description>
+    </item>
+    
+    <item>
+      <title>Chapter-20 test_exec部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>start.S .text .code32 .extern main .extern exit .global _start _start: push %ebx push %ecx call main  test.c 测试exec是否能执行prog程序
+#include &amp;quot;../kernel/user/stdio.h&amp;quot; #include &amp;quot;../kernel/user/user_syscall.h&amp;quot; #define NULL ((void *)0) void main(int argc,char **argv){ int arg_idx = 0; while(arg_idx &amp;lt; argc) { printf(&amp;quot;argv[%d] is %s\n&amp;quot;, arg_idx, argv[arg_idx]); arg_idx++; } printf(&amp;quot;Nice to meet you! It&#39;s all! See You! Goodbye!\n&amp;quot;); while(1); }  test.ld /* ** 链接脚本 */ OUTPUT_FORMAT(elf32-i386) OUTPUT_ARCH(i386) ENTRY(_start) /* * ld有多种方法设置进程入口地址, 按以下顺序: (编号越前, 优先级越高) * 1, ld命令行的-e选项 * 2, 连接脚本的ENTRY(SYMBOL)命令 * 3, 如果定义了start 符号, 使用start符号值 * 4, 如果存在 .</description>
+    </item>
+    
+    <item>
+      <title>Chapter-21 test_cat部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>start.S .text .code32 .extern main .extern exit .global _start _start: push %ebx push %ecx call main push %eax call exit  test.c cat命令实现，属于外部命令
+#include &amp;quot;../kernel/user/stdio.h&amp;quot; #include &amp;quot;../kernel/user/user_syscall.h&amp;quot; #include &amp;quot;../kernel/user/string.h&amp;quot; #define NULL ((void *)0) void main(int argc,char **argv){ /*printf(&amp;quot;hello nice to meet you\n&amp;quot;); while(1);*/ if (argc &amp;gt; 2 || argc == 1) { printf(&amp;quot;cat: only support 1 argument.\neg: cat filename\n&amp;quot;); exit(-2); } int buf_size = 1024; char abs_path[512] = {0}; void* buf = malloc(buf_size); if (buf == NULL) { printf(&amp;quot;cat: malloc memory failed\n&amp;quot;); return -1; } if (argv[1][0] !</description>
+    </item>
+    
+    <item>
+      <title>Chapter-22 test_pipe部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>start.S .text .code32 .extern main .extern exit .global _start _start: push %ebx push %ecx call main push %eax call exit  test.c 测试管道用的程序
+#include &amp;quot;../kernel/user/stdio.h&amp;quot; #include &amp;quot;../kernel/user/user_syscall.h&amp;quot; int main(int argc, char** argv) { int fd[2] = {-1}; pipe(fd); int pid = fork(); if(pid) {	// 父进程 close(fd[0]); // 关闭输入 write(fd[1], &amp;quot;Hi, my son, I love you!&amp;quot;, 24); printf(&amp;quot;\nI`m father, my pid is %d\n&amp;quot;, user_sys_getpid()); return 8; } else { close(fd[1]); // 关闭输出 char buf[32] = {0}; read(fd[0], buf, 24); printf(&amp;quot;\nI`m child, my pid is %d\n&amp;quot;, user_sys_getpid()); printf(&amp;quot;I`m child, my father said to me: \&amp;quot;%s\&amp;quot;\n&amp;quot;, buf); return 9; } }  test.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-23 cmake部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>mac_x86_toolchain.cmake set(CMAKE_SYSTEM_NAME Darwin) set(CMAKE_SYSTEM_VERSION 1) set(CMAKE_SYSTEM_PROCESSOR x86_64) # GCC find_program(X86_64 x86_64-elf-gcc REQUIRED) if (NOT X86_64) message(FATAL_ERROR &amp;quot;x86_64-elf-gcc not found.\n&amp;quot; &amp;quot;Run `brew install x86_64-elf-gcc` to install the toolchain.&amp;quot;) else () message(STATUS &amp;quot;Found x86_64-elf-gcc ${X86_64}.&amp;quot;) endif () set(TOOLCHAIN_PREFIX x86_64-elf-) set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}gcc) set(CMAKE_OBJCOPY ${TOOLCHAIN_PREFIX}objcopy)  通过.cmake设置不同环境下的编译工具链，mac环境下的工具链如上图所示。
+另外说明一下，本人用的是64位的x86机器，如果使用的是32位的机器，那就需要根据情况来设定，看到这里，有很多读者可能会问，MAC电脑下自带gcc版本，为什么要用x86_64-elf-gcc呢，因为MAC电脑下的gcc只支持MAC系统下的文件系统，不认elf文件系统，那我们要写一个类似Linux的内核，肯定要用到它的文件系统，而gcc早就帮我们想到了这一点，所以其提供了跨平台的编译器&amp;mdash;-x86_64-elf-gcc，这样我们编译链接运行出来的就是elf文件格式了。
+linux_x86_toolchain.cmake set(CMAKE_SYSTEM_NAME Linux) set(CMAKE_SYSTEM_VERSION 1) set(CMAKE_SYSTEM_PROCESSOR x86_64) # GCC find_program(X86_64 x86_64-elf-gcc REQUIRED) if (NOT X86_64) message(FATAL_ERROR &amp;quot;x86_64-elf-gcc not found.\n&amp;quot; &amp;quot;Run `brew install x86_64-elf-gcc` to install the toolchain.&amp;quot;) else () message(STATUS &amp;quot;Found x86_64-elf-gcc ${X86_64}.</description>
+    </item>
+    
+    <item>
+      <title>Chapter-24 disassembly部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>该目录主要是可执行文件的反汇编 只能看到.text段的数据，简单示意下。
+boot_disass.md =====》》》》bootblock(引导程序)的反汇编
+kernel_disass.md =====》》》》kernel(内核)的反汇编代码
+test_cat.md =====》》》》test_cat(cat测试程序)的反汇编代码
+test_exec_disass.md =====》》》》test_exec(exec测试程序)的反汇编代码
+test_pipe_disass.md =====》》》》test_pipe(pipe测试程序)的反汇编代码
+通过以下命令可获得:</description>
+    </item>
+    
+    <item>
+      <title>Chapter-25 elf部分详解</title>
+      <link>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Thu, 24 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/</guid>
+      <description>ELF Header: Magic: 7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 Class: ELF32 Data: 2&#39;s complement, little endian Version: 1 (current) OS/ABI: UNIX - System V ABI Version: 0 Type: EXEC (Executable file) Machine: Intel 80386 Version: 0x1 Entry point address: 0x100000 Start of program headers: 52 (bytes into file) Start of section headers: 241288 (bytes into file) Flags: 0x0 Size of this header: 52 (bytes) Size of program headers: 32 (bytes) Number of program headers: 5 Size of section headers: 40 (bytes) Number of section headers: 23 Section header string table index: 22 Section Headers: [Nr] Name Type Addr Off Size ES Flg Lk Inf Al [ 0] NULL 00000000 000000 000000 00 0 0 0 [ 1] .</description>
+    </item>
+    
+    <item>
+      <title>Hello World</title>
+      <link>/posts/hello-word/</link>
+      <pubDate>Thu, 24 Mar 2022 17:46:29 +0800</pubDate>
+      
+      <guid>/posts/hello-word/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

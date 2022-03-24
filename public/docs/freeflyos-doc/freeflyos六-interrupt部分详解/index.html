@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  dir="ltr"
+  
+><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Chapter-6 interrupt部分详解 | FreeFlyOS | 自由飞翔的大山鸡</title>
+
+<meta name="generator" content="Hugo Eureka 0.9.1" />
+<link rel="stylesheet" href="/css/eureka.min.6a378a23360d238dc3ef4df2f5cd718093f02c10c9c7eb2437c29701cd8d389ab6da5d9f21bdd3afa305fd56c1235017.css" integrity="sha384-ajeKIzYNI43D703y9c1xgJPwLBDJx&#43;skN8KXAc2NOJq22l2fIb3Tr6MF/VbBI1AX">
+<script defer src="/js/eureka.min.4ab4e11bfa71ae0aeed55e31bbb0f8ab16c24a648722270637c4b96ea70eef4ddf17aa3e2a8131f613520e0387c1bbde.js" integrity="sha384-SrThG/pxrgru1V4xu7D4qxbCSmSHIicGN8S5bqcO703fF6o&#43;KoEx9hNSDgOHwbve"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js"
+   crossorigin></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js"
+     crossorigin></script>
+
+
+<script defer type="text/javascript" src="/js/fontawesome.min.56e85e545fac4d674dccb3bcea98ac2a625933b1f15638678edd10cf6c26fb44f0e1c5507df434dd557495bf13b58413.js" integrity="sha384-VuheVF&#43;sTWdNzLO86pisKmJZM7HxVjhnjt0Qz2wm&#43;0Tw4cVQffQ03VV0lb8TtYQT"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+   integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" 
+  integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"
+   integrity="sha384-&#43;XBljXPPiv&#43;OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js" 
+  integrity="sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0"  crossorigin></script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png">
+
+<meta name="description"
+  content="Chapter 6 of FreeFlyOS">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Docs",
+      "item":"/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"FreeFlyOS",
+      "item":"/docs/freeflyos-doc/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"Chapter-6 interrupt部分详解",
+      "item":"/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"
+    },
+    "headline": "Chapter-6 interrupt部分详解 | FreeFlyOS | 自由飞翔的大山鸡","datePublished": "2022-03-24T00:00:00+00:00",
+    "dateModified": "2022-03-24T00:00:00+00:00",
+    "wordCount":  1878 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "/images/icon.png"
+        }
+        },
+    "description": "Chapter 6 of FreeFlyOS"
+}
+</script><meta property="og:title" content="Chapter-6 interrupt部分详解 | FreeFlyOS | 自由飞翔的大山鸡" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="/images/icon.png">
+
+
+<meta property="og:url" content="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" />
+
+
+
+<meta property="og:description" content="Chapter 6 of FreeFlyOS" />
+
+
+
+<meta property="og:locale" content="en" />
+
+
+
+
+<meta property="og:site_name" content="自由飞翔的大山鸡" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+  <body class="flex min-h-screen flex-col">
+    <header
+      class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"
+    >
+      <div class="mx-auto w-full max-w-screen-xl"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0">
+    <a href="/" class="me-6 text-primary-text text-xl font-bold">自由飞翔的大山鸡</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/#about" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">About</a>
+            <a href="/posts/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">Posts</a>
+            <a href="/docs/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  selected-menu-item  me-4">Docs</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', switchDarkMode)
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script>
+</div>
+    </header>
+    <main class="grow pt-16">
+        <div class="pl-scrollbar">
+          <div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-e">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">Table of Contents</span>
+    <i class='fas fa-caret-right ms-1'></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="/docs/freeflyos-doc/">FreeFlyOS</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="ps-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/">Chapter-1 boot部分(引导扇区)详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-2 init部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-3 asm部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-4 dt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-5 VGA部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-6 interrupt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-7 keyboard部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-8 serial部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-9 timer部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-10 pic部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-11 stl部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-12 debug部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-13 mem部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-14 sync部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-15 task部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-16 file部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-17 pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-18 main部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-19 user部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-20 test_exec部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-21 test_cat部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-22 test_pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-23 cmake部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-24 disassembly部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-25 elf部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    <article class="prose">
+  <h1 class="mb-4">Chapter-6 interrupt部分详解</h1>
+
+  <div
+  class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"
+>
+  <div class="me-6 my-2">
+    <i class="fas fa-calendar me-1"></i>
+    <span
+      >2022-03-24</span
+    >
+  </div>
+  <div class="me-6 my-2">
+    <i class="fas fa-clock me-1"></i>
+    <span>9 min read</span>
+  </div>
+
+  
+
+  
+</div>
+
+
+  
+  
+
+  <h2 id="trapc">trap.c</h2>
+<p>中断服务程序IRQ的实现.</p>
+<pre><code>#include &quot;trap.h&quot;
+#include &quot;../asm/asm.h&quot;
+#include &quot;../vga/vga.h&quot;
+#include &quot;../timer/timer.h&quot;
+#include &quot;../debug/debug.h&quot;
+#include &quot;../dt/dt.h&quot;
+#include &quot;../task/task.h&quot;
+#include &quot;../sync/sync.h&quot;
+#include &quot;../serial/serial.h&quot;
+extern struct semaphore user_sema;
+
+extern unsigned int volatile jiffies; //记录当前系统开机的时钟节拍数
+extern unsigned int volatile second; //记录秒数
+//int test_test=0;
+extern struct task_struct *current;  //指向当前进程
+static const char *IA32flags[] = {
+    &quot;CF&quot;, NULL, &quot;PF&quot;, NULL, &quot;AF&quot;, NULL, &quot;ZF&quot;, &quot;SF&quot;,
+    &quot;TF&quot;, &quot;IF&quot;, &quot;DF&quot;, &quot;OF&quot;, NULL, NULL, &quot;NT&quot;, NULL,
+    &quot;RF&quot;, &quot;VM&quot;, &quot;AC&quot;, &quot;VIF&quot;, &quot;VIP&quot;, &quot;ID&quot;, NULL, NULL,
+};
+void print_regs(struct pushregs *regs) {
+    printk(&quot;  edi  0x%08ux\n&quot;, regs-&gt;reg_edi);
+    printk(&quot;  esi  0x%08ux\n&quot;, regs-&gt;reg_esi);
+    printk(&quot;  ebp  0x%08ux\n&quot;, regs-&gt;reg_ebp);
+    printk(&quot;  oesp 0x%08ux\n&quot;, regs-&gt;reg_oesp);
+    printk(&quot;  ebx  0x%08ux\n&quot;, regs-&gt;reg_ebx);
+    printk(&quot;  edx  0x%08ux\n&quot;, regs-&gt;reg_edx);
+    printk(&quot;  ecx  0x%08ux\n&quot;, regs-&gt;reg_ecx);
+    printk(&quot;  eax  0x%08ux\n&quot;, regs-&gt;reg_eax);
+}
+void print_trapframe(struct trapframe *tf) {
+   // printk(&quot;trapframe at %p\n&quot;, tf);
+    print_regs(&amp;tf-&gt;tf_regs);
+    printk(&quot;  ds   0x----%04ux\n&quot;, tf-&gt;tf_ds);
+    printk(&quot;  es   0x----%04ux\n&quot;, tf-&gt;tf_es);
+    printk(&quot;  fs   0x----%04ux\n&quot;, tf-&gt;tf_fs);
+    printk(&quot;  gs   0x----%04ux\n&quot;, tf-&gt;tf_gs);
+    //printk(&quot;  trap 0x%08ux %s\n&quot;, tf-&gt;tf_trapno, trapname(tf-&gt;tf_trapno));
+    printk(&quot;  err  0x%08ux\n&quot;, tf-&gt;tf_err);
+    printk(&quot;  eip  0x%08ux\n&quot;, tf-&gt;tf_eip);
+    printk(&quot;  cs   0x----%04ux\n&quot;, tf-&gt;tf_cs);
+    printk(&quot;  flag 0x%08ux &quot;, tf-&gt;tf_eflags);
+
+    int i, j;
+    for (i = 0, j = 1; i &lt; sizeof(IA32flags) / sizeof(IA32flags[0]); i ++, j &lt;&lt;= 1) {
+        if ((tf-&gt;tf_eflags &amp; j) &amp;&amp; IA32flags[i] != NULL) {
+            printk(&quot;%s,&quot;, IA32flags[i]);
+        }
+    }
+    printk(&quot;IOPL=%d\n&quot;, (tf-&gt;tf_eflags &amp; FL_IOPL_MASK) &gt;&gt; 12);
+    while(1);
+   // if (!trap_in_kernel(tf)) {
+   //     printk(&quot;  esp  0x%08x\n&quot;, tf-&gt;tf_esp);
+   //     printk(&quot;  ss   0x----%04x\n&quot;, tf-&gt;tf_ss);
+   // }
+}
+
+/* *
+ * trap - handles or dispatches an exception/interrupt. if and when trap() returns,
+ * the code in kern/trap/trapentry.S restores the old CPU state saved in the
+ * trapframe and then uses the iret instruction to return from the exception.
+ * */
+/* trap_dispatch - dispatch based on what type of trap occurred */
+static void trap_dispatch(struct trapframe *tf) 
+{
+    char c;
+    switch (tf-&gt;tf_trapno) {
+        case IRQ_TEST:
+            printk(&quot;test user trap\n&quot;);
+            break;
+        case T_PGFLT:
+            print_trapframe(tf);
+            //printk(&quot;queye\n&quot;);
+            break;
+        case T_SYSCALL:
+            syscall_trap(tf);
+            break;
+        case IRQ_OFFSET + IRQ_TIMER:
+            jiffies++;
+            //1秒触发一次
+            if (jiffies % 100 == 0){
+                current-&gt;counter--;
+                second++;
+                //printk(&quot;current-&gt;counter:%08d\n&quot;,current-&gt;counter);
+            }
+            if(current-&gt;counter==0){
+                //printk(&quot;Start Schedule\n&quot;,current-&gt;counter);
+                schedule();
+            }
+            break;
+        case IRQ_OFFSET + IRQ_COM1:
+             c = cons_getc();
+             //cons_putc(c);
+             break;
+        case IRQ_OFFSET + IRQ_KBD:
+            c = cons_getc();
+            //printk(&quot;%c&quot;,c);
+            //cons_putc(c);
+            //printk(&quot;anle\n&quot;);
+            //test_test++;
+            //printk(&quot;test_test:%02d\n&quot;,test_test);
+            //printk(&quot;user_sema.value:%08d\n&quot;,user_sema.value);
+            if(user_sema.value==0){
+                 sema_up(&amp;user_sema);
+                 schedule();
+                //printk(&quot;user_sema.value:%08d\n&quot;,user_sema.value);
+            }
+               
+            //printk(&quot;rpos:%08x&quot;,cons.rpos);
+            //printk(&quot;wpos:%08x&quot;,cons.wpos);
+            //printk(&quot;cons.buf:%c&quot;,cons.buf[cons.wpos-1]);
+            break;
+        case IRQ_OFFSET+IRQ_IDE1:
+           /* struct ide_channel* channel = &amp;channels[0];
+            if (channel-&gt;expecting_intr) {
+                channel-&gt;expecting_intr = 0;
+                sema_up(&amp;channel-&gt;disk_done);
+                // 读取状态寄存器使硬盘控制器认为此次的中断已被处理,从而硬盘可以继续执行新的读写 
+                inb(reg_status(channel));
+            } */
+            break;
+        case IRQ_OFFSET+IRQ_IDE2:
+            /*struct ide_channel* channel = &amp;channels[1];
+            if (channel-&gt;expecting_intr) {
+                channel-&gt;expecting_intr = 0;
+                sema_up(&amp;channel-&gt;disk_done);
+                 读取状态寄存器使硬盘控制器认为此次的中断已被处理,从而硬盘可以继续执行新的读写 
+                inb(reg_status(channel));
+            }  */
+            break;
+        default:
+            // in kernel, it must be a mistake
+            printk(&quot;unexpected trap in kernel!\n&quot;);
+    }
+}
+
+void trap(struct trapframe *tf) {
+    trap_dispatch(tf);
+}
+
+void disable_interupt(){
+    // 关闭中断
+    asm volatile (&quot;cli&quot;);
+}
+
+void enable_interupt(){
+    // 开启中断
+    asm volatile (&quot;sti&quot;);
+}
+/*
+**   获取当前中断状态
+*/
+enum intr_status get_now_intr_status(){
+    unsigned int eflags=0;
+    get_intr_status(eflags);
+    return (EFLAGS_IF &amp; eflags) ? INTR_ON : INTR_OFF ;
+}
+/*
+**   开中断并获取之前的中断状态
+*/
+enum intr_status intr_enable(){
+    if(get_now_intr_status()==INTR_OFF){
+        enable_interupt();
+        return INTR_OFF;
+    }
+    else{
+        return INTR_ON;
+    }
+}
+/*
+**   关中断并获取之前的中断状态
+*/
+enum intr_status intr_disable(){
+    if(get_now_intr_status()==INTR_ON){
+        disable_interupt();
+        return INTR_ON;
+    }
+    else{
+        return INTR_OFF;
+    }
+}
+
+/*
+**      临界区访问,保存中断状态后
+**           &lt;关闭中断&gt;
+*/
+enum intr_status intr_save(){
+    enum intr_status status;
+    status=intr_disable();
+    return status;
+}
+/*
+**      临界区访问,保存中断状态后
+**           &lt;关闭中断&gt;
+*/
+void intr_restore(enum intr_status status){
+    if(status==INTR_ON)
+        enable_interupt();
+}
+</code></pre>
+<h2 id="traph">trap.h</h2>
+<p>trap号，硬件IRQ号，两者主要区别是陷阱门发生后不会关中断，可能会出现中断嵌套，而中断门发生后会关闭中断，防止出现中断嵌套。</p>
+<pre><code>#ifndef _TRAP_H_
+#define _TRAP_H_
+
+/* Trap Numbers */
+/* Processor-defined: */
+#define T_DIVIDE                0   // divide error
+#define T_DEBUG                 1   // debug exception
+#define T_NMI                   2   // non-maskable interrupt
+#define T_BRKPT                 3   // breakpoint
+#define T_OFLOW                 4   // overflow
+#define T_BOUND                 5   // bounds check
+#define T_ILLOP                 6   // illegal opcode
+#define T_DEVICE                7   // device not available
+#define T_DBLFLT                8   // double fault
+// #define T_COPROC             9   // reserved (not used since 486)
+#define T_TSS                   10  // invalid task switch segment
+#define T_SEGNP                 11  // segment not present
+#define T_STACK                 12  // stack exception
+#define T_GPFLT                 13  // general protection fault
+#define T_PGFLT                 14  // page fault
+// #define T_RES                15  // reserved
+#define T_FPERR                 16  // floating point error
+#define T_ALIGN                 17  // aligment check
+#define T_MCHK                  18  // machine check
+#define T_SIMDERR               19  // SIMD floating point error
+
+/* Hardware IRQ numbers. We receive these as (IRQ_OFFSET + IRQ_xx) */
+#define IRQ_OFFSET              32  // IRQ 0 corresponds to int IRQ_OFFSET
+
+#define IRQ_TIMER               0
+#define IRQ_KBD                 1
+#define IRQ_COM1                4
+#define IRQ_IDE1                14
+#define IRQ_IDE2                15
+#define IRQ_ERROR               19
+#define IRQ_SPURIOUS            31
+
+#define IRQ_TEST  0x60
+/*
+ * These are arbitrarily chosen, but with care not to overlap
+ * processor defined exceptions or interrupt vectors.
+ * */
+#define T_SWITCH_TOU                120    // user/kernel switch
+#define T_SWITCH_TOK                121    // user/kernel switch
+
+#define NULL ((void *)0)
+#define FL_IOPL_MASK    0x00003000  // I/O Privilege Level bitmask
+
+/*
+**   中断状态
+*/
+enum intr_status{
+    INTR_OFF=0,
+    INTR_ON=1,
+};
+#define EFLAGS_IF 0x00000200  //中断标志位
+#define get_intr_status(eflag_val) asm volatile(&quot;pushfl ; popl %0&quot;:&quot;=g&quot;(eflag_val))
+
+#define local_intr_save(x)      do { x = intr_save(); } while (0)
+#define local_intr_restore(x)       intr_restore(x)
+
+/* registers as pushed by pushal */
+struct pushregs {
+    unsigned int reg_edi;
+    unsigned int reg_esi;
+    unsigned int reg_ebp;
+    unsigned int reg_oesp;          /* Useless */
+    unsigned int reg_ebx;
+    unsigned int reg_edx;
+    unsigned int reg_ecx;
+    unsigned int reg_eax;
+}__attribute__((packed));
+
+struct trapframe {
+    struct pushregs tf_regs;
+    unsigned short tf_gs;
+    unsigned short tf_padding0;
+    unsigned short tf_fs;
+    unsigned short tf_padding1;
+    unsigned short tf_es;
+    unsigned short tf_padding2;
+    unsigned short tf_ds;
+    unsigned short tf_padding3;
+    unsigned int tf_trapno;
+    /* below here defined by x86 hardware */
+    unsigned int tf_err;
+    unsigned int tf_eip;
+    unsigned short tf_cs;
+    unsigned short tf_padding4;
+    unsigned int tf_eflags;
+    /* below here only when crossing rings, such as from user to kernel */
+    unsigned int tf_esp;
+    unsigned short tf_ss;
+    unsigned short tf_padding5;
+} __attribute__((packed));
+
+void print_trapframe(struct trapframe *tf);
+static void trap_dispatch(struct trapframe *tf);
+void trap(struct trapframe *tf);
+void disable_interupt();
+void enable_interupt();
+enum intr_status get_now_intr_status();
+enum intr_status intr_enable();
+enum intr_status intr_disable();
+enum intr_status intr_save();
+void intr_restore(enum intr_status status);
+
+#endif
+</code></pre>
+<h2 id="trapentrys">trapentry.S</h2>
+<p>用于保存中断处理程序前的现场（上下文），当程序执行完毕后返回原来的现场，各种段寄存器恢复成原值。</p>
+<pre><code>#define GD_KDATA    ((2) &lt;&lt; 3)      // kernel data
+.code32
+# vectors.S sends all traps here.
+.section .text
+.globl __alltraps
+__alltraps:
+    # push registers to build a trap frame
+    # therefore make the stack look like a struct trapframe
+    pushl %ds
+    pushl %es
+    pushl %fs
+    pushl %gs
+    pushal
+
+    # load GD_KDATA into %ds and %es to set up data segments for kernel
+    movl $GD_KDATA, %eax
+    movw %ax, %ds
+    movw %ax, %es
+
+    # push %esp to pass a pointer to the trapframe as an argument to trap()
+    pushl %esp
+
+    # call trap(tf), where tf=%esp
+    call trap
+
+    # pop the pushed stack pointer
+    popl %esp
+
+    # return falls through to trapret...
+.globl __trapret
+__trapret:
+    # restore registers from stack
+    popal
+
+    # restore %ds, %es, %fs and %gs
+    popl %gs
+    popl %fs
+    popl %es
+    popl %ds
+
+    # get rid of the trap number and error code
+    addl $0x8, %esp
+    iret
+
+.globl forkrets
+forkrets:
+    # set stack to this new task's trapframe
+    movl 4(%esp), %esp
+    jmp __trapret
+</code></pre>
+<h2 id="vectors">vector.S</h2>
+<p>中断向量表，在IDT初始化时和中断号绑定，初始化了256个中断向量，实际只用了几个。</p>
+<h2 id="syscallc">syscall.c</h2>
+<pre><code>#include &quot;syscall.h&quot;
+#include &quot;../task/task.h&quot;
+#include &quot;../vga/vga.h&quot;
+#include &quot;../file/fs.h&quot;
+#include &quot;../mem/vmm.h&quot;
+#include &quot;../task/exec.h&quot;
+#include &quot;../pipe/pipe.h&quot;
+extern struct task_struct *current;  //指向当前进程
+
+static int
+syscall_exit(unsigned int arg[]) {
+    int status = (int)arg[0];
+    sys_exit(status);
+    return 0;
+}
+
+static int
+sys_fork(unsigned int arg[]) {
+    struct trapframe *tf = current-&gt;tf;
+    unsigned int stack = tf-&gt;tf_esp;
+    return do_fork(0, stack, tf);
+}
+
+static int
+syscall_wait(unsigned int arg[]) {
+    int *status = (int *)arg[0];
+    return sys_wait(status);
+    //return do_wait(pid, store);
+}
+
+static int
+sys_exec(unsigned int arg[]) {
+    const char *path = (const char *)arg[0];
+    const char **argv = (const char **)arg[1];
+    return sys_execv(path,argv);
+}
+
+static int
+sys_yield(unsigned int arg[]) {
+    //return do_yield();
+}
+
+static int
+sys_kill(unsigned int arg[]) {
+    int pid = (int)arg[0];
+    //return do_kill(pid);
+}
+
+static int
+sys_getpid(unsigned int arg[]) {
+    return current-&gt;pid;
+}
+
+static int
+sys_print_char(unsigned int arg[]) {
+    char c = (char)arg[0];
+    print_char(c,default_background,default_foreground);
+    return 0;
+}
+static int
+sys_print_string(unsigned int arg[]) {
+    const char *str = (const char *)arg[0];
+    print_string(str,default_background,default_foreground);
+    return 0;
+}
+static int
+sys_print_num(unsigned int arg[]) {
+    int num = (int)arg[0];
+    unsigned char base=(unsigned char)arg[1];
+    char len=(char)arg[2];
+    int flag=(int)arg[3];
+    print_num(num,default_background,default_foreground,base,len,flag);
+    return 0;
+}
+static int
+sys_backtrace(unsigned int arg[]) {
+    backtrace();
+    return 0;
+}
+static int
+sys_pgdir(unsigned int arg[]) {
+    //print_pgdir();
+    return 0;
+}
+static int
+sys_fdread(unsigned int arg[]) {
+    int fd=arg[0];
+    void *buf=(void *)arg[1];
+    unsigned int count=(unsigned int)arg[2];
+    return sys_read(fd,buf,count);
+}
+static int
+syscall_open(unsigned int arg[]) {
+    const char* pathname=(const char*)arg[0];
+    unsigned char flags=(unsigned char)arg[1];
+    return sys_open(pathname,flags);
+}
+static int
+syscall_close(unsigned int arg[]) {
+    int fd=(int)arg[0];
+    return sys_close(fd);
+}
+static int
+syscall_write(unsigned int arg[]) {
+    int fd=(int)arg[0];
+    const void* buf=(const void*)arg[1];
+    unsigned int count=(unsigned int)arg[2];
+    return sys_write(fd,buf,count);
+}
+static int
+syscall_lseek(unsigned int arg[]) {
+    int fd=(int)arg[0];
+    int offset=(int)arg[1];
+    unsigned char whence=(unsigned char)arg[2];
+    return sys_lseek(fd,offset,whence);
+}
+static int
+syscall_unlink(unsigned int arg[]) {
+    const char* pathname=(const char*)arg[0];
+    return sys_unlink(pathname);
+}
+static int
+syscall_mkdir(unsigned int arg[]) {
+    const char* pathname=(const char*)arg[0];
+    return sys_mkdir(pathname);
+}
+static int
+syscall_rmdir(unsigned int arg[]) {
+    const char* pathname=(const char*)arg[0];
+    return sys_rmdir(pathname);
+}
+static int
+syscall_rewinddir(unsigned int arg[]) {
+    struct dir* dir=(struct dir*)arg[0];
+    sys_rewinddir(dir);
+    return 0;
+}
+static char*
+syscall_getcwd(unsigned int arg[]) {
+    char* buf=(char* )arg[0];
+    unsigned int size=(unsigned int)arg[1];
+    return sys_getcwd(buf,size);
+}
+static int
+syscall_chdir(unsigned int arg[]) {
+    const char* path=(const char*)arg[0];
+    return sys_chdir(path);
+}
+static int
+syscall_stat(unsigned int arg[]) {
+    const char* path=(const char*)arg[0];
+    struct stat *buf=(struct stat *)arg[1];
+    return sys_stat(path,buf);
+}
+static struct dir *
+syscall_opendir(unsigned int arg[]) {
+    const char* name=(const char*)arg[0];
+    return sys_opendir(name);
+}
+static int
+syscall_closedir(unsigned int arg[]) {
+    struct dir* dir=(struct dir* )arg[0];
+    return sys_closedir(dir);
+}
+static int
+syscall_readdir(unsigned int arg[]) {
+    struct dir* dir=(struct dir* )arg[0];
+    return sys_readdir(dir);
+}
+static int 
+syscall_print_task(unsigned int arg[]) {
+    sys_print_task();
+    return 0;
+}
+static unsigned int 
+syscall_malloc(unsigned int arg[]){
+    unsigned int bytes=(unsigned int)arg[0];
+    return sys_malloc(bytes);
+}
+static int
+syscall_free(unsigned int arg[]){
+    unsigned int addr=(unsigned int)arg[0];
+    unsigned int size=(unsigned int)arg[1];
+    sys_free(addr,size);
+    return 0;
+}
+static int
+syscall_pipe(unsigned int arg[]){
+    unsigned int *fd=(unsigned int)arg[0];
+    sys_pipe(fd);
+    return 0;
+}
+static int (*syscalls[])(unsigned int arg[]) = {
+    [SYS_exit]              syscall_exit,
+    [SYS_fork]              sys_fork,
+    [SYS_wait]              syscall_wait,
+    [SYS_exec]              sys_exec,
+    [SYS_yield]             sys_yield,
+    [SYS_kill]              sys_kill,
+    [SYS_getpid]            sys_getpid,
+    [SYS_fdread]            sys_fdread, 
+    [SYS_pgdir]             sys_pgdir,
+    [SYS_print_char]        sys_print_char,
+    [SYS_print_string]      sys_print_string,
+    [SYS_print_num]         sys_print_num,
+    [SYS_backtrace]         sys_backtrace,
+    [SYS_open]              syscall_open,
+    [SYS_close]             syscall_close,
+    [SYS_write]             syscall_write,
+    [SYS_lseek]             syscall_lseek,
+    [SYS_unlink]            syscall_unlink,
+    [SYS_mkdir]             syscall_mkdir,
+    [SYS_rmdir]             syscall_rmdir,
+    [SYS_rewinddir]         syscall_rewinddir,
+    [SYS_getcwd]            syscall_getcwd,
+    [SYS_chdir]             syscall_chdir,
+    [SYS_stat]              syscall_stat,
+    [SYS_opendir]           syscall_opendir,
+    [SYS_closedir]          syscall_closedir,
+    [SYS_readdir]           syscall_readdir,
+    [SYS_print_task]        syscall_print_task,
+    [SYS_malloc]            syscall_malloc,
+    [SYS_free]              syscall_free,
+    [SYS_mmap]              sys_mmap,
+    [SYS_pipe]              syscall_pipe,
+};
+
+#define NUM_SYSCALLS        ((sizeof(syscalls)) / (sizeof(syscalls[0])))
+
+void
+syscall_trap(struct trapframe *tf) {
+    //struct trapframe *tf = current-&gt;tf;
+    unsigned int arg[5];
+    int num = tf-&gt;tf_regs.reg_eax;
+    if (num &gt;= 0 &amp;&amp; num &lt; NUM_SYSCALLS) {
+        if (syscalls[num] != NULL) {
+            arg[0] = tf-&gt;tf_regs.reg_edx;
+            arg[1] = tf-&gt;tf_regs.reg_ecx;
+            arg[2] = tf-&gt;tf_regs.reg_ebx;
+            arg[3] = tf-&gt;tf_regs.reg_edi;
+            arg[4] = tf-&gt;tf_regs.reg_esi;
+            tf-&gt;tf_regs.reg_eax = syscalls[num](arg);
+            return ;
+        }
+    }
+    
+    //print_trapframe(tf);
+    //printk(&quot;undefined syscall %d, pid = %d, name = %s.\n&quot;,
+    //        num, current-&gt;pid, current-&gt;name);
+}
+
+</code></pre>
+<h2 id="syscallh">syscall.h</h2>
+<pre><code>#ifndef _SYSCALL_H_
+#define _SYSCALL_H_
+#include &quot;trap.h&quot;
+/* syscall number */
+#define SYS_exit            1
+#define SYS_fork            2
+#define SYS_wait            3
+#define SYS_exec            4
+#define SYS_clone           5
+#define SYS_yield           10
+#define SYS_sleep           11
+#define SYS_kill            12
+#define SYS_gettime         17
+#define SYS_getpid          18
+#define SYS_brk             19
+#define SYS_mmap            20
+#define SYS_munmap          21
+#define SYS_shmem           22
+
+#define SYS_fdread            24
+
+#define SYS_pgdir           31
+
+#define SYS_print_char      36
+#define SYS_print_string    37
+#define SYS_print_num       38
+#define SYS_backtrace       39
+#define SYS_open  40
+#define SYS_close 41
+#define SYS_write 42
+#define SYS_lseek 43
+#define SYS_unlink 44
+#define SYS_mkdir 45
+#define SYS_rmdir 46
+#define SYS_rewinddir 47
+#define SYS_getcwd 48
+#define SYS_chdir 49
+#define SYS_stat 50
+#define SYS_opendir 51
+#define SYS_closedir 52
+#define SYS_readdir 53
+#define SYS_print_task 54
+#define SYS_malloc 55
+#define SYS_free 56
+#define SYS_mmap 57
+#define SYS_pipe 58
+void syscall_trap(struct trapframe *tf);
+int user_sys_getpid(void);
+void user_print_char(char c); 
+void user_print_string(char *str);
+void user_print_num(int num,unsigned char base,char len,int flag);
+#endif
+</code></pre>
+<p>关于中断，网上有很多详细的资料，背景类知识就不再赘述，大概说一下FreeFlyOS的中断体系把，主要包含两种，一种是硬件中断，比如缺页异常、时钟中断、键盘中断、串口中断、硬盘中断等等，这些中断处理程序设计的比较简单。还有一种是软中断，我们通过中断门实现的一种中断，主要用于系统调用，也就是ring3权限的用户想要对系统资源进行访问时,ring0权限的OS提供给用户访问的一种接口。大概讲一下系统调用怎么传递参数吧，首先我们看用户视角下的系统调用。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103210145826.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-SuNlJR6L-1609678882123)(readme.assets/image-20210102111920939.png)\]"></p>
+<p>一般而言，系统调用的中断号是0x80，这个大家应该都知道，那么参数应该如何传递呢，这里我们规定最多只能传递5个参数，而且每个参数需要放在指定的寄存器中，首先把参数数量放在eax中，然后第一个参数放在edx参数，依次类推。</p>
+<p>同样，内核中的中断服务程序会根据栈帧接受到这些信息，从而完成参数的传递。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103210216857.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-Pe9eu5B4-1609678882124)(readme.assets/image-20210102112300909.png)\]"></p>
+<p>现在还需说明一个问题，我们使用中断的时候，硬件会自动压栈，只包含SS、ESP、EFLAGS、CS、EIP、ERROR等信息，而这些寄存器信息并不包含在内，所以我们需要构建一个参数传递栈帧，如下图所示。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103210235507.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-ESnmerRX-1609678882125)(readme.assets/image-20210102112516846.png)\]"></p>
+<p>硬件压栈的部分我们就不需要继续压栈了，只需要对栈帧其他寄存器进行压栈即可，构造过程如下，注意pushal是压入所有通用寄存器。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103210250283.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-MlKQX4qK-1609678882126)(readme.assets/image-20210102113658283.png)\]"></p>
+<p>就说这么多吧，拜拜。</p>
+
+</article>
+
+                    
+                    
+                    
+
+                    
+
+
+
+                    
+  <div
+    class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"
+  >
+    <div>
+      
+        <span class="text-primary-text block font-bold"
+          >Previous</span
+        >
+        <a href="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-5 VGA部分详解</a>
+      
+    </div>
+    <div class="mt-4 md:mt-0 md:text-right">
+      
+        <span class="text-primary-text block font-bold">Next</span>
+        <a href="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-7 keyboard部分详解</a>
+      
+    </div>
+  </div>
+
+
+                    
+
+
+
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div
+  class="
+    bg-secondary-bg
+   prose sticky top-16 z-10 hidden px-6 py-4 lg:block"
+>
+  <h3>On This Page</h3>
+</div>
+<div
+  class="sticky-toc 
+    border-s
+   hidden px-6 pb-6 lg:block"
+>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#trapc">trap.c</a></li>
+    <li><a href="#traph">trap.h</a></li>
+    <li><a href="#trapentrys">trapentry.S</a></li>
+    <li><a href="#vectors">vector.S</a></li>
+    <li><a href="#syscallc">syscall.c</a></li>
+    <li><a href="#syscallh">syscall.h</a></li>
+  </ul>
+</nav>
+</div>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    enableStickyToc();
+  });
+</script>
+
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      
+    </main>
+    <footer class="pl-scrollbar">
+      <div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2022 <a href="https://dashanji.github.io/">dashanji</a>
+ &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+    </footer>
+  </body>
+</html>

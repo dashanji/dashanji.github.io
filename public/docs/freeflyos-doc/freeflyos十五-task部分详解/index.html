@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  dir="ltr"
+  
+><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Chapter-15 task部分详解 | FreeFlyOS | 自由飞翔的大山鸡</title>
+
+<meta name="generator" content="Hugo Eureka 0.9.1" />
+<link rel="stylesheet" href="/css/eureka.min.6a378a23360d238dc3ef4df2f5cd718093f02c10c9c7eb2437c29701cd8d389ab6da5d9f21bdd3afa305fd56c1235017.css" integrity="sha384-ajeKIzYNI43D703y9c1xgJPwLBDJx&#43;skN8KXAc2NOJq22l2fIb3Tr6MF/VbBI1AX">
+<script defer src="/js/eureka.min.4ab4e11bfa71ae0aeed55e31bbb0f8ab16c24a648722270637c4b96ea70eef4ddf17aa3e2a8131f613520e0387c1bbde.js" integrity="sha384-SrThG/pxrgru1V4xu7D4qxbCSmSHIicGN8S5bqcO703fF6o&#43;KoEx9hNSDgOHwbve"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js"
+   crossorigin></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js"
+     crossorigin></script>
+
+
+<script defer type="text/javascript" src="/js/fontawesome.min.56e85e545fac4d674dccb3bcea98ac2a625933b1f15638678edd10cf6c26fb44f0e1c5507df434dd557495bf13b58413.js" integrity="sha384-VuheVF&#43;sTWdNzLO86pisKmJZM7HxVjhnjt0Qz2wm&#43;0Tw4cVQffQ03VV0lb8TtYQT"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+   integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" 
+  integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"
+   integrity="sha384-&#43;XBljXPPiv&#43;OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js" 
+  integrity="sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0"  crossorigin></script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png">
+
+<meta name="description"
+  content="Chapter 15 of FreeFlyOS">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Docs",
+      "item":"/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"FreeFlyOS",
+      "item":"/docs/freeflyos-doc/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"Chapter-15 task部分详解",
+      "item":"/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"
+    },
+    "headline": "Chapter-15 task部分详解 | FreeFlyOS | 自由飞翔的大山鸡","datePublished": "2022-03-24T00:00:00+00:00",
+    "dateModified": "2022-03-24T00:00:00+00:00",
+    "wordCount":  3289 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "/images/icon.png"
+        }
+        },
+    "description": "Chapter 15 of FreeFlyOS"
+}
+</script><meta property="og:title" content="Chapter-15 task部分详解 | FreeFlyOS | 自由飞翔的大山鸡" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="/images/icon.png">
+
+
+<meta property="og:url" content="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" />
+
+
+
+<meta property="og:description" content="Chapter 15 of FreeFlyOS" />
+
+
+
+<meta property="og:locale" content="en" />
+
+
+
+
+<meta property="og:site_name" content="自由飞翔的大山鸡" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+  <body class="flex min-h-screen flex-col">
+    <header
+      class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"
+    >
+      <div class="mx-auto w-full max-w-screen-xl"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0">
+    <a href="/" class="me-6 text-primary-text text-xl font-bold">自由飞翔的大山鸡</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/#about" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">About</a>
+            <a href="/posts/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">Posts</a>
+            <a href="/docs/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  selected-menu-item  me-4">Docs</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', switchDarkMode)
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script>
+</div>
+    </header>
+    <main class="grow pt-16">
+        <div class="pl-scrollbar">
+          <div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-e">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">Table of Contents</span>
+    <i class='fas fa-caret-right ms-1'></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="/docs/freeflyos-doc/">FreeFlyOS</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="ps-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/">Chapter-1 boot部分(引导扇区)详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-2 init部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-3 asm部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-4 dt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-5 VGA部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-6 interrupt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-7 keyboard部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-8 serial部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-9 timer部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-10 pic部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-11 stl部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-12 debug部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-13 mem部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-14 sync部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-15 task部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-16 file部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-17 pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-18 main部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-19 user部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-20 test_exec部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-21 test_cat部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-22 test_pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-23 cmake部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-24 disassembly部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-25 elf部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    <article class="prose">
+  <h1 class="mb-4">Chapter-15 task部分详解</h1>
+
+  <div
+  class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"
+>
+  <div class="me-6 my-2">
+    <i class="fas fa-calendar me-1"></i>
+    <span
+      >2022-03-24</span
+    >
+  </div>
+  <div class="me-6 my-2">
+    <i class="fas fa-clock me-1"></i>
+    <span>16 min read</span>
+  </div>
+
+  
+
+  
+</div>
+
+
+  
+  
+
+  <h2 id="taskc">task.c</h2>
+<pre><code>#include &quot;task.h&quot;
+#include &quot;../interrupt/syscall.h&quot;
+#include &quot;../stl/elf.h&quot;
+#include &quot;../mem/pmm.h&quot;
+#include &quot;../mem/vmm.h&quot;
+#include &quot;../mem/memlayout.h&quot;
+#include &quot;../debug/debug.h&quot;
+#include &quot;../sync/sync.h&quot;
+#include &quot;../file/file.h&quot;
+#include &quot;../file/inode.h&quot;
+#define HASH_SHIFT          10
+#define HASH_LIST_SIZE      (1 &lt;&lt; HASH_SHIFT)
+#define pid_hashfn(x)       (hash32(x, HASH_SHIFT))
+
+
+/*
+#define __KERNEL_EXECVE(name, binary, size) ({                          \
+            printk(&quot;kernel_execve: pid = %d, name = \&quot;%s\&quot;.\n&quot;,        \
+                    current-&gt;pid, name);                                \
+            kernel_execve(name, binary, (unsigned int)(size));                \
+        })
+//#x 表示字符串操作符，即&quot;x&quot;
+//##x##表示连接符  
+#define KERNEL_EXECVE(x) ({                                             \
+            extern unsigned char _binary_##x##_out_start[],  \
+                _binary_##x##_out_size[];                    \
+            __KERNEL_EXECVE(#x, _binary_##x##_out_start,     \
+                            _binary_##x##_out_size);         \
+        })
+
+#define __KERNEL_EXECVE2(x, xstart, xsize) ({                           \
+            extern unsigned char xstart[], xsize[];                     \
+            __KERNEL_EXECVE(#x, xstart, (unsigned int)xsize);                 \
+        })
+
+#define KERNEL_EXECVE2(x, xstart, xsize)       __KERNEL_EXECVE2(x, xstart, xsize)
+*/
+// 绑定PID的哈希表
+static list_entry_t hash_list[HASH_LIST_SIZE];
+
+//PID 位图初始化
+pidmap_t task_pidmap={pid_max,{0}}; 
+static unsigned int volatile last_pid=0;
+
+//就绪进程链表
+static list_entry_t ready_task_list;
+//所有进程链表
+static list_entry_t all_task_list;
+struct task_struct *task0;  //祖先进程，即进程0
+struct task_struct *user_task; //第一个用户进程
+//struct task_struct *task1;  //由进程0 do_fork出来的进程1
+struct task_struct *current;  //指向当前进程
+
+extern struct semaphore user_sema;
+
+//MACOS下容易出现BUG
+//静态全局变量设置为0值时，在运行的时候容易跑飞，所以为了避免出现BUG，在使用的时候应先定义0值
+static unsigned int volatile nr_task=0; //当前所有进程数量  
+
+void forkrets(struct trapframe *tf);
+
+extern unsigned int __trapret;
+extern struct file file_table[MAX_FILE_OPEN];
+extern struct segdesc gdt[];
+extern unsigned int new_pdt[PAGE_DIR_SIZE] __attribute__( (aligned(VMM_PAGE_SIZE) ) );
+extern unsigned int user_pt_highmem[(unsigned int)0xC0000000/
+((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE)]
+[PAGE_TABLE_SIZE]__attribute__( (aligned(VMM_PAGE_SIZE) ) );
+struct task_struct *task0,*task1;
+/*
+*   kernel_task_init:创建第一个内核进程
+*/
+void kernel_task_init(void *function){
+
+    /*就绪进程链表初始化*/
+    list_init(&amp;ready_task_list);
+    /*所有进程链表初始化*/
+    list_init(&amp;all_task_list);
+    /*哈希链表初始化*/
+    for(int i=0;i&lt;HASH_LIST_SIZE;i++){
+        list_init(&amp;hash_list[i]);
+    }
+    //分配task_struct结构体
+    if((task0=alloc_task(KERNEL_TASK))==NULL){
+        printk(&quot;alloc task error!\n&quot;);
+    }
+    
+    /* 设置task0属性 */
+    task0-&gt;state=STOPPED;   
+    task0-&gt;counter=5;
+    task0-&gt;priority=1; 
+    last_pid=task0-&gt;pid=0;  //初始化task0的PID和last_pid
+    set_task_name(task0,&quot;kernel_task&quot;);
+    task0-&gt;kernel_stack=(unsigned int)task0+VMM_PAGE_SIZE;
+    task0-&gt;cr3=LA_PA((unsigned int)new_pdt);
+    task0-&gt;cwd_inode_nr=0;
+
+        
+    task0-&gt;tf = (struct trapframe *)(task0-&gt;kernel_stack)- 1;
+    task0-&gt;tf-&gt;tf_regs.reg_eax=0;
+    task0-&gt;tf-&gt;tf_regs.reg_ebp=0;
+    task0-&gt;tf-&gt;tf_regs.reg_ebx=0;
+    task0-&gt;tf-&gt;tf_regs.reg_ecx=0;
+    task0-&gt;tf-&gt;tf_regs.reg_edi=0;
+    task0-&gt;tf-&gt;tf_regs.reg_edx=0;
+    task0-&gt;tf-&gt;tf_regs.reg_esi=0;
+    task0-&gt;tf-&gt;tf_regs.reg_oesp=0;
+
+    task0-&gt;tf-&gt;tf_cs=KERNEL_CS;
+    task0-&gt;tf-&gt;tf_ds=task0-&gt;tf-&gt;tf_es=task0-&gt;tf-&gt;tf_fs=task0-&gt;tf-&gt;tf_ss=KERNEL_DS;
+    task0-&gt;tf-&gt;tf_gs=0;
+    task0-&gt;tf-&gt;tf_eip=0;//function; //user_space1
+    task0-&gt;tf-&gt;tf_eflags=(EFLGAS_IOPL_0|EFLAGS_MBS|EFLAGS_IF_1);
+
+    task0-&gt;tf-&gt;tf_esp=task0-&gt;kernel_stack-sizeof(struct trapframe);
+    
+    /*设置用户的上下文*/
+    task0-&gt;context.eip=function;//task0-&gt;tf-&gt;tf_eip;
+    task0-&gt;context.esp= (unsigned int)(task0-&gt;tf); 
+    task0-&gt;context.ebx=task0-&gt;tf-&gt;tf_regs.reg_ebx;
+    task0-&gt;context.edx=task0-&gt;tf-&gt;tf_regs.reg_edx;
+
+    /* 进程链表指向task0 */
+    //ask_list=task0-&gt;link;   //待调试
+    //memcpy(&amp;(task_list),&amp;(task0-&gt;link),sizeof(list_entry_t));
+    //list_init(&amp;task0-&gt;link);
+    //插入就绪任务链表
+    list_init(&amp;task0-&gt;link);
+    add_link(&amp;task0-&gt;link);
+    //插入所有任务链表
+    list_init(&amp;task0-&gt;all_link);
+    add_all_link(&amp;task0-&gt;all_link);
+    task0-&gt;fd_table[0]=0;
+    task0-&gt;fd_table[1]=1;
+    task0-&gt;fd_table[2]=2;
+    for(int i=3;i&lt;MAX_FILE_OPEN;i++){
+        task0-&gt;fd_table[i]=-1;
+    }
+    /* 当前进程指向task0 */
+    current=task0;
+    
+    //clear();
+    //printk(&quot;task0-&gt;counter:%08d!\n&quot;,task0-&gt;counter);
+    //printk(&quot;current:%08X!\n&quot;,current);
+    //printk(&quot;In task_init,current-&gt;counter=%08d\n&quot;,current-&gt;counter);
+    /* 根据PID加入哈希链表 */
+    add_pid_hash(task0);
+    
+    wakeup_task(task0);
+    //这时候直接赋值，以免静态全局变量在不同编译器下跑飞
+    //nr_task++;
+    nr_task=1;
+}
+//设置PID位
+static int set_pid_bit(int pid){
+    //获取PID所在的字节号
+    int chars=pid/8;
+    //获取PID所在字节的偏移位
+    int offset=pid%8;
+    //置位
+    set_char_bit(task_pidmap.bits[chars],offset,1);
+}
+//清除PID位
+static int clear_pid_bit(int pid){
+    //获取PID所在的字节号
+    int chars=pid/8;
+    //获取PID所在字节的偏移位
+    int offset=pid%8;
+    //清零
+    set_char_bit(task_pidmap.bits[chars],offset,0);
+}
+//返回未被占用的PID号，若没有则返回-1
+static int find_free_pid(){
+    int i=0,k=0;
+    while(k!=32768){
+        for(int j=0;j&lt;8;j++,k++){
+            if((task_pidmap.bits[i]&gt;&gt;j)&amp;1==0){
+                return k;
+            }
+        }
+        i++;
+    }
+    return -1;
+}
+//分配一个可用的PID
+static int alloc_pid(){
+
+    //若无多余的PID号
+    if(!task_pidmap.nr_free){
+        return -1;
+    }
+    /*
+    ** 一般将PID号设置为上个进程PID号+1
+    **  若PID号已设置到末尾，则查询位图中是否还有未被占用的PID号
+    */
+    int pid=(pid==32767)?find_free_pid():last_pid+1;
+    
+    //有效PID
+    if(pid&gt;=0){
+        set_pid_bit(pid);
+        task_pidmap.nr_free--;
+    }
+    last_pid=pid;
+    return pid;
+}
+//释放一个PID
+static void free_pid(int pid){
+    clear_pid_bit(pid);
+    task_pidmap.nr_free++;
+}
+
+// 设置进程名称
+char *set_task_name(struct task_struct *task, const char *name) {
+    memset(task-&gt;name, 0, sizeof(task-&gt;name));
+    return memcpy(task-&gt;name, name, task_name_max);
+}
+
+// 获取进程名称
+char *get_task_name(struct task_struct *task) {
+    static char name[task_name_max + 1];
+    memset(name, 0, sizeof(name));
+    return memcpy(name, task-&gt;name, task_name_max);
+}
+
+//将新进程插入就绪进程链表队尾
+static void add_link(list_entry_t *new){
+    list_add_before(&amp;ready_task_list,new);
+}
+//将新进程插入所有进程链表队尾
+static void add_all_link(list_entry_t *new){
+    list_add_before(&amp;all_task_list,new);
+}
+
+//在进程链表中删除某个进程
+static void remove_link(list_entry_t *node){
+    list_del(node);
+}
+
+//根据PID加入到PID哈希表中
+static void add_pid_hash(struct task_struct *task){
+    list_add(hash_list+pid_hashfn(task-&gt;pid),&amp;(task-&gt;hash_link));
+}
+
+//根据PID删除哈希表中的节点
+static void remove_pid_hash(int pid){
+    struct task_struct *task=find_task(pid);
+    list_del(&amp;(task-&gt;hash_link)); 
+}
+
+//给定PID，在哈希表查找进程
+static struct task_struct* find_task(int pid){
+    
+    if(pid&lt;0){
+        return NULL;
+    }
+    //找到哈希链表头
+    list_entry_t *head=&amp;hash_list[pid_hashfn(pid)];
+    list_entry_t *ite=head;
+    
+    //在哈希表头下的双向循环链表(不包含哈希表头)中查找PID对应的进程
+    while((ite=list_next(ite))!=head){
+        struct  task_struct *task=list_to_task(ite,hash_link);
+        if(task-&gt;pid==pid){
+            return task;
+        }
+    } 
+    //未找到
+    return NULL;
+}
+
+//给进程分配task_struct结构体,判断是用户进程还是内核进程
+static struct task_struct* alloc_task(enum task_kind kind){
+    struct task_struct *task;
+    if(kind==KERNEL_TASK)
+        task=vmm_malloc(VMM_PAGE_SIZE*2,1);
+    else
+        task=vmm_malloc(VMM_PAGE_SIZE*2,2);
+    
+    if(task!=NULL){
+        task-&gt;state=UNRUNNABLE;
+        task-&gt;counter=5;
+        task-&gt;priority=0;
+        task-&gt;pid=-1;
+        memset(&amp;(task-&gt;name),0,sizeof(task-&gt;name));
+        task-&gt;kernel_stack=0;
+        task-&gt;cr3=new_pdt;
+        task-&gt;tf=NULL;
+        memset(&amp;(task-&gt;context),0,sizeof(task-&gt;context));
+        task-&gt;magic=TASK_MAGIC;
+        task-&gt;cwd_inode_nr=0;
+        for(int i=0;i&lt;MAX_FILE_OPEN;i++){
+        task-&gt;fd_table[i]=-1;
+    }
+    }
+    return task;
+}
+
+/* 由kernel_thread去执行function(func_arg) */
+//static void kernel_thread(thread_func* function, void* func_arg) {
+/* 执行function前要开中断,避免后面的时钟中断被屏蔽,而无法调度其它线程 */
+//   intr_enable();
+//  function(func_arg); 
+//}
+
+// forkret -- the first kernel entry point of a new thread/task
+// NOTE: the addr of forkret is setted in copy_thread function
+//       after switch_to, the current proc will execute here.
+static void
+forkret(void) {
+    forkrets(current-&gt;tf);
+}
+
+// copy_thread - setup the trapframe on the  task's kernel stack top and
+//             - setup the kernel entry point and stack of task
+static void
+copy_thread(struct task_struct *task, unsigned int esp, struct trapframe *tf) {
+    //在内核栈顶分配一个中断帧大小
+    task-&gt;tf = (struct trapframe *)(task-&gt;kernel_stack)- 1;
+    //task-&gt;kernel_stack-=sizeof(struct trapframe);
+    //将trapframe信息放入内核栈中
+    *(task-&gt;tf) = *tf;
+    task-&gt;tf-&gt;tf_regs.reg_eax = 0;
+    //task-&gt;tf-&gt;tf_esp = esp;
+    task-&gt;tf-&gt;tf_eflags |= FL_IF;
+
+    //拷贝栈信息，即用户态之前的函数调用信息
+    memcpy((unsigned int)task+sizeof(struct task_struct),(unsigned int)current+sizeof(struct task_struct),VMM_PAGE_SIZE-sizeof(struct task_struct));
+    //更改下栈信息，防止破坏父进程的栈
+    unsigned int *start=(unsigned int)task+sizeof(struct task_struct);
+    unsigned int i;
+    for(i=0;i&lt;((unsigned int)VMM_PAGE_SIZE-sizeof(struct task_struct))/sizeof(unsigned int);i++){
+        if((*(start+i)&amp;0xFFFFF000)==((unsigned int)current&amp;0xFFFFF000)){
+            *(start+i)=(unsigned int)((unsigned int)task&amp;(unsigned int)0xFFFFF000)+
+            +(unsigned int)(*(start+i)&amp;(unsigned int)0x00000FFF);
+        }
+    }
+    //设置相同的栈地址
+    task-&gt;tf-&gt;tf_esp=(task-&gt;tf-&gt;tf_esp-(unsigned int)current)+(unsigned int)task;
+    task-&gt;context.eip=forkret;
+    task-&gt;context.ebx=tf-&gt;tf_regs.reg_ebx;
+    task-&gt;context.edx=tf-&gt;tf_regs.reg_edx;
+    //task-&gt;context.eip = (unsigned int)forkret;//print_task1;
+    task-&gt;context.esp =task-&gt;tf-&gt;tf_esp;  
+}
+
+/* 更新inode打开数 */
+static void update_inode_open_cnts(struct task_struct* task) {
+   int local_fd = 3, global_fd = 0;
+   while (local_fd &lt; MAX_FILE_OPEN) {
+      global_fd = task-&gt;fd_table[local_fd];
+      ASSERT(global_fd &lt; MAX_FILE_OPEN);
+      if (global_fd != -1) {
+	 if (is_pipe(local_fd)) {
+	    file_table[global_fd].fd_pos++;
+	 } else {
+	    file_table[global_fd].fd_inode-&gt;i_open_cnts++;
+	 }
+      }
+      local_fd++;
+   }
+}
+
+/* do_fork -     parent task for a new child task
+ * @clone_flags: used to guide how to clone the child task
+ * @stack:       the parent's user stack pointer. if stack==0, It means to fork a kernel thread.
+ * @tf:          the trapframe info, which will be copied to child task's task-&gt;tf
+ */
+int
+do_fork(unsigned int clone_flags, unsigned int stack, struct trapframe *tf) {
+    struct  task_struct *task;
+
+    //判断进程数是否达到最大值
+    if(nr_task&gt;pid_max){
+        return -1;
+    }
+    
+    //分配task_struct结构体
+    if((task=alloc_task(USER_TASK)) == NULL){
+        return -1;
+    }
+    //设置父进程指针
+    task-&gt;parent=current;
+    task-&gt;ppid=current-&gt;pid;
+    ASSERT(current-&gt;state==0);
+    
+    //设置新进程内核栈
+    task-&gt;kernel_stack=(unsigned int)task+VMM_PAGE_SIZE*2;
+    
+    //设置新进程的cr3
+    copy_user_cr3(task);
+    //在新进程的内核栈中设置中断帧，并设置中断上下文的eip和esp
+    copy_thread(task,stack,tf);
+
+    //复制父进程的文件表
+    for(int i=0;i&lt;MAX_FILE_OPEN;i++){
+        task-&gt;fd_table[i]=current-&gt;fd_table[i];
+    }
+    //设置子进程文件表
+    update_inode_open_cnts(task);
+    //获取PID
+    if((task-&gt;pid=alloc_pid())&lt;0){
+        return -1;
+    }
+    list_init(&amp;task-&gt;link);
+    //将新进程加入就绪进程链表中,加入到队尾中
+    add_link(&amp;(task-&gt;link));
+    list_init(&amp;task-&gt;all_link);
+    //将新进程加入所有进程链表中,加入到队尾中
+    add_all_link(&amp;(task-&gt;all_link));
+    //将新进程的PID加入到哈希表中
+    add_pid_hash(task);
+    nr_task++;
+
+    wakeup_task(task);
+    //schedule();
+    return task-&gt;pid;
+}
+
+static void wakeup_task(struct task_struct *task){
+    task-&gt;state=RUNNABLE;
+}
+// 创建内核线程
+int kernel_thread(int (*fun)(void *), void *args, unsigned int flags) {
+    struct trapframe tf;
+    memset(&amp;tf, 0, sizeof(struct trapframe));
+    tf.tf_cs = KERNEL_CS;
+    tf.tf_ds = tf.tf_es = tf.tf_ss = KERNEL_DS;
+    tf.tf_regs.reg_ebx = (unsigned int)fun;
+    tf.tf_regs.reg_edx = (unsigned int)args;
+    tf.tf_eip = (unsigned int)kernel_thread_entry;
+
+    return do_fork(flags ,0, &amp;tf);
+}
+
+static void task_run(struct task_struct *task){
+    //enum intr_status flag;
+    if(task!=current){
+        struct task_struct *prev=current;
+        current=task;
+        
+        if(task==task0)
+            intr_enable();
+        else
+            intr_disable();
+        //local_intr_save(flag);
+        //{
+        set_ts_esp0(task-&gt;kernel_stack);
+        lcr3(task-&gt;cr3);
+        switch_to(&amp;(prev-&gt;context),&amp;(task-&gt;context));
+        //printk(&quot;task_schedule!\n&quot;);
+       // }
+        //local_intr_restore(flag);
+    }
+}
+/* 调度算法 */
+void schedule(){
+    //在进程链表中查找可运行的进程
+    list_entry_t *head=&amp;ready_task_list;
+    list_entry_t *ite=head;
+    struct  task_struct *task;
+
+    //首先判断当前进程是不是时间片用完了或者是不是有用户进程响应
+    if(current-&gt;state==RUNNABLE&amp;&amp;current-&gt;counter==0||user_sema.value==1){
+        //若该线程只是时间片用完了，重新分配时间片，并将其放入就绪进程链表队尾
+        current-&gt;counter=5;
+        add_link(&amp;current-&gt;link);
+    }
+    
+
+    //在就绪进程链表中查找时间片不为0的可用进程
+    while((ite=list_next(ite))!=head){
+        task=list_to_task(ite,link);
+        //找到一个可运行进程，则弹出就绪链表
+        if(task-&gt;state==RUNNABLE&amp;&amp;task-&gt;counter!=0){
+            remove_link(ite);
+            break;
+        }
+    }
+
+    //若无可调度进程，则运行进程0
+    //if(task==current||task-&gt;state==UNRUNNABLE){
+    //    task=task0;
+    //}
+
+    //运行进程
+    task_run(task);
+}
+/* 当前线程将自己阻塞,标志其状态为stat. */
+void thread_block(enum task_state stat) {
+/* stat取值为TASK_BLOCKED,TASK_WAITING,TASK_HANGING,也就是只有这三种状态才不会被调度*/
+   //ASSERT(stat == STOPPED);
+   enum intr_status flag;
+   local_intr_save(flag);
+   {
+       current-&gt;state=stat;
+       schedule();
+   }
+   /* 待当前线程被解除阻塞后才继续运行下面的intr_set_status */
+   local_intr_restore(flag);
+}
+/* 解除线程的阻塞状态 */
+void thread_unblock(struct task_struct* task) {
+    list_entry_t *head=&amp;ready_task_list;
+    list_entry_t *ite=head;
+    enum intr_status flag;
+    local_intr_save(flag);
+    {
+        ASSERT(task-&gt;state == STOPPED);
+        if (task-&gt;state != RUNNABLE) {
+            //若已堵塞的线程已经在就绪队列中
+            while((ite=list_next(ite))!=head){
+                if(task==list_to_task(ite,link))
+                     PANIC(&quot;thread_unblock: blocked thread in ready_task_list\n&quot;);
+            }
+            task-&gt;state = RUNNABLE;
+            add_link(&amp;task-&gt;link);   //插入到就绪队列表尾部   
+        }
+    }
+    local_intr_restore(flag);
+
+}
+
+/* 打印进程信息 */
+static int
+print_taskinfo(void *arg) {
+    printk(&quot;this task, pid = %d, name = \&quot;%s\&quot;\n&quot;, current-&gt;pid, get_task_name(current));
+    printk(&quot;To U: \&quot;%s\&quot;.\n&quot;, (const char *)arg);
+    printk(&quot;To U: \&quot;en.., Bye, Bye. :)\&quot;\n&quot;);
+    return 0;
+}
+
+/* 进程退出 */
+void do_exit(){
+    printk(&quot;task exit!\n&quot;);
+    //schedule();
+    while(1);
+}
+// do_execve - call exit_mmap(mm)&amp;put_pgdir(mm) to reclaim memory space of current process
+//           - call load_icode to setup new memory space accroding binary prog.
+int
+do_execve(const char *name, unsigned int len, unsigned char *binary, unsigned int size) { 
+  /*  struct elfhdr *elf = (struct elfhdr *)binary;
+    //(3.2) get the entry of the program section headers of the bianry program (ELF format)
+    struct proghdr *ph = (struct proghdr *)(binary + elf-&gt;e_phoff);
+    struct proghdr *ph_end = ph + elf-&gt;e_phnum;
+    unsigned int pdt=setup_pgdir();
+    //有多少个程序头
+    for (; ph &lt; ph_end; ph ++){
+        unsigned char *start = binary + ph-&gt;p_offset,map_start=round_down_to(start,VMM_PAGE_SIZE);
+        unsigned char *end=ph-&gt;p_va + ph-&gt;p_filesz,map_end=round_up_to(end,VMM_PAGE_SIZE);
+        vmm_map(pdt,map_start+(unsigned int)0x80000000,map_end+(unsigned int)0x80000000);
+        memcpy(map_start+(unsigned int)0x80000000,map_start,map_end-map_start);
+    }
+    vmm_map(pdt,(unsigned int)0xA0000000,(unsigned int)0xA0002000);
+    unsigned int user_stack=0xA0002000;
+    current-&gt;cr3=LA_PA(pdt);
+    lcr3(LA_PA(pdt));
+    // setup trapframe for user environment
+    struct trapframe *tf = current-&gt;tf;
+    memset(tf, 0, sizeof(struct trapframe));
+    tf-&gt;tf_cs = USER_CS;
+    tf-&gt;tf_ds = tf-&gt;tf_es = tf-&gt;tf_ss = USER_DS;
+    tf-&gt;tf_esp = user_stack;
+    tf-&gt;tf_eip = elf-&gt;e_entry;*/
+    return 0;
+}
+// kernel_execve - do SYS_exec syscall to exec a user program called by user_main kernel_thread
+static int
+kernel_execve(const char *name, unsigned char *binary, unsigned int size) {
+    int ret, len = strlen(name);
+    /*asm volatile (
+        &quot;int %1;&quot;
+        : &quot;=a&quot; (ret)
+        : &quot;i&quot; (T_SYSCALL), &quot;0&quot; (SYS_exec), &quot;d&quot; (name), &quot;c&quot; (len), &quot;b&quot; (binary), &quot;D&quot; (size)
+        : &quot;memory&quot;);*/
+    return ret;
+}
+
+// user_main - kernel thread used to exec a user program
+static int
+user_main(void *arg) {
+    //KERNEL_EXECVE(exit);
+}
+
+//设置用户页表
+void set_user_cr3(struct task_struct *task){
+    unsigned int cr3_addr=vmm_malloc(VMM_PAGE_SIZE,2);
+   // printk(&quot;cr3_addr:%08x&quot;,cr3_addr);
+   // printk(&quot;new_pdt[0]:%08x&quot;,new_pdt[0]);
+    memcpy(cr3_addr,new_pdt,VMM_PAGE_SIZE);
+   // printk(&quot;new_pdt[0]:%08x&quot;,new_pdt[0]);
+    unsigned int *pdt=(unsigned int *)cr3_addr;
+    //printk(&quot;idx(PA_LA(DMA_START)):%08x&quot;,idx(PA_LA(DMA_START)));
+    //printk(&quot;new_pdt[0x300]:%08x&quot;,new_pdt[0x300]);
+    //printk(&quot;pdt[0x300]:%08x&quot;,pdt[0x300]);
+   /* unsigned int pt_len=(unsigned int)HIGHMEM_START/
+((unsigned int)PAGE_TABLE_SIZE*(unsigned int)VMM_PAGE_SIZE);
+
+    for(unsigned int i=0;i&lt;pt_len;i++){
+            pdt[i+idx(PA_LA(DMA_START))]|=VMM_PAGE_KERNEL;//VMM_PAGE_USER
+        }
+    //user_task_print c10021b4 user_print_string c1001aa9 user_syscall c1001a20
+    //pdt[idx(PA_LA(DMA_START))+4]|=VMM_PAGE_USER;
+    unsigned int *pt=(unsigned int *)PA_LA((new_pdt[idx(PA_LA(DMA_START))]&amp;VMM_PAGE_MASK));
+    printk(&quot;pt[0]:%08x&quot;,pt[0]);
+    for(unsigned int i=0,k=0,n=0;n&lt;pt_len*(unsigned int)PAGE_TABLE_SIZE;i+=(unsigned int)VMM_PAGE_SIZE,n++){
+        pt[k++]|=VMM_PAGE_KERNEL;//VMM_PAGE_USER
+        //printk(&quot;i:%08ux\nj:%08ux\nk:%08ux\n&quot;,i,j,k);
+    }*/
+    unsigned int *cr3_ph_addr=(unsigned int *)cr3_addr;
+    unsigned int *zh1=PA_LA((cr3_ph_addr[(unsigned int)((cr3_addr&gt;&gt;22)&amp;0x3FF)]&amp;VMM_PAGE_MASK));
+    unsigned int phaddr=zh1[((cr3_addr&amp;0x003FF000)&gt;&gt;12)]&amp;VMM_PAGE_MASK;
+    //unsigned int ph_addr=(unsigned int)(*cr3_ph_addr[((cr3_addr&gt;&gt;22)&amp;0x3FF)/4]&amp;VMM_PAGE_MASK)[((cr3_addr&amp;0x003FF000)&gt;&gt;12)/4]&amp;VMM_PAGE_MASK;
+    //printk(&quot;phaddr:%08ux\n&quot;,phaddr);
+   // pt[0x1001]|=VMM_PAGE_USER;
+   // pt[0x1002]|=VMM_PAGE_USER;
+    task-&gt;cr3=phaddr;
+    task-&gt;cr3_va=cr3_addr;
+}
+/* 拷贝用户页表 */
+void copy_user_cr3(struct task_struct *task){
+    unsigned int cr3_addr=vmm_malloc(VMM_PAGE_SIZE,2);
+    //先拷贝内核页表，因为该页信息在内核页表中
+    memcpy(cr3_addr,new_pdt,VMM_PAGE_SIZE);
+    //然后拷贝进程独有的页目录项,实际上还是和内核共用页表项，但页目录项是分开的。
+    unsigned int *task_pdt=(unsigned int *)current-&gt;cr3_va;
+    unsigned int *pdt=(unsigned int *)cr3_addr;
+    for(int i=0;i&lt;0x400;i++){
+        pdt[i]=(task_pdt[i]&amp;VMM_PAGE_PRESENT)?task_pdt[i]:pdt[i];
+    }
+    //获取该页物理地址
+    unsigned int *cr3_ph_addr=(unsigned int *)cr3_addr;
+    unsigned int *zh1=PA_LA((cr3_ph_addr[(unsigned int)((cr3_addr&gt;&gt;22)&amp;0x3FF)]&amp;VMM_PAGE_MASK));
+    unsigned int phaddr=zh1[((cr3_addr&amp;0x003FF000)&gt;&gt;12)]&amp;VMM_PAGE_MASK;
+    task-&gt;cr3_va=cr3_addr;
+    task-&gt;cr3=phaddr;
+}
+/* 把列表plist中的每个元素elem和arg传给回调函数func,
+ * arg给func用来判断elem是否符合条件.
+ * 本函数的功能是遍历列表内所有元素,逐个判断是否有符合条件的元素。
+ * 找到符合条件的元素返回元素指针,否则返回NULL. */
+struct list_entry_t* list_traversal(struct list_entry_t* list, function func, int arg) {
+   struct list_entry_t* ite = list;
+/* 如果队列为空,就必然没有符合条件的结点,故直接返回NULL */
+   if (list_empty(ite)) { 
+      return NULL;
+   }
+    while((ite=list_next(ite))!=list){
+        if (func(ite, arg)) {		  // func返回ture则认为该元素在回调函数中符合条件,命中,故停止继续遍历
+	        return ite;
+        }
+    }
+   return NULL;
+}
+/* 进程退出，由父进程释放子进程的资源 */
+void task_exit(struct task_struct *task)
+{
+    list_entry_t *ready_head=&amp;ready_task_list;
+    list_entry_t *all_head=&amp;all_task_list;
+    list_entry_t *ite=ready_head;
+    enum intr_status flag;
+    local_intr_save(flag);
+    {
+        //进程设置为退出状态
+        task-&gt;state=EXIT;  
+        //在就绪进程列表中删除该进程
+        while((ite=list_next(ite))!=ready_head){
+            if(task==list_to_task(ite,link)){
+                list_del_init(ite);
+                break;
+            }
+        }
+        //在所有进程列表中删除该进程
+        ite=all_head;
+        while((ite=list_next(ite))!=all_head){
+            if(task==list_to_task(ite,all_link)){
+                list_del_init(ite);
+                break;
+            }
+        }
+        //释放PID
+        free_pid(task-&gt;pid);
+        //释放进程所属页目录表
+        vmm_free(task-&gt;cr3_va,VMM_PAGE_SIZE);
+        //释放进程内核栈
+        vmm_free((unsigned int)task+(unsigned int)VMM_PAGE_SIZE,VMM_PAGE_SIZE);
+        //释放进程结构体信息和用户栈
+        vmm_free((unsigned int)task,VMM_PAGE_SIZE);
+    }
+    local_intr_restore(flag);
+}
+/* 得到虚拟地址vaddr对应的pte指针*/
+unsigned int* pte_ptr(unsigned int vaddr) {
+   /* 先访问到页表自己 + \
+    * 再用页目录项pde(页目录内页表的索引)做为pte的索引访问到页表 + \
+    * 再用pte的索引做为页内偏移*/
+   unsigned int* pte = (unsigned int*)(0xffc00000 + \
+	 ((vaddr &amp; 0xffc00000) &gt;&gt; 10) + \
+	 ((vaddr &amp; 0x003ff000) &gt;&gt; 12) * 4);
+   return pte;
+}
+/* 用户进程自己释放资源 */
+void release_prog_resource(struct task_struct *task){
+   /*
+    //查找用户空间占用的页（3G以下），设置页表项
+   unsigned int* pgdir_vaddr = task-&gt;cr3_va;
+   unsigned short user_pde_nr = 768, pde_idx = 0;
+   unsigned int pde = 0;
+   unsigned int* v_pde_ptr = NULL;	    // v表示var,和函数pde_ptr区分
+
+   unsigned short user_pte_nr = 1024, pte_idx = 0;
+   unsigned int pte = 0;
+   unsigned int* v_pte_ptr = NULL;	    // 加个v表示var,和函数pte_ptr区分
+
+   unsigned int* first_pte_vaddr_in_pde = NULL;	// 用来记录pde中第0个pte的地址
+   unsigned int pg_phy_addr = 0;
+
+   // 回收页表中用户空间的页框 
+   while (pde_idx &lt; user_pde_nr) {
+      v_pde_ptr = pgdir_vaddr + pde_idx;
+      pde = *v_pde_ptr;
+      if (pde &amp; 0x00000001) {   // 如果页目录项p位为1,表示该页目录项下可能有页表项
+	 first_pte_vaddr_in_pde = pte_ptr(pde_idx * 0x400000);	  // 一个页表表示的内存容量是4M,即0x400000
+	 pte_idx = 0;
+	 while (pte_idx &lt; user_pte_nr) {
+	    v_pte_ptr = first_pte_vaddr_in_pde + pte_idx;
+	    pte = *v_pte_ptr;
+	    if (pte &amp; 0x00000001) {
+	       // 将pte中记录的物理页框直接在相应内存池的位图中清0 
+	       pg_phy_addr = pte &amp; 0xfffff000;
+           if(pg_phy_addr!=0)
+	       pmm_free(pg_phy_addr,PMM_PAGE_SIZE);
+	    }
+	    pte_idx++;
+	 }
+        // 将pde中记录的物理页框直接在相应内存池的位图中清0 
+        //pg_phy_addr = pde &amp; 0xfffff000;
+        //pmm_free(pg_phy_addr,PMM_PAGE_SIZE);
+      }
+        pde_idx++;
+   }*/
+   /* 关闭进程打开的文件 */
+
+      /* 关闭进程打开的文件 */
+   unsigned char local_fd = 3;
+   while(local_fd &lt; MAX_FILE_OPEN) {
+      if (task-&gt;fd_table[local_fd] != -1) {
+	 if (is_pipe(local_fd)) {
+	    unsigned int global_fd = fd_local2global(local_fd);  
+	    if (--file_table[global_fd].fd_pos == 0) {
+           vmm_free(file_table[global_fd].fd_inode,VMM_PAGE_SIZE);
+	       file_table[global_fd].fd_inode = NULL;
+	    }
+	 } else {
+	    sys_close(local_fd);
+	 }
+      }
+      local_fd++;
+   }
+}
+/* list_traversal的回调函数,
+ * 查找pelem的parent_pid是否是ppid,成功返回true,失败则返回false */
+static char find_child(list_entry_t *ite, int ppid) {
+    struct task_struct *task=list_to_task(ite,all_link);
+    if (task-&gt;ppid == ppid) {     // 若该任务的parent_pid为ppid,返回
+      return 1;   // list_traversal只有在回调函数返回true时才会停止继续遍历,所以在此返回true
+   }
+   return 0;     // 让list_traversal继续传递下一个元素
+}
+
+/* list_traversal的回调函数,
+ * 查找状态为TASK_HANGING的任务 */
+static char find_hanging_child(list_entry_t *ite, int ppid) {
+   struct task_struct* task = list_to_task(ite,all_link);
+   if (task-&gt;ppid == ppid &amp;&amp; task-&gt;state == HANGING) {
+      return 1;
+   }
+   return 0; 
+}
+
+/* list_traversal的回调函数,
+ * 将一个子进程过继给task0 */
+static char task0_adopt_a_child(list_entry_t *ite, int pid) {
+   struct task_struct* task = list_to_task(ite,all_link);
+   if (task-&gt;ppid == pid) {     // 若该进程的parent_pid为pid,返回
+      task-&gt;ppid = 0;
+   }
+   return 0;		// 让list_traversal继续传递下一个元素
+}
+
+/* 等待子进程调用exit,将子进程的退出状态保存到status指向的变量.
+ * 成功则返回子进程的pid,失败则返回-1 */
+int sys_wait(int* status) {
+
+   while(1) {
+      /* 优先处理已经是挂起状态的任务 */
+      struct list_entry_t* child_elem = list_traversal(&amp;all_task_list, find_hanging_child, current-&gt;pid);
+      /* 若有挂起的子进程 */
+      if (child_elem != NULL) {
+	 struct task_struct* child_task = list_to_task(child_elem,all_link);
+	 *status = child_task-&gt;exit_status; 
+
+	 /* thread_exit之后,pcb会被回收,因此提前获取pid */
+	 int child_pid = child_task-&gt;pid;
+
+	 /* 2 从就绪队列和全部队列中删除进程表项*/
+	 task_exit(child_task); 
+	 /* 进程表项是进程或线程的最后保留的资源, 至此该进程彻底消失了 */
+
+	    return child_pid;
+      } 
+
+      /* 判断是否有子进程 */
+      child_elem = list_traversal(&amp;all_task_list, find_child, current-&gt;pid);
+      if (child_elem == NULL) {	 // 若没有子进程则出错返回
+	    return -1;
+      } else {
+      /* 若子进程还未运行完,即还未调用exit,则将自己挂起,直到子进程在执行exit时将自己唤醒 */
+	    thread_block(STOPPED); 
+      }
+   }
+}
+
+/* 子进程用来结束自己时调用 */
+void sys_exit(int status) {
+   current-&gt;exit_status = status; 
+   if (current-&gt;ppid == -1) {
+      PANIC(&quot;sys_exit: child_thread-&gt;parent_pid is -1\n&quot;);
+   }
+
+   /* 将进程child_thread的所有子进程都过继给task0 */
+   list_traversal(&amp;all_task_list, task0_adopt_a_child, current-&gt;pid);
+
+   /* 回收进程child_thread的资源 */
+   //release_prog_resource(current); 
+
+   /* 如果父进程正在等待子进程退出,将父进程唤醒 */
+   struct task_struct* parent_task = find_task(current-&gt;ppid);
+   if (parent_task-&gt;state == STOPPED) {
+      thread_unblock(parent_task);
+   }
+
+   /* 将自己挂起,等待父进程获取其status,并回收其pcb */
+   thread_block(HANGING);
+}
+
+
+/*用户进程初始化*/
+void  user_task_init(void *function){
+    
+    //分配task_struct结构体
+    if((user_task=alloc_task(USER_TASK))==NULL){
+        printk(&quot;alloc task error!\n&quot;);
+    }
+    /* 设置task0属性 */
+    user_task-&gt;state=STOPPED;   
+    user_task-&gt;counter=5;
+    user_task-&gt;priority=1; 
+    user_task-&gt;pid=alloc_pid();  //初始化task0的PID和last_pid
+    user_task-&gt;ppid=0;
+    set_task_name(user_task,&quot;user_task&quot;);
+    user_task-&gt;kernel_stack=(unsigned int)user_task+VMM_PAGE_SIZE*2;//后一页为内核栈
+
+    set_user_cr3(user_task);//LA_PA(set_user_cr3());
+    
+    user_task-&gt;tf = (struct trapframe *)((unsigned int)user_task+VMM_PAGE_SIZE*2)- 1;
+    user_task-&gt;tf-&gt;tf_regs.reg_eax=0;
+    user_task-&gt;tf-&gt;tf_regs.reg_ebp=0;
+    user_task-&gt;tf-&gt;tf_regs.reg_ebx=0;
+    user_task-&gt;tf-&gt;tf_regs.reg_ecx=0;
+    user_task-&gt;tf-&gt;tf_regs.reg_edi=0;
+    user_task-&gt;tf-&gt;tf_regs.reg_edx=0;
+    user_task-&gt;tf-&gt;tf_regs.reg_esi=0;
+    user_task-&gt;tf-&gt;tf_regs.reg_oesp=0;
+
+    user_task-&gt;tf-&gt;tf_cs=USER_CS;
+    user_task-&gt;tf-&gt;tf_ds=user_task-&gt;tf-&gt;tf_es=user_task-&gt;tf-&gt;tf_fs=user_task-&gt;tf-&gt;tf_ss=USER_DS;
+    user_task-&gt;tf-&gt;tf_gs=0;
+    user_task-&gt;tf-&gt;tf_eip=function;//function; //user_space1
+    user_task-&gt;tf-&gt;tf_eflags=(EFLGAS_IOPL_0|EFLAGS_MBS|EFLAGS_IF_1);
+
+    //前一页为用户栈
+    user_task-&gt;tf-&gt;tf_esp=(unsigned int)user_task+VMM_PAGE_SIZE;
+    
+    /*设置用户的上下文*/
+    user_task-&gt;context.eip=__trapret;//user_task-&gt;tf-&gt;tf_eip;
+    user_task-&gt;context.esp=(unsigned int)user_task+VMM_PAGE_SIZE; 
+    user_task-&gt;context.ebx=user_task-&gt;tf-&gt;tf_regs.reg_ebx;
+    user_task-&gt;context.edx=user_task-&gt;tf-&gt;tf_regs.reg_edx;
+
+    user_task-&gt;fd_table[0]=0;
+    user_task-&gt;fd_table[1]=1;
+    user_task-&gt;fd_table[2]=2;
+    for(int i=3;i&lt;MAX_FILE_OPEN;i++){
+        user_task-&gt;fd_table[i]=-1;
+    }
+    /* 进程链表指向task0 */
+    //ask_list=task0-&gt;link;   //待调试
+    //memcpy(&amp;(task_list),&amp;(task0-&gt;link),sizeof(list_entry_t));
+    //list_init(&amp;task0-&gt;link);
+    
+    list_init(&amp;user_task-&gt;link);
+    //add_link(&amp;user_task-&gt;link);
+    //插入所有任务链表
+    list_init(&amp;user_task-&gt;all_link);
+    add_all_link(&amp;user_task-&gt;all_link);
+    
+    //add_link(&amp;user_task-&gt;link);
+    //printk(&quot;task0-&gt;counter:%08d!\n&quot;,task0-&gt;counter);
+    //printk(&quot;current:%08X!\n&quot;,current);
+    //printk(&quot;In task_init,current-&gt;counter=%08d\n&quot;,current-&gt;counter);
+    /* 根据PID加入哈希链表 */
+    add_pid_hash(user_task);
+
+    wakeup_task(user_task);
+
+    
+    nr_task++;
+    
+    //这时候直接赋值，以免静态全局变量在不同编译器下跑飞
+    //nr_task++;
+    current=user_task;
+    set_ts_esp0(user_task-&gt;kernel_stack);
+    lcr3(user_task-&gt;cr3);
+    asm volatile (&quot;movl %0, %%esp; jmp __trapret&quot; : : &quot;g&quot; (user_task-&gt;tf) : &quot;memory&quot;);
+    //schedule();
+    //task_run(user_task);
+}
+/* sys_fork系统调用，返回子进程PID号 */
+/*int sys_fork(){
+
+}*/
+
+/* sys_print_task 系统调用，打印所有运行进程*/
+void sys_print_task(){
+    list_entry_t *head=&amp;all_task_list;
+    list_entry_t *ite=head;
+    struct task_struct *task;
+    printk(&quot;PID\t\tNAME\t\tSTATE\n&quot;);
+    while((ite=list_next(ite))!=head){
+        task=list_to_task(ite,all_link);
+        printk(&quot;%d\t\t%s\t&quot;,task-&gt;pid,task-&gt;name);
+        if(task-&gt;state==-1)
+            printk(&quot;UNRUNNABLE\n&quot;);
+        else if(task-&gt;state==0)
+            printk(&quot;RUNNABLE\n&quot;);
+        else
+            printk(&quot;STOPPED\n&quot;); 
+    }
+}
+</code></pre>
+<h2 id="taskh">task.h</h2>
+<pre><code>#ifndef _TASK_H_
+#define _TASK_H_
+
+#include &quot;../dt/dt.h&quot;
+#include &quot;../mem/vmm.h&quot;
+#include &quot;../mem/memlayout.h&quot;
+#include &quot;../asm/asm.h&quot;
+#include &quot;../interrupt/trap.h&quot;
+#include &quot;../vga/vga.h&quot;
+#include &quot;../stl/list.h&quot;
+#include &quot;../stl/hash.h&quot;
+#include &quot;../stl/defs.h&quot;
+#include &quot;../file/fs.h&quot;
+#include &quot;../file/file.h&quot;
+//进程魔数
+#define TASK_MAGIC 0x19971211
+//最大进程数量  pid号从0-32767 
+#define pid_max 32768
+//进程名最大值
+#define task_name_max 20
+
+//将list_entry_t转化为sturct task_struct
+#define list_to_task(list_entry_addr,member)         \
+    to_struct(list_entry_addr,struct task_struct,member)
+
+#define EFLAGS_MBS (1&lt;&lt;1)
+#define EFLAGS_IF_1  (1&lt;&lt;9)
+#define EFLAGS_IF_0 0
+#define EFLAGS_IOPL_3 (3&lt;&lt;12) 
+#define EFLGAS_IOPL_0 (0&lt;&lt;12)
+
+#define FL_IF           0x00000200  // Interrupt Flag
+/* 自定义通用函数类型,它将在很多线程函数中做为形参类型 */
+typedef void thread_func(void*);
+/* 自定义函数类型function,用于在list_traversal中做回调函数 */
+typedef char (function)(struct list_entry_t*, int arg);
+// Saved registers for kernel context switches.
+// Don't need to save all the %fs etc. segment registers,
+// because they are constant across kernel contexts.
+// Save all the regular registers so we don't need to care
+// which are caller save, but not the return register %eax.
+// (Not saving %eax just simplifies the switching code.)
+// The layout of context must match code in switch.S.
+struct context {
+    unsigned int eip;
+    unsigned int esp;
+    unsigned int ebx;
+    unsigned int ecx;
+    unsigned int edx;
+    unsigned int esi;
+    unsigned int edi;
+    unsigned int ebp;
+};
+enum task_state{
+    UNRUNNABLE=-1,
+    RUNNABLE=0,
+    STOPPED=1,
+    HANGING=2,
+    EXIT=3,
+};
+enum task_kind{
+    USER_TASK=0,
+    KERNEL_TASK=1,
+};
+struct task_struct{
+    enum task_state state;  //-1 unrunnable , 0 runnable, 1 stopped
+    int counter; //计数器，已经运行多长时间
+    int priority; //优先级
+    int pid,ppid;
+    char name[task_name_max]; //进程名
+    unsigned int kernel_stack;    //内核栈
+    unsigned int cr3;            //cr3基址
+    unsigned int cr3_va;         //cr3虚拟地址（访问地址）
+    struct task_struct *parent;  //父进程
+    struct trapframe *tf;
+    struct context context;
+    list_entry_t link;                //进程状态链表
+    list_entry_t all_link;            //所有进程链表
+    list_entry_t hash_link;           //哈希链表
+    unsigned int fd_table[MAX_FILE_OPEN]; //文件描述符数组
+    unsigned int magic;
+    unsigned int cwd_inode_nr;
+    char exit_status;  //进程退出状态
+};
+union task_union
+{
+    struct task_struct task;
+    unsigned char stack[VMM_PAGE_SIZE];
+};
+
+//进程号位映射
+typedef struct pidmap
+{
+    unsigned int nr_free; //还剩下多少个进程号没有分配
+    char bits[4096]; //0代表未被占用，1代表被占用
+}pidmap_t;
+
+// 内核线程入口函数 thread_entry.S
+extern int kernel_thread_entry(void *args);
+void kernel_task_init(void *function);
+//void print1();
+//void print2();
+int kernel_thread(int (*fun)(void *), void *args, unsigned int flags); 
+
+/*  PID管理函数 */
+static int set_pid_bit(int pid);
+static int clear_pid_bit(int pid);
+static int find_free_pid();
+static int alloc_pid();
+static void free_pid(int pid);
+
+/* 进程链表管理函数 */
+static void add_link(list_entry_t *new);
+static void add_all_link(list_entry_t *new);
+static void remove_link(list_entry_t *node);
+
+/* PID哈希表管理函数 */
+static void add_pid_hash(struct task_struct *task);
+static void remove_pid_hash(int pid);
+static struct task_struct* find_task(int pid);
+
+/* 进程名管理函数 */
+char *set_task_name(struct task_struct *task, const char *name);
+char *get_task_name(struct task_struct *task);
+/* 分配task_struct结构体 */
+static struct task_struct* alloc_task(enum task_kind kind);
+
+/* fork产生新进程 */
+static void forkret(void);
+static void copy_thread(struct task_struct *task, unsigned int esp, struct trapframe *tf);
+int do_fork(unsigned int clone_flags, unsigned int stack, struct trapframe *tf);
+int kernel_thread(int (*fun)(void *), void *args, unsigned int flags);
+
+/* 进程调度管理函数 */
+static void task_run(struct task_struct *task);
+static void wakeup_task(struct task_struct *task);
+void schedule(); 
+void thread_block(enum task_state stat);
+void thread_unblock(struct task_struct* task);
+
+static int print_taskinfo(void *arg); 
+static void print_task1();
+static void print_task2();
+void do_exit();
+
+int do_execve(const char *name, unsigned int len, unsigned char *binary, unsigned int size);
+void set_user_cr3();
+void copy_user_cr3(struct task_struct *task);
+void task_exit(struct task_struct *task);
+void user_task_init(void *function);
+
+struct list_entry_t* list_traversal(struct list_entry_t* list, function func, int arg);
+unsigned int* pte_ptr(unsigned int vaddr);
+void sys_print_task();
+int sys_wait(int* status);
+void sys_exit(int status);
+#endif
+</code></pre>
+<h2 id="switchs">switch.S</h2>
+<pre><code>.text
+.globl switch_to
+switch_to:                      # switch_to(from, to)
+
+    # 参数是结构体指针，所以需要进行两次内存寻址
+    # save from's registers
+    movl 4(%esp), %eax          # eax points to from
+    popl 0(%eax)                # save eip !popl
+    movl %esp, 4(%eax)
+    movl %ebx, 8(%eax)
+    movl %ecx, 12(%eax)
+    movl %edx, 16(%eax)
+    movl %esi, 20(%eax)
+    movl %edi, 24(%eax)
+    movl %ebp, 28(%eax)
+
+    # eax=0
+    # restore to's registers
+    movl 4(%esp), %eax          # not 8(%esp): popped return address already
+                                # eax now points to to
+    movl 28(%eax), %ebp
+    movl 24(%eax), %edi
+    movl 20(%eax), %esi
+    movl 16(%eax), %edx
+    movl 12(%eax), %ecx
+    movl 8(%eax), %ebx
+    movl 4(%eax), %esp
+
+    #  将寄存器恢复为下一个进程的进程上下文，下一步执行to-&gt;context.eip
+    pushl 0(%eax)               # push eip
+
+    ret
+
+
+</code></pre>
+<h2 id="thread_entryh">thread_entry.h</h2>
+<pre><code>.code32
+
+.global kernel_thread_entry
+.extern do_exit
+
+kernel_thread_entry: # void kernel_thread(void)
+    sti  #open interrrupt
+    pushl %edx # push arg
+    call *%ebx # call fn
+    ret
+    #pushl %eax # save the return value of fn(arg)
+    #call do_exit # call do_exit to terminate current thread
+
+</code></pre>
+<h2 id="execc">exec.c</h2>
+<pre><code>#include &quot;exec.h&quot;
+#include &quot;../interrupt/syscall.h&quot;
+#include &quot;../asm/asm.h&quot;
+#include &quot;../mem/vmm.h&quot;
+#include &quot;../mem/memlayout.h&quot;
+#include &quot;task.h&quot;
+#define NULL ((void *)0)
+
+extern unsigned int __trapret;
+extern struct task_struct *current;
+//extern unsigned int test_end;
+typedef unsigned int Elf32_Word, Elf32_Addr, Elf32_Off;
+typedef unsigned short Elf32_Half;
+
+/* 32位elf头 */
+struct Elf32_Ehdr {
+   unsigned char e_ident[16];
+   Elf32_Half    e_type;
+   Elf32_Half    e_machine;
+   Elf32_Word    e_version;
+   Elf32_Addr    e_entry;
+   Elf32_Off     e_phoff;
+   Elf32_Off     e_shoff;
+   Elf32_Word    e_flags;
+   Elf32_Half    e_ehsize;
+   Elf32_Half    e_phentsize;
+   Elf32_Half    e_phnum;
+   Elf32_Half    e_shentsize;
+   Elf32_Half    e_shnum;
+   Elf32_Half    e_shstrndx;
+};
+
+/* 程序头表Program header.就是段描述头 */
+struct Elf32_Phdr {
+   Elf32_Word p_type;		 // 见下面的enum segment_type
+   Elf32_Off  p_offset;
+   Elf32_Addr p_vaddr;
+   Elf32_Addr p_paddr;
+   Elf32_Word p_filesz;
+   Elf32_Word p_memsz;
+   Elf32_Word p_flags;
+   Elf32_Word p_align;
+};
+
+/* 段类型 */
+enum segment_type {
+   PT_NULL,            // 忽略
+   PT_LOAD,            // 可加载程序段
+   PT_DYNAMIC,         // 动态加载信息 
+   PT_INTERP,          // 动态加载器名称
+   PT_NOTE,            // 一些辅助信息
+   PT_SHLIB,           // 保留
+   PT_PHDR             // 程序头表
+};
+
+/* 将文件描述符fd指向的文件中,偏移为offset,大小为filesz的段加载到虚拟地址为vaddr的内存 */
+static char segment_load(int fd, unsigned int offset, unsigned int filesz, unsigned int vaddr) {
+   unsigned int vaddr_first_page = vaddr &amp; 0xfffff000;    // vaddr地址所在的页框
+   unsigned int size_in_first_page = VMM_PAGE_SIZE - (vaddr &amp; 0x00000fff);     // 加载到内存后,文件在第一个页框中占用的字节大小
+   unsigned int occupy_pages = 0;
+   /* 若一个页框容不下该段 */
+   if (filesz &gt; size_in_first_page) {
+      unsigned int left_size = filesz - size_in_first_page;
+      occupy_pages = (left_size+VMM_PAGE_SIZE)/VMM_PAGE_SIZE + 1;	     // 1是指vaddr_first_page
+   } else {
+      occupy_pages = 1;
+   }
+
+   sys_mmap(vaddr_first_page,vaddr_first_page+occupy_pages*VMM_PAGE_SIZE,EXEC_START);
+
+   /* 为进程分配内存 
+   unsigned int page_idx = 0;
+   unsigned int vaddr_page = vaddr_first_page;
+   while (page_idx &lt; occupy_pages) {
+
+
+      unsigned int* pde = pde_ptr(vaddr_page);
+      unsigned int* pte = pte_ptr(vaddr_page);
+
+
+
+      // 如果pde不存在,或者pte不存在就分配内存.
+    // pde的判断要在pte之前,否则pde若不存在会导致
+    // 判断pte时缺页异常 
+      if (!(*pde &amp; 0x00000001) || !(*pte &amp; 0x00000001)) {
+	 if (get_a_page(PF_USER, vaddr_page) == NULL) {
+	    return false;
+	 }
+      } // 如果原进程的页表已经分配了,利用现有的物理页,直接覆盖进程体
+      vaddr_page += VMM_PAGE_SIZE;
+      page_idx++;
+   } */
+
+   sys_lseek(fd, offset, SEEK_SET);
+   sys_read(fd, (void*)vaddr, filesz);
+   return 1;
+}
+
+/* 从文件系统上加载用户程序pathname,成功则返回程序的起始地址,否则返回-1 */
+static int load(const char* pathname) {
+   int ret = -1;
+   struct Elf32_Ehdr elf_header;
+   struct Elf32_Phdr prog_header;
+   memset(&amp;elf_header, 0, sizeof(struct Elf32_Ehdr));
+
+   int fd = sys_open(pathname, O_RDONLY);
+   if (fd == -1) {
+      return -1;
+   }
+
+   if (sys_read(fd, &amp;elf_header, sizeof(struct Elf32_Ehdr)) != sizeof(struct Elf32_Ehdr)) {
+      ret = -1;
+      goto done;
+   }
+
+   /* 校验elf头 */
+   if (memcmp(elf_header.e_ident, &quot;\177ELF\1\1\1&quot;, 7) \
+      || elf_header.e_type != 2 \
+      || elf_header.e_machine != 3 \
+      || elf_header.e_version != 1 \
+      || elf_header.e_phnum &gt; 1024 \
+      || elf_header.e_phentsize != sizeof(struct Elf32_Phdr)) {
+      ret = -1;
+      goto done;
+   }
+
+   Elf32_Off prog_header_offset = elf_header.e_phoff; 
+   Elf32_Half prog_header_size = elf_header.e_phentsize;
+
+   /* 遍历所有程序头 */
+   unsigned int prog_idx = 0;
+   while (prog_idx &lt; elf_header.e_phnum) {
+      memset(&amp;prog_header, 0, prog_header_size);
+      
+      /* 将文件的指针定位到程序头 */
+      sys_lseek(fd, prog_header_offset, SEEK_SET);
+
+     /* 只获取程序头 */
+      if (sys_read(fd, &amp;prog_header, prog_header_size) != prog_header_size) {
+	 ret = -1;
+	 goto done;
+      }
+
+      /* 如果是可加载段就调用segment_load加载到内存 */
+      if (PT_LOAD == prog_header.p_type) {
+	 if (!segment_load(fd, prog_header.p_offset, prog_header.p_filesz, prog_header.p_vaddr)) {
+	    ret = -1;
+	    goto done;
+	 }
+      }
+
+      /* 更新下一个程序头的偏移 */
+      prog_header_offset += elf_header.e_phentsize;
+      prog_idx++;
+   }
+   ret = elf_header.e_entry;
+done:
+   sys_close(fd);
+   return ret;
+}
+
+/* 用path指向的程序替换当前进程 */
+int sys_execv(const char* path, const char* argv[]) {
+   unsigned int argc = 0;
+   while (argv[argc]) {
+      argc++;
+   }
+   int entry_point = load(path);     
+   if (entry_point == -1) {	 // 若加载失败则返回-1
+      return -1;
+   }
+
+   /* 修改进程名 */
+   memcpy(current-&gt;name, path, task_name_max);
+   current-&gt;name[task_name_max-1] = 0;
+
+   struct trapframe *tf=(struct trapframe *)
+   ((unsigned int)current+VMM_PAGE_SIZE*2-sizeof(struct trapframe));
+   tf-&gt;tf_regs.reg_ebx=(int)argv;
+   tf-&gt;tf_regs.reg_ecx=argc;
+   tf-&gt;tf_eip=(void*)entry_point;
+   tf-&gt;tf_esp=(unsigned int)current+VMM_PAGE_SIZE;
+
+   /* exec不同于fork,为使新进程更快被执行,直接从中断返回 */
+   asm volatile (&quot;movl %0, %%esp; jmp __trapret&quot; : : &quot;g&quot; ((unsigned int)tf) : &quot;memory&quot;);
+   return 0;
+}
+
+</code></pre>
+<h2 id="exech">exec.h</h2>
+<pre><code>#ifndef _EXEC_H_
+#define _EXEC_H_
+
+int sys_execv(const char* path, const char*  argv[]);
+#endif
+</code></pre>
+<p>关于进程这一块，还是比较复杂的。</p>
+<p>首先看下FreeFlyOS的进程描述符，如下图所示。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103214720284.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-5CpBLDPV-1609681604096)(readme.assets/image-20210103125344968.png)\]"></p>
+<p>1、首先我们会创建一个内核进程，这些信息均已写好，该进程主要任务是怠速，也就是当其他进程无法运行时，该任务就会占用CPU。</p>
+<p>2、接着手动创建一个用户进程，主要步骤如下，先构造好用户进程的信息，主要是用户进程的内核栈和用户本身使用的栈，一般在创建任务时，会分配2页给进程使用，前一页页尾作为用户自己使用的栈，后一页页尾作为用户内核栈。所以我们只需要在用户内核栈中构造好用户进程信息（USER_CS、USER_DS等），然后切换到用户内核栈，调用__trapret函数，模拟中断返回的后续操作，则该函数会将用户进程信息弹出，故当前状态变为USER_CS，即用户权限下的环境。</p>
+<p>3、用户进程会直接调用user目录下的shell，从而实现用户和系统的交互操作。</p>
+<p>4、一般情况下，时钟中断会进行进程切换，但由于增加了shell，所以当一个进程等待时，也会进行进程切换。进程切换时需要注意的是，更换内核栈和页表，内核栈是用户在进行系统调用时，内核权限下访问资源的栈，然后进行上下文切换，一般的上下文由以下寄存器组成。如果是线程切换，由于共用一套内核栈和页表，所以只需要进行上下文切换即可。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103214732334.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-cOvwYF4M-1609681604098)(readme.assets/image-20210103132009043.png)\]"></p>
+<p>5、简单说下FreeFlyOS中fork的原理，假定有一个用户进程调用了fork代码，首先我们会创建一个子进程信息，关键在于构造子进程的用户栈信息和内核栈信息，首先子进程的用户栈需要拷贝父进程的用户栈，保存之前父进程的函数调用关系，不然等待子进程执行时，函数就会跑飞，但是需要改下栈中和进程地址有关的信息，也就是要构造两套地址不同、功能相同的栈，不然还是用了同样的栈。接着中断栈直接拷贝父进程的中断栈帧，但是需要改下esp的地址，让它指向用户进程栈，同时上下文中设置esp为当前中断栈地址，eip为forkre函数（调用__trapret）。当子进程数据构造完毕时，当时钟中断开始进程调度时，子进程会按照它的上下文信息执行，记住此时栈指向了中断栈帧的启示地址，首先调用forkret,然后forkret调用forkrets,接着把esp设置为中断栈帧的esp（用户栈），要记住内核权限转化为用户权限是软件模拟的过程，没有硬件自动切换栈的操作，这样子进程就会变成和父进程一样的用户进程，并且获取了之前的函数调用信息，开始下一步的操作。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210103214745878.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-CtdldrSs-1609681604099)(readme.assets/image-20210103134220781.png)\]"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210103214757602.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N5Mjk1OTU3NDEw,size_16,color_FFFFFF,t_70" alt="\[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-8S1rTmpC-1609681604100)(readme.assets/image-20210103134240827.png)\]"></p>
+<p>大概就讲这么多了，写文档的过程太枯燥了，去打游戏了，88！若有疑问可以联系295957410@qq.com</p>
+
+</article>
+
+                    
+                    
+                    
+
+                    
+
+
+
+                    
+  <div
+    class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"
+  >
+    <div>
+      
+        <span class="text-primary-text block font-bold"
+          >Previous</span
+        >
+        <a href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-14 sync部分详解</a>
+      
+    </div>
+    <div class="mt-4 md:mt-0 md:text-right">
+      
+        <span class="text-primary-text block font-bold">Next</span>
+        <a href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-16 file部分详解</a>
+      
+    </div>
+  </div>
+
+
+                    
+
+
+
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div
+  class="
+    bg-secondary-bg
+   prose sticky top-16 z-10 hidden px-6 py-4 lg:block"
+>
+  <h3>On This Page</h3>
+</div>
+<div
+  class="sticky-toc 
+    border-s
+   hidden px-6 pb-6 lg:block"
+>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#taskc">task.c</a></li>
+    <li><a href="#taskh">task.h</a></li>
+    <li><a href="#switchs">switch.S</a></li>
+    <li><a href="#thread_entryh">thread_entry.h</a></li>
+    <li><a href="#execc">exec.c</a></li>
+    <li><a href="#exech">exec.h</a></li>
+  </ul>
+</nav>
+</div>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    enableStickyToc();
+  });
+</script>
+
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      
+    </main>
+    <footer class="pl-scrollbar">
+      <div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2022 <a href="https://dashanji.github.io/">dashanji</a>
+ &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+    </footer>
+  </body>
+</html>

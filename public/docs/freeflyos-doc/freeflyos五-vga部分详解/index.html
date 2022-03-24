@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  dir="ltr"
+  
+><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Chapter-5 VGA部分详解 | FreeFlyOS | 自由飞翔的大山鸡</title>
+
+<meta name="generator" content="Hugo Eureka 0.9.1" />
+<link rel="stylesheet" href="/css/eureka.min.6a378a23360d238dc3ef4df2f5cd718093f02c10c9c7eb2437c29701cd8d389ab6da5d9f21bdd3afa305fd56c1235017.css" integrity="sha384-ajeKIzYNI43D703y9c1xgJPwLBDJx&#43;skN8KXAc2NOJq22l2fIb3Tr6MF/VbBI1AX">
+<script defer src="/js/eureka.min.4ab4e11bfa71ae0aeed55e31bbb0f8ab16c24a648722270637c4b96ea70eef4ddf17aa3e2a8131f613520e0387c1bbde.js" integrity="sha384-SrThG/pxrgru1V4xu7D4qxbCSmSHIicGN8S5bqcO703fF6o&#43;KoEx9hNSDgOHwbve"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js"
+   crossorigin></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js"
+     crossorigin></script>
+
+
+<script defer type="text/javascript" src="/js/fontawesome.min.56e85e545fac4d674dccb3bcea98ac2a625933b1f15638678edd10cf6c26fb44f0e1c5507df434dd557495bf13b58413.js" integrity="sha384-VuheVF&#43;sTWdNzLO86pisKmJZM7HxVjhnjt0Qz2wm&#43;0Tw4cVQffQ03VV0lb8TtYQT"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+   integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" 
+  integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"
+   integrity="sha384-&#43;XBljXPPiv&#43;OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js" 
+  integrity="sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0"  crossorigin></script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png">
+
+<meta name="description"
+  content="Chapter 5 of FreeFlyOS">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Docs",
+      "item":"/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"FreeFlyOS",
+      "item":"/docs/freeflyos-doc/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"Chapter-5 VGA部分详解",
+      "item":"/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/"
+    },
+    "headline": "Chapter-5 VGA部分详解 | FreeFlyOS | 自由飞翔的大山鸡","datePublished": "2022-03-24T00:00:00+00:00",
+    "dateModified": "2022-03-24T00:00:00+00:00",
+    "wordCount":  877 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "/images/icon.png"
+        }
+        },
+    "description": "Chapter 5 of FreeFlyOS"
+}
+</script><meta property="og:title" content="Chapter-5 VGA部分详解 | FreeFlyOS | 自由飞翔的大山鸡" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="/images/icon.png">
+
+
+<meta property="og:url" content="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" />
+
+
+
+<meta property="og:description" content="Chapter 5 of FreeFlyOS" />
+
+
+
+<meta property="og:locale" content="en" />
+
+
+
+
+<meta property="og:site_name" content="自由飞翔的大山鸡" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2022-03-24T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+  <body class="flex min-h-screen flex-col">
+    <header
+      class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"
+    >
+      <div class="mx-auto w-full max-w-screen-xl"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0">
+    <a href="/" class="me-6 text-primary-text text-xl font-bold">自由飞翔的大山鸡</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/#about" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">About</a>
+            <a href="/posts/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">Posts</a>
+            <a href="/docs/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  selected-menu-item  me-4">Docs</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', switchDarkMode)
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script>
+</div>
+    </header>
+    <main class="grow pt-16">
+        <div class="pl-scrollbar">
+          <div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-e">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">Table of Contents</span>
+    <i class='fas fa-caret-right ms-1'></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pe-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ms-4 -me-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="/docs/freeflyos-doc/">FreeFlyOS</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="ps-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%80-boot%E9%83%A8%E5%88%86%E5%BC%95%E5%AF%BC%E6%89%87%E5%8C%BA%E8%AF%A6%E8%A7%A3/">Chapter-1 boot部分(引导扇区)详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C-init%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-2 init部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%89-asm%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-3 asm部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-4 dt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%94-vga%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-5 VGA部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-6 interrupt部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B8%83-keyboard%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-7 keyboard部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%85%AB-serial%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-8 serial部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%B9%9D-timer%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-9 timer部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81-pic%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-10 pic部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%80-stl%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-11 stl部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%8C-debug%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-12 debug部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%89-mem%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-13 mem部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%9B%9B-sync%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-14 sync部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%BA%94-task%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-15 task部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AD-file%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-16 file部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B8%83-pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-17 pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E5%85%AB-main%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-18 main部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E5%8D%81%E4%B9%9D-user%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-19 user部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81test_exec%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-20 test_exec部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%80-test_cat%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-21 test_cat部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%8C-test_pipe%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-22 test_pipe部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%B8%89-cmake%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-23 cmake部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E5%9B%9B-disassembly%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-24 disassembly部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="/docs/freeflyos-doc/freeflyos%E4%BA%8C%E5%8D%81%E4%BA%94-elf%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/">Chapter-25 elf部分详解</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    <article class="prose">
+  <h1 class="mb-4">Chapter-5 VGA部分详解</h1>
+
+  <div
+  class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"
+>
+  <div class="me-6 my-2">
+    <i class="fas fa-calendar me-1"></i>
+    <span
+      >2022-03-24</span
+    >
+  </div>
+  <div class="me-6 my-2">
+    <i class="fas fa-clock me-1"></i>
+    <span>5 min read</span>
+  </div>
+
+  
+
+  
+</div>
+
+
+  
+  
+
+  <h2 id="vgac">vga.c</h2>
+<pre><code>#include &quot;vga.h&quot;
+#include &quot;../asm/asm.h&quot;
+#include &quot;../serial/serial.h&quot;
+#include &quot;../keyboard/keyboard.h&quot;
+#define NULL ((void *)0)
+//the standard window is 80*25, max of cursor_x is 25, max of cursor_y is 80
+static unsigned char cursor_x=0;
+static unsigned char cursor_y=0;
+//the start address of CGA is 0xB8000，此时开启了分页，应加上一个线性映射地址
+//避免后面新建页表时，未映射前面一段物理内存而导致BUG
+static unsigned short *vga_memory=(unsigned short *)(0xB8000+0xC0000000);
+/* print cursor */ 
+inline void print_cursor(unsigned char x,unsigned char y){
+    unsigned short pos;
+    //calculate the pos from (0,0)
+    pos=x*80+y;
+
+    //write register data to port 0x3d4,set register_cursor_x
+    outb(VGA_register,register_cursor_x);
+    //set cursor_x
+    outb(VGA_data,(pos&gt;&gt;8)&amp;0xFF);
+    //write register data to port 0x3d4,set register_cursor_y
+    outb(VGA_register,register_cursor_y);
+    //set cursor_y
+    outb(VGA_data,pos&amp;0xFF);
+}
+/* use 'space' to clear the screen */
+inline void clear(){
+    unsigned short attribute=((0&lt;&lt;4)&amp;0xf0|(15&amp;0xf))&lt;&lt;8;
+    unsigned short space=' '|attribute;
+    for(unsigned short i=0;i&lt;25*80;i++){
+        vga_memory[i]=space;
+    }
+
+    cursor_x=0;
+    cursor_y=0;
+
+    print_cursor(cursor_x,cursor_y);
+}
+/* print char */ 
+inline void print_char(char c,color_type background,color_type foreground){
+    unsigned short attribute=0,character=0,pos;
+   
+    if(cursor_x&gt;=25){
+        clear();
+    }
+        
+    //calculate the pos from (0,0)
+    pos=cursor_x*80+cursor_y;
+
+    switch(c)
+    {
+        case '\n':
+            cursor_y=0;
+            cursor_x++;
+            break;
+        case '\t':
+            cursor_y=(cursor_y+8)&amp;~(8-1);
+            break;
+        default:
+            //set the first byte of character
+            character=c;
+            //set the last byte of character
+            attribute=((background&lt;&lt;4)&amp;0xf0|(foreground&amp;0xf))&lt;&lt;8;
+            character=character|attribute;
+            //send character to vga memory
+            vga_memory[pos]=character;
+
+            cursor_y++;
+            if(cursor_y&gt;=80)
+            {
+                cursor_y=0;
+                cursor_x++;
+            }
+            break;
+    }
+    print_cursor(cursor_x,cursor_y);
+}
+//print string
+inline void print_string(char *str,color_type background,color_type foreground){
+    //the end of string is '\0' and its ascii is 0
+    while(*str){
+        print_char(*str++,background,foreground);
+    }
+}
+/*                print num                                 
+*  base-represent the displayed type is hex or dec: 
+*      base=10-----hex base=16-----dec
+*       flag-1:display len bits num
+*       flag-0:dislay only num
+*/
+inline void print_num(unsigned long long num,
+color_type background,color_type foreground,unsigned char base,char len,int flag){
+    
+    char str[20];
+    char i,j,k;
+    str[len]='\0';
+
+    for(i=len-1;i&gt;=0;i--){
+        str[i]=do_div(num,base);
+        if(base==10){
+            str[i]=str[i]+'0';
+        }  
+        else if(base==16){
+            str[i]=str[i]&gt;9?str[i]-10+'A':str[i]+'0';
+        }   
+    }
+
+    if(!flag){
+        int x=0;
+        while(str[x++]=='0');
+        x--;
+        if(str[x]!=NULL)
+            print_string(&amp;str[x],background,foreground);
+        else
+            print_char('0',background,foreground);
+    
+        return ;
+    }
+
+    print_string(str,background,foreground);
+}
+
+/* 退格 */
+void backtrace(){
+    if(cursor_y&gt;21){
+    cursor_y--;
+    unsigned short attribute=0,character=0,pos;
+   
+    if(cursor_x&gt;=25){
+        clear();
+    }
+        
+    //calculate the pos from (0,0)
+    pos=cursor_x*80+cursor_y;
+
+    //set the first byte of character
+    character=' ';
+    //set the last byte of character
+    attribute=((default_background&lt;&lt;4)&amp;0xf0|(default_foreground&amp;0xf))&lt;&lt;8;
+    character=character|attribute;
+    //send character to vga memory
+    vga_memory[pos]=character;
+
+    print_cursor(cursor_x,cursor_y);
+    }
+}
+/*
+*    printk(“”,...)-standardized format output
+*         %c-------char
+*         %s-------char *
+*         %d-------dec int
+*      %x,%X-------hex int  
+*        %ud-------unsigned dec int (10)
+*    %ux,%uX-------unsigned hex int (16)
+*         %l-------hex long long
+*        %ul-------unsigned hex long long
+*/
+void printk(char *fmt,...){
+    va_list ap;
+    
+    char c;
+    char *str;
+
+    int dec_num;
+    int hex_num;
+
+    unsigned int unsigned_dec_num;
+    unsigned int unsigned_hex_num;
+
+    long long ll_hex_num;
+
+    unsigned long long ull_hex_num;
+
+    char bits=0;     //record the number's bits
+
+    va_start(ap,fmt);
+
+    while(*fmt){
+        if(*fmt=='%'){
+dis_num:    switch (*(++fmt))
+            {
+                case 'c':
+                    c=va_arg(ap,char);
+                    print_char(c,default_background,default_foreground);
+                    break;
+                case 's':
+                    str=va_arg(ap,char *);
+                    print_string(str,default_background,default_foreground);
+                    break;
+                case 'd':
+                    dec_num=va_arg(ap,int);
+                    if(bits){
+                        print_num(dec_num,default_background,default_foreground,dec,bits,display_bits);
+                    }
+                    else{
+                        print_num(dec_num,default_background,default_foreground,dec,ulonglong_max,display_num);
+                    }
+                    break;
+                case 'X':
+                case 'x':
+                    hex_num=va_arg(ap,int);
+                    if(bits){
+                        print_num(hex_num,default_background,default_foreground,hex,bits,display_bits);
+                    }
+                    else{
+                        print_num(hex_num,default_background,default_foreground,hex,ulonglong_max,display_num);
+                    }
+                    break;
+                case 'l':
+                case 'L':
+                    ll_hex_num=va_arg(ap,long long);
+                    if(bits){
+                        print_num(ll_hex_num,default_background,default_foreground,hex,bits,display_bits);
+                    }
+                    else{
+                        print_num(ll_hex_num,default_background,default_foreground,hex,ulonglong_max,display_num);
+                    }
+                    break;
+                case 'u':
+                    switch (*(++fmt))
+                    {
+                        case 'd':
+                            unsigned_dec_num=va_arg(ap,unsigned int);
+                            if(bits){
+                                print_num(unsigned_dec_num,default_background,default_foreground,dec,bits,display_bits);
+                            }
+                            else{
+                                print_num(unsigned_dec_num,default_background,default_foreground,dec,ulonglong_max,display_num);
+                            }
+                            break;
+                        case 'X':
+                        case 'x':
+                            unsigned_hex_num=va_arg(ap,unsigned int);
+                            if(bits){
+                                print_num(unsigned_hex_num,default_background,default_foreground,hex,bits,display_bits);
+                            }
+                            else{
+                                print_num(unsigned_hex_num,default_background,default_foreground,hex,ulonglong_max,display_num);
+                            }
+                            break;
+                        case 'l':
+                        case 'L':
+                            ull_hex_num=va_arg(ap,unsigned long long);
+                            if(bits){
+                                print_num(ull_hex_num,default_background,default_foreground,hex,bits,display_bits);
+                            }
+                            else{
+                                print_num(ull_hex_num,default_background,default_foreground,hex,ulonglong_max,display_num);
+                                }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                //read the bits of number displayed,the range is 00-99
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    bits=(*fmt-'0')*10+(*(++fmt)-'0');
+                    goto dis_num;
+                    break;
+                default:    
+                    print_string(&quot;error format!Please correct it!&quot;,default_background,default_foreground);
+                    break;
+            }
+            fmt++;
+        }
+        else{
+            print_char(*fmt,default_background,default_foreground);
+            fmt++;
+        }
+        bits=0;
+    }
+}
+
+/* 
+*  cons_putc - print a single character @c to console devices 
+*/
+void cons_putc(int c) {
+
+        lpt_putc(c);
+        if(c){
+            printk(&quot;%c&quot;,c);
+        }
+        serial_putc(c);
+}
+
+int cons_getc(void) {
+    int c = 0;
+
+    // poll for any pending input characters,
+    // so that this function works even when interrupts are disabled
+    // (e.g., when called from the kernel monitor).
+    serial_intr();
+    kbd_intr();
+    
+    // grab the next character from the input buffer.
+    if (cons.rpos != cons.wpos) {
+        c = cons.buf[cons.rpos ++];
+        if (cons.rpos == CONSBUFSIZE) {
+            cons.rpos = 0;
+        }
+        //return c;
+    }
+    return c;
+}
+</code></pre>
+<h4 id="vgah">Vga.h</h4>
+<pre><code>#ifndef _VGA_H_
+#define _VGA_H_
+
+//the max of unsigned char is 255 in dec(3 character)
+#define uchar_max 3
+//the max of unsigned short is 65535 in dec(5 character)
+#define ushort_max 5
+//the max of unsigned int is 4294967295 in dec(10 character)
+#define int_max 10
+//the max of unsigned long long is 18446744073709551615 in dec(20 character)
+#define ulonglong_max 20
+
+
+#define dec 10  //Decimal
+#define hex 16  //Hexadecimal  
+
+#define display_bits 1   //display x bits number     ex. 100-&gt;00100
+#define display_num  0   //display only number bits  ex. 100-&gt;100  
+
+#define VGA_register 0x3d4
+#define VGA_data 0x3d5
+#define register_cursor_x 14
+#define register_cursor_y 15
+
+/*可变参数宏定义*/
+typedef char * va_list;     
+//为了满足需要内存对齐的系统
+#define _INTSIZEOF(n)  ((sizeof(n)+sizeof(int)-1)&amp;~(sizeof(int) - 1) ) 
+
+/*
+*  va_start(ap,v):ap指向第一个变参的位置，即将第一个变参的地址赋予ap
+*  va_arg(ap,t):获取变参的具体内容，t为变参的类型，如有多个参数，
+*               则通过移动ap的指针来获得变参的地址，从而获得内容
+*  va_end(ap):清空va_list，即结束变参的获取,防止野指针
+*/
+#define va_start(ap,v) ( ap = (va_list)&amp;v + _INTSIZEOF(v) )     
+#define va_arg(ap,t)   ( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )   
+#define va_end(ap)     ( ap = (va_list)0 )   
+
+/* 系统默认的背景色和字体颜色，可根据喜好更改 */
+#define default_background black
+#define default_foreground green
+
+typedef enum color {
+    black = 0,
+    blue = 1,
+    green = 2,
+    cyan = 3,
+    red = 4,
+    magenta = 5,
+    brown = 6,
+    light_grey = 7,
+    dark_grey = 8,
+    light_blue = 9,
+    light_green = 10,
+    light_cyan = 11,
+    light_red = 12,
+    light_magenta = 13,
+    light_brown  = 14,   // yellow
+    white = 15
+}color_type;
+
+void print_cursor(unsigned char x,unsigned char y);
+void print_char(char c,color_type background,color_type foreground);
+void clear();
+void print_string(char *str,color_type background,color_type foreground);
+void print_num(unsigned long long num,color_type background,color_type foreground,unsigned char base,char len,int flag);
+void printk(char *fmt,...);
+void cons_putc(int c);
+int cons_getc(void);
+void backtrace();
+#endif
+</code></pre>
+<p>vga即显示屏幕初始化，包含清空屏幕，打印字符，从键盘和串口接收字符等。</p>
+<p>关于VGA显示的问题，详见我的博客https://blog.csdn.net/cy295957410/article/details/108436730</p>
+
+</article>
+
+                    
+                    
+                    
+
+                    
+
+
+
+                    
+  <div
+    class="-mx-2 mt-4 flex flex-col border-t px-2 pt-4 md:flex-row md:justify-between"
+  >
+    <div>
+      
+        <span class="text-primary-text block font-bold"
+          >Previous</span
+        >
+        <a href="/docs/freeflyos-doc/freeflyos%E5%9B%9B-dt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-4 dt部分详解</a>
+      
+    </div>
+    <div class="mt-4 md:mt-0 md:text-right">
+      
+        <span class="text-primary-text block font-bold">Next</span>
+        <a href="/docs/freeflyos-doc/freeflyos%E5%85%AD-interrupt%E9%83%A8%E5%88%86%E8%AF%A6%E8%A7%A3/" class="block">Chapter-6 interrupt部分详解</a>
+      
+    </div>
+  </div>
+
+
+                    
+
+
+
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div
+  class="
+    bg-secondary-bg
+   prose sticky top-16 z-10 hidden px-6 py-4 lg:block"
+>
+  <h3>On This Page</h3>
+</div>
+<div
+  class="sticky-toc 
+    border-s
+   hidden px-6 pb-6 lg:block"
+>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#vgac">vga.c</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#vgah">Vga.h</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</div>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    enableStickyToc();
+  });
+</script>
+
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      
+    </main>
+    <footer class="pl-scrollbar">
+      <div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2022 <a href="https://dashanji.github.io/">dashanji</a>
+ &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+    </footer>
+  </body>
+</html>
