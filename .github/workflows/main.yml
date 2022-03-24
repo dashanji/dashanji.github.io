@@ -6,7 +6,7 @@ on:
     - source  # Set the source branch
 
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@master
